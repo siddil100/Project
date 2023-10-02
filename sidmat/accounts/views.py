@@ -22,12 +22,17 @@ def login_view(request):
 
             user = form.get_user()
             login (request, user)
-            return redirect ('matrimony:profile_list')
+            request.session['suser'] = user.username
+            return redirect ('matrimony:profile_list_loghome')
     else:
         form = AuthenticationForm()
     
     return render (request, 'accounts/login.html', {'form':form})
 
 def logout_view(request):
-    logout (request)
-    return redirect ('accounts:login')
+    
+    if 'suser' in request.session:
+        del request.session['suser']
+
+    logout(request)
+    return redirect('accounts:login')

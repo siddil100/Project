@@ -6,7 +6,12 @@ from django.contrib.auth.decorators import login_required
 
 def ProfileListView(request):
     profiles=Profile.objects.all()
+    return render (request, 'matrimony/profile_list_home.html', {'profiles':profiles})
+
+def ProfileLog(request):
+    profiles=Profile.objects.all()
     return render (request, 'matrimony/profile_list.html', {'profiles':profiles})
+
 
 def ProfileDetailView(request, profile_id):
     profile=Profile.objects.get(id=profile_id)

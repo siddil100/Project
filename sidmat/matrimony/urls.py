@@ -5,6 +5,7 @@ app_name = 'matrimony'
 
 urlpatterns = [
     path('', views.ProfileListView, name='profile_list'),
+    path('loggedin', views.ProfileLog, name='profile_list_loghome'),
     path('<int:profile_id>', views.ProfileDetailView, name='profile_detail'),
     path('<int:profile_id>/delete', views.ProfileDeleteView, name='profile_delete'),
     path('contact', views.ContactView, name='contact'),

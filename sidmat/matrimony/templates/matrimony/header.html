@@ -1,6 +1,6 @@
 <!-- templates/header.html -->
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary"> <!-- Change bg-dark to bg-primary for blue background -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <a class="navbar-brand" href="#">Matrimonial App</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -11,11 +11,21 @@
         <a class="nav-link" href="{% url 'matrimony:profile_list' %}">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'matrimony:contact' %}" style="color: white;">Contact Us</a> <!-- Add style to set the color to white -->
+        <a class="nav-link" href="{% url 'matrimony:contact' %}" style="color: white;">Contact Us</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'accounts:logout' %}" style="color: white;">Logout</a> <!-- Add style to set the color to white -->
-      </li>
+      {% if user.is_authenticated %}
+        
+        <li class="nav-item">
+          <a class="nav-link" href="#" style="color: white;">Welcome, {{ request.session.suser }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'accounts:logout' %}" style="color: white;">Logout</a>
+        </li>
+      {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'accounts:login' %}" style="color: white;">Login</a>
+        </li>
+      {% endif %}
     </ul>
   </div>
 </nav>

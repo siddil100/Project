@@ -50,7 +50,13 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    
 ]
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+# Set the session storage mechanism (if using the database engine)
+SESSION_CACHE_ALIAS = 'default'
 
 ROOT_URLCONF = "core.urls"
 
