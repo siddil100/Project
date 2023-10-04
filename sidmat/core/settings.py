@@ -60,6 +60,8 @@ SESSION_CACHE_ALIAS = 'default'
 
 ROOT_URLCONF = "core.urls"
 
+TEMPLATE_DIR = BASE_DIR / 'templates'
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -138,3 +140,10 @@ MEDIA_ROOT=BASE_DIR / 'media'
 MEDIA_URL='/media/'
 
 LOGIN_URL= 'accounts:login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'kdoxigen@gmail.com'
+EMAIL_HOST_PASSWORD = 'rrvnojnzayzkywix'
