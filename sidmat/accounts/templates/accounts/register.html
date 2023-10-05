@@ -71,7 +71,7 @@
 
 <div class="register-container">
     <h1>Register Your Account!</h1>
-    <form method="post">
+    <form method="post" onsubmit="return validateRegistrationForm();">
 
         {% csrf_token %}
         {{ form.as_p }}
@@ -81,5 +81,46 @@
 
     <p>Already Registered? <a href="{% url 'accounts:login' %}">Login Here</a></p>
 </div>
+
+<script>
+    // Function to validate the registration form
+    function validateRegistrationForm() {
+        const usernameField = document.getElementById("id_username");
+        const usernameValue = usernameField.value;
+
+        // Check if the username starts or ends with spaces
+        if (usernameValue.trim() !== usernameValue) {
+            alert("Username should not start or end with spaces.");
+            usernameField.style.borderColor = "red"; // Set border color to red
+            return false; // Prevent form submission
+        } else {
+            usernameField.style.borderColor = ""; // Reset border color
+        }
+
+        // Check if the username is too short (less than 5 characters)
+        if (usernameValue.length < 5) {
+            alert("Username should be at least 5 characters long.");
+            usernameField.style.borderColor = "red"; // Set border color to red
+            return false; // Prevent form submission
+        } else {
+            usernameField.style.borderColor = ""; // Reset border color
+        }
+
+        // Check if the username is too long (more than 15 characters)
+        if (usernameValue.length > 15) {
+            alert("Username should be no more than 15 characters long.");
+            usernameField.style.borderColor = "red"; // Set border color to red
+            return false; // Prevent form submission
+        } else {
+            usernameField.style.borderColor = ""; // Reset border color
+        }
+
+        // Other form validation logic can be added here if needed
+
+        return true; // Form is valid
+    }
+</script>
+
+
 
 {% endblock %}
