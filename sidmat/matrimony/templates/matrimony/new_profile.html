@@ -62,7 +62,7 @@
 </style>
 
 <h1>Add a New Profile!</h1>
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" id="newpro">
 
     {% csrf_token %}
     {{ formset.management_form }}
@@ -71,4 +71,5 @@
     {% endfor %}
     <input type="submit" class="btn btn-primary" value="Submit">
 </form>
+<script src="{% static 'js/profile_validation.js' %}"></script>
 {% endblock %}

@@ -33,4 +33,12 @@ class ProfileForm(forms.ModelForm):
         fields = "__all__"
         # fields = ['name','age','gender']
         # exclude = ['name','age','gender']
+        widgets = {
+            'name': forms.TextInput(attrs={'id': 'id_name'}),
+            'gender': forms.Select(attrs={'id': 'id_gender'}),
+            'occupation': forms.TextInput(attrs={'id': 'id_occupation'}),
+            'email': forms.EmailInput(attrs={'id': 'id_email'}),
+            'religion': forms.Select(attrs={'id': 'id_religion'}),
+            'sect': forms.Select(attrs={'id': 'id_sect'}),
+        }
 
