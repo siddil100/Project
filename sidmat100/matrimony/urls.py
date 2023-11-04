@@ -4,10 +4,9 @@ from . import views
 app_name = 'matrimony'
 
 urlpatterns = [
-    path('', views.ProfileListView, name='profile_list'),
-    path('loggedin', views.ProfileLog, name='profile_list_loghome'),
-    path('<int:profile_id>', views.ProfileDetailView, name='profile_detail'),
-    path('<int:profile_id>/delete', views.ProfileDeleteView, name='profile_delete'),
-    path('contact', views.ContactView, name='contact'),
-    path('new_profile', views.NewProfileView, name='new_profile'),
+   
+    
+    path('/personaldetails', views.personaldetailsview, name='personaldetails'),
+    path('check_phone_number/', views.check_phone_number, name='checkphone'),
+    
 ]

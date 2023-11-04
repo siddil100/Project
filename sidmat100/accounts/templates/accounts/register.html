@@ -1,124 +1,307 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
 {% block content %}
-<style>
-    /* Style the form container */
-    .register-container {
-        max-width: 400px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #f4f4f4;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Marriage</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/global.css' %}" rel="stylesheet">
+    <link href="{% static 'css/index.css' %}" rel="stylesheet">
+    <link href="{% static 'css/about.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}" />
+    <link href="{% static 'css/element.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
+    <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #7abecc !important;
     }
-
-    h1 {
-        text-align: center;
-        color: #007BFF;
+    
+    .user_card {
+      width: 500px; /* Increased width */
+      height: 700px; /* Increased height */
+      margin: auto; /* Center horizontally and vertically */
+      background: #74cfbf;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center; /* Center vertically */
+      flex-direction: column;
+      padding: 60px; /* Increased padding */
+      box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2), 0 12px 40px 0 rgba(0, 0, 0, 0.19); /* Increased shadow */
+      -webkit-box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2), 0 12px 40px 0 rgba(0, 0, 0, 0.19);
+      -moz-box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2), 0 12px 40px 0 rgba(0, 0, 0, 0.19);
+      border-radius: 20px; /* Increased border radius */
+      font-size: 18px; /* Increase the font size inside the card */
     }
-
-    /* Style form elements */
-    form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    
+    .form_container {
+      margin-top: 20px;
     }
-
-    label {
-        font-weight: bold;
+    
+    #form-title {
+      color: #fff;
+      font-size: 28px; /* Increased font size */
     }
-
-    input[type="text"],
-    input[type="password"] {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        transition: border-color 0.2s;
+    
+    .login_btn {
+      width: 100%;
+      background: #33ccff !important;
+      color: white !important;
+      font-size: 20px; /* Increased font size */
     }
-
-    button[type="submit"] {
-        background-color: #007BFF;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.2s;
+    
+    .login_btn:focus {
+      box-shadow: none !important;
+      outline: 0px !important;
     }
-
-    button[type="submit"]:hover {
-        background-color: #0056b3;
+    
+    .login_container {
+      padding: 0 2rem;
     }
-
-    /* Style the login link */
-    p {
-        text-align: center;
-        margin-top: 20px;
+    
+    .input-group-text {
+      background: #f7ba5b !important;
+      color: white !important;
+      border: 0 !important;
+      border-radius: 20px 0 0 20px !important; /* Adjusted border radius */
     }
-
-    a {
-        color: #007BFF;
-        text-decoration: none;
+    
+    .input_user,
+    .input_pass:focus {
+      box-shadow: none !important;
+      outline: 0px !important;
+      font-size: 24px; /* Increased font size inside the text fields */
     }
-
-    a:hover {
-        text-decoration: underline;
+    
+    .input-group {
+      margin-bottom: 30px; /* Increased vertical spacing between fields */
     }
-</style>
+    
+    
+  </style>
+  
+      
+  
 
-<div class="register-container">
-    <h1>Register Your Account!</h1>
-    <form method="post" onsubmit="return validateRegistrationForm();">
+</head>
 
-        {% csrf_token %}
-        {{ form.as_p }}
+	
+<section id="about" class="clearfix">
+    <div class="about_main clearfix">
+      <div class="container">
+     <div class="row">
+      <div class="about clearfix">
+      <div class="col-sm-7 about_left clearfix">
+       <div class="about_left_inner clearfix">
+        <h1>REGISTER NOW</h1>
+        <h5>Adipiscing  /  Torquent  /  Litora  /  Sociosqu</h5>
+       </div>
+      </div>	 
+      </div>
+     </div>
+    </div>
+    </div>
+   </section>
+   
 
-        <button type="submit" class="btn btn-primary">Register</button>
-    </form>
+   
+ 
+   
+   <section id="center_7" class="clearfix">
+    <body>
+      <div class="container h-100">
+        <div class="d-flex justify-content-center h-100">
+          <div class="user_card">
+            <div class="d-flex justify-content-center">
+              <h3 id="form-title">REGISTER ACCOUNT</h3>
+            </div>
+            <div class="d-flex justify-content-center form_container">
+    
+              <form method="POST" action="">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                  </div>
+                  {{form.username}}
+                </div>
+                <div id="username-error" style="color: red;"></div>
+                <div class="input-group mb-2">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-envelope-square"></i></span>
+                  </div>
+                  {{form.email}}
+                </div>
+                <div id="email-error" style="color: red;"></div>
+                <div class="input-group mb-2">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                  </div>
+                  {{form.password1}}
+                </div>
+                <div id="password1-error" style="color: red;"></div>
+                <div class="input-group mb-2">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                  </div>
+                  {{form.password2}}
+                </div>
+                <div id="password2-error" style="color: red;"></div>
+    
+                   <div class="d-flex justify-content-center mt-3 login_container">
+                   <input class="btn login_btn" type="submit" value="Register Account">
+                   </div>
+              </form>
+            </div>
+            {{form.errors}}
+            <div class="mt-4">
+              <div class="d-flex justify-content-center links">
+                Already have an account? <a href="{% url 'accounts:login' %}" class="ml-2">Login</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+   </section>
+   
+   
+   <script src="{% static 'js/classie.js' %}"></script>
+   <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script>   
+   <script>
+    
+//Query All input fields
+var form_fields = document.getElementsByTagName('input')
+form_fields[1].placeholder='Username';
+form_fields[2].placeholder='Email..';
+form_fields[3].placeholder='Enter password...';
+form_fields[4].placeholder='Re-enter Password...';
 
-    <p>Already Registered? <a href="{% url 'accounts:login' %}">Login Here</a></p>
-</div>
+
+for (var field in form_fields){	
+form_fields[field].className += ' form-control'
+}
+</script>
 
 <script>
-    // Function to validate the registration form
-    function validateRegistrationForm() {
-        const usernameField = document.getElementById("id_username");
-        const usernameValue = usernameField.value;
+  document.addEventListener("DOMContentLoaded", function () {
+      const form = document.querySelector("form");
+      const usernameField = document.querySelector("#id_username");
+      const emailField = document.querySelector("#id_email");
+      const password1Field = document.querySelector("#id_password1");
+      const password2Field = document.querySelector("#id_password2");
 
-        // Check if the username starts or ends with spaces
-        if (usernameValue.trim() !== usernameValue) {
-            alert("Username should not start or end with spaces.");
-            usernameField.style.borderColor = "red"; // Set border color to red
-            return false; // Prevent form submission
+      const errorContainer = document.querySelector("#username-error");
+      const emailErrorContainer = document.querySelector("#email-error");
+      const password1ErrorContainer = document.querySelector("#password1-error");
+      const password2ErrorContainer = document.querySelector("#password2-error");
+
+      usernameField.addEventListener("input", function () {
+          validateUsername();
+      });
+
+      emailField.addEventListener("input", function () {
+          validateEmail();
+      });
+
+      password1Field.addEventListener("input", function () {
+          validatePassword1();
+      });
+
+      password2Field.addEventListener("input", function () {
+          validatePassword2();
+      });
+
+      form.addEventListener("submit", function (event) {
+          if (!validateUsername() || !validateEmail() || !validatePassword1() || !validatePassword2()) {
+              event.preventDefault(); // Prevent form submission
+          }
+      });
+
+      function validateUsername() {
+        const usernameValue = usernameField.value.trim();
+        const usernameRegex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]*$/;
+    
+        if (
+            usernameValue.length < 5 ||
+            !usernameRegex.test(usernameValue) ||
+            usernameField.value[0] === " " || // Check for space at the beginning
+            usernameField.value[usernameField.value.length - 1] === " " // Check for space at the end
+        ) {
+            errorContainer.textContent = "Username must be at least 5 characters long,\n contain both numbers and alphabets, \n and not have any spaces at the beginning or end";
+            return false;
         } else {
-            usernameField.style.borderColor = ""; // Reset border color
+            errorContainer.textContent = "";
+            return true;
         }
-
-        // Check if the username is too short (less than 5 characters)
-        if (usernameValue.length < 5) {
-            alert("Username should be at least 5 characters long.");
-            usernameField.style.borderColor = "red"; // Set border color to red
-            return false; // Prevent form submission
-        } else {
-            usernameField.style.borderColor = ""; // Reset border color
-        }
-
-        // Check if the username is too long (more than 15 characters)
-        if (usernameValue.length > 15) {
-            alert("Username should be no more than 15 characters long.");
-            usernameField.style.borderColor = "red"; // Set border color to red
-            return false; // Prevent form submission
-        } else {
-            usernameField.style.borderColor = ""; // Reset border color
-        }
-
-        // Other form validation logic can be added here if needed
-
-        return true; // Form is valid
     }
+    
+    
+    
+    
+      function validateEmail() {
+          const emailValue = emailField.value.trim();
+          if (!isValidEmail(emailValue)) {
+              emailErrorContainer.textContent = "Invalid email address";
+              return false;
+          } else {
+              emailErrorContainer.textContent = "";
+              return true;
+          }
+      }
+
+      function validatePassword1() {
+        const password1Value = password1Field.value;
+        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
+      
+        if (
+          password1Value.charAt(0) === " " || // Check for space at the beginning
+          password1Value.charAt(password1Value.length - 1) === " " || // Check for space at the end
+          /\s/.test(password1Value) || // Check for any spaces in between
+          !passwordRegex.test(password1Value) // Check against your password regex
+        ) {
+          password1ErrorContainer.textContent = "Password must be at least 8 characters long, contain at least one character, one number, one special symbol, and not have any spaces at the beginning or end or in between";
+          return false;
+        } else {
+          password1ErrorContainer.textContent = "";
+          return true;
+        }
+      }
+      
+      
+      
+
+      function validatePassword2() {
+          const password1Value = password1Field.value.trim();
+          const password2Value = password2Field.value.trim();
+          if (password1Value !== password2Value) {
+              password2ErrorContainer.textContent = "Passwords do not match";
+              return false;
+          } else {
+              password2ErrorContainer.textContent = "";
+              return true;
+          }
+      }
+
+      function isValidEmail(email) {
+        // A modified email validation regex
+        const emailRegex = /^[a-zA-Z][a-zA-Z0-9._-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email) && !email.match(/@[0-9]/);
+    }
+  });
 </script>
 
 
