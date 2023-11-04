@@ -1,0 +1,86 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    /* Style the form container */
+    .login-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f4f4f4;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+        color: #007BFF;
+    }
+
+    /* Style form elements */
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: border-color 0.2s;
+    }
+
+    button[type="submit"] {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+    /* Style the registration link */
+    p {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    a {
+        color: #007BFF;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="login-container">
+    <h1>Account Login</h1>
+    <form method="post">
+
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+    <a href="{% url 'password_reset' %}">Forgot Password?</a>
+    <p>Do not have an Account? <a href="{% url 'accounts:register' %}">Register Here</a></p>
+</div>
+
+{% endblock %}
