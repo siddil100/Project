@@ -18,6 +18,9 @@ class PersonalDetails(models.Model):
     phone_number = models.CharField(max_length=15,unique=True)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)  # Define the profile image field
     mother_tongue = models.CharField(max_length=100)
+    religion = models.CharField(max_length=100)
+    sector = models.CharField(max_length=100)
+    perso_fill = models.BooleanField(default=False)
 
     # Add any other fields you need for personal details
 

@@ -20,6 +20,7 @@ def personaldetailsview(request):
         if personal_details_form.is_valid():
             personal_details = personal_details_form.save(commit=False)
             personal_details.user = request.user  # Link to the current user
+            personal_details.perso_fill = True
             personal_details.save()
             return redirect('success_url')  # Redirect to a success page
 

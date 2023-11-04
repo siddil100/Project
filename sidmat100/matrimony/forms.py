@@ -8,7 +8,7 @@ from .models import PersonalDetails
 class PersonalDetailsForm(forms.ModelForm):
     class Meta:
         model = PersonalDetails
-        fields = ['first_name', 'last_name', 'middle_name', 'gender', 'date_of_birth', 'phone_number', 'profile_image', 'mother_tongue']
+        fields = ['first_name', 'last_name', 'middle_name', 'gender', 'date_of_birth', 'phone_number', 'profile_image', 'mother_tongue', 'religion', 'sector']
 
 
 
