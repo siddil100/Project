@@ -15,7 +15,7 @@ def check_phone_number(request):
 @login_required
 def personaldetailsview(request):
     if request.method == 'POST':
-        personal_details_form = PersonalDetailsForm(request.POST)
+        personal_details_form = PersonalDetailsForm(request.POST, request.FILES)
 
         if personal_details_form.is_valid():
             personal_details = personal_details_form.save(commit=False)
@@ -25,6 +25,7 @@ def personaldetailsview(request):
 
     else:
         personal_details_form = PersonalDetailsForm()
+        print(personal_details_form.errors)
 
     return render(request, 'matrimony/personaldetails.html', {'personal_details_form': personal_details_form})
 

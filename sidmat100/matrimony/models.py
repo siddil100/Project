@@ -16,6 +16,7 @@ class PersonalDetails(models.Model):
     gender = models.CharField(max_length=10)
     date_of_birth = models.DateField()
     phone_number = models.CharField(max_length=15,unique=True)
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)  # Define the profile image field
     mother_tongue = models.CharField(max_length=100)
 
     # Add any other fields you need for personal details
