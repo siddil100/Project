@@ -21,6 +21,7 @@ class PersonalDetails(models.Model):
     religion = models.CharField(max_length=100)
     sector = models.CharField(max_length=100)
     perso_fill = models.BooleanField(default=False)
+    marital_status = models.CharField(max_length=100)
 
     # Add any other fields you need for personal details
 
