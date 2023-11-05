@@ -23,7 +23,28 @@ class PersonalDetails(models.Model):
     perso_fill = models.BooleanField(default=False)
     marital_status = models.CharField(max_length=100)
 
-    # Add any other fields you need for personal details
+    # Now family details
+
+    from django.db import models
+from django.contrib.auth.models import User
+
+class FamilyDetails(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Create a foreign key relationship with the User model
+    father_name = models.CharField(max_length=100)
+    mother_name = models.CharField(max_length=100)
+    number_of_siblings = models.PositiveIntegerField()
+    father_occupation = models.CharField(max_length=100)
+    mother_occupation = models.CharField(max_length=100)
+    family_type = models.CharField(max_length=100)
+    family_status = models.CharField(max_length=100)
+    number_of_family_members = models.PositiveIntegerField()
+    famil_fill = models.BooleanField(default=False)
+
+    # Add any other fields you need for family details
+
+    
+
+
 
 
 

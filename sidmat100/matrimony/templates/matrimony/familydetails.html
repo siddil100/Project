@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Details Form</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include jQuery UI CSS (for the date picker) -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <!-- Include jQuery UI JavaScript (for the date picker) -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">My Website</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                {% if request.session.suser %}
+                <li class="nav-item">
+                    <span class="navbar-text">Welcome, {{ request.session.suser }}</span>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
+                </li>
+            {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+
+
+    <div class="container mt-5">
+        <h2>Family Details</h2>
+        <!-- Family details form goes here -->
+        <form method="post" action="{% url 'matrimony:familydetails' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="fatherName">Father's Name</label>
+                <input type="text" class="form-control" id="fatherName" name="father_name" placeholder="Enter your father's name" required>
+                {% if family_details_form.father_name.errors %}
+                <div class="text-danger">
+                    {{ family_details_form.father_name.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+            <div class="form-group">
+                <label for="motherName">Mother's Name</label>
+                <input type="text" class="form-control" id="motherName" name="mother_name" placeholder="Enter your mother's name" required>
+                {% if family_details_form.mother_name.errors %}
+                <div class="text-danger">
+                    {{ family_details_form.mother_name.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+            
+
+            <div class="form-group">
+                <label for="siblings">Number of Siblings</label>
+                <input type="number" class="form-control" id="siblings" name="number_of_siblings" required>
+                {% if family_details_form.number_of_siblings.errors %}
+                <div class="text-danger">
+                    {{ family_details_form.number_of_siblings.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+            <div class="form-group">
+                <label for="fatherOccupation">Father's Occupation</label>
+                <select class="form-control occupation-select" id="fatherOccupation" name="father_occupation">
+                    <option value="" disabled selected>Select Father's Occupation</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="engineer">Engineer</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="lawyer">Lawyer</option>
+                    <option value="farmer">Farmer</option>
+                    <option value="businessman">Businessman</option>
+                    <option value="software_professional">Software Professional</option>
+                    <option value="government_employee">Government Employee</option>
+                    <option value="artist">Artist</option>
+                    <option value="engineer">Engineer</option>
+                    <option value="entrepreneur">Entrepreneur</option>
+                    <option value="other">Other</option>
+                </select>
+                {% if family_details_form.father_occupation.errors %}
+                <div class="text-danger">
+                    {{ family_details_form.father_occupation.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+           
+
+            <div class="form-group">
+                <label for="motherOccupation">Mother's Occupation</label>
+                <select class="form-control occupation-select" id="motherOccupation" name="mother_occupation">
+                    <option value="" disabled selected>Select Mother's Occupation</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="housewife">Housewife</option>
+                    <option value="nurse">Nurse</option>
+                    <option value="software_professional">Software Professional</option>
+                    <option value="government_employee">Government Employee</option>
+                    <option value="artist">Artist</option>
+                    <option value="engineer">Engineer</option>
+                    <option value="entrepreneur">Entrepreneur</option>
+                    <option value="other">Other</option>
+                </select>
+                {% if family_details_form.mother_occupation.errors %}
+                <div class="text-danger">
+                    {{ family_details_form.mother_occupation.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+
+            
+
+            <div class="form-group">
+                <label for="familyType">Family Type</label>
+                <select class="form-control" id="familyType" name="family_type">
+                    <option value="" disabled selected>Select Family Type</option>
+                    <option value="nuclear">Nuclear</option>
+                    <option value="joint">Joint</option>
+                    <option value="extended">Extended</option>
+                </select>
+                {% if family_details_form.family_type.errors %}
+                <div class="text-danger">
+                    {{ family_details_form.family_type.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+            <div class="form-group">
+                <label for="familyStatus">Family Status</label>
+                <select class="form-control" id="familyStatus" name="family_status">
+                    <option value="" disabled selected>Select Family Status</option>
+                    <option value="lower">Lower</option>
+                    <option value="middle">Middle</option>
+                    <option value="upper">Upper</option>
+                </select>
+                {% if family_details_form.family_status.errors %}
+                <div class="text-danger">
+                    {{ family_details_form.family_status.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+
+            <div class="form-group">
+                <label for="familyMembers">Number of Family Members</label>
+                <input type="number" class="form-control" id="familyMembers" name="number_of_family_members" required>
+                {% if family_details_form.number_of_family_members.errors %}
+                    <div class="text-danger">
+                        {{ family_details_form.number_of_family_members.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+
+    
+    
+</body>
+</html>
