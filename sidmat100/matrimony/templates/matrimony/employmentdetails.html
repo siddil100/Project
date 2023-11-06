@@ -1,0 +1,151 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Occupational Details Form</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include jQuery UI CSS (for the date picker) -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <!-- Include jQuery UI JavaScript (for the date picker) -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">My Website</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                {% if request.session.suser %}
+                <li class="nav-item">
+                    <span class="navbar-text">Welcome, {{ request.session.suser }}</span>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
+                </li>
+            {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+
+
+
+<div class="container mt-5">
+    <h2>Employment Details</h2>
+    <!-- Your form goes here -->
+    <form method="post" action="{% url 'matrimony:employmentdetails' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="employmentStatus">Employment Status:</label>
+            <select class="form-control" id="employmentStatus" name="employment_status">
+                <option value="" disabled selected>Select Employment Status</option>
+                <option value="employed">Employed</option>
+                <option value="self-employed">Self-Employed</option>
+                <option value="unemployed">Unemployed</option>
+                <option value="student">Student</option>
+                <option value="retired">Retired</option>
+                <option value="freelancer">Freelancer</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="occupation">Occupation:</label>
+            <input type="text" class="form-control" id="occupation" name="occupation" placeholder="Enter your job title or profession">
+        </div>
+
+        <div class="form-group">
+            <label for="employer">Employer Of:</label>
+            <input type="text" class="form-control" id="employer" name="employerof" placeholder="Enter the name of company you work for">
+        </div>
+
+        <div class="form-group">
+            <label for="annualIncome">Annual Income:</label>
+            <input type="text" class="form-control" id="annualIncome" name="annual_income" placeholder="Enter your annual income">
+        </div>
+
+        <div class="form-group">
+            <label for="industry">Industry:</label>
+            <select class="form-control" id="industry" name="industry">
+                <option value="" disabled selected>Select Industry</option>
+                <option value="IT">Information Technology</option>
+                <option value="finance">Finance</option>
+                <option value="healthcare">Healthcare</option>
+                <option value="education">Education</option>
+                <option value="manufacturing">Manufacturing</option>
+                <!-- Add more industry options here -->
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="job_location">Job Location</label>
+            <select class="form-control" id="job_location" name="job_location">
+                <option value="" disabled selected>Select your Birth-Place</option>
+                <option value="andhra pradesh">Andhra Pradesh</option>
+                <option value="arunachal pradesh">Arunachal Pradesh</option>
+                <option value="assam">Assam</option>
+                <option value="bihar">Bihar</option>
+                <option value="chhattisgarh">Chhattisgarh</option>
+                <option value="goa">Goa</option>
+                <option value="gujarat">Gujarat</option>
+                <option value="haryana">Haryana</option>
+                <option value="himachal pradesh">Himachal Pradesh</option>
+                <option value="jammu and kashmir">Jammu and Kashmir</option>
+                <option value="jharkhand">Jharkhand</option>
+                <option value="karnataka">Karnataka</option>
+                <option value="kerala">Kerala</option>
+                <option value="madhya pradesh">Madhya Pradesh</option>
+                <option value="maharashtra">Maharashtra</option>
+                <option value="manipur">Manipur</option>
+                <option value="meghalaya">Meghalaya</option>
+                <option value="mizoram">Mizoram</option>
+                <option value="nagaland">Nagaland</option>
+                <option value="odisha">Odisha</option>
+                <option value="punjab">Punjab</option>
+                <option value="rajasthan">Rajasthan</option>
+                <option value="sikkim">Sikkim</option>
+                <option value="tamil nadu">Tamil Nadu</option>
+                <option value="telangana">Telangana</option>
+                <option value="tripura">Tripura</option>
+                <option value="uttar pradesh">Uttar Pradesh</option>
+                <option value="uttarakhand">Uttarakhand</option>
+                <option value="west bengal">West Bengal</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="aboutJob">About Job:</label>
+            <textarea class="form-control" id="aboutJob" name="about_job" rows="3" placeholder="Provide more details about your job or profession"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="workingHours">Working Hours:</label>
+            <input type="text" class="form-control" id="workingHours" name="working_hours" placeholder="Enter your typical working hours or shifts">
+        </div>
+
+        <div class="form-group">
+            <label for="linkedinProfile">LinkedIn Profile (Optional):</label>
+            <input type="text" class="form-control" id="linkedinProfile" name="linkedin_profile" placeholder="Enter your LinkedIn profile URL (if applicable)">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
