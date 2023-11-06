@@ -24,6 +24,7 @@ class PersonalDetails(models.Model):
     sector = models.CharField(max_length=100)
     perso_fill = models.BooleanField(default=False)
     marital_status = models.CharField(max_length=100)
+    about_you = models.TextField(blank=True)
 
     # Now family details
 

@@ -137,7 +137,7 @@ def locationdetailsview(request):
     # Check if the LocationDetails form is already filled
     if LocationDetails.objects.filter(user=user, loca_fill=True).exists():
         # LocationDetails form is already filled, redirect to the home page
-        return redirect('home')
+        return redirect('matrimony:home')
 
     if request.method == 'POST':
         location_details_form = LocationDetailsForm(request.POST, request.FILES)
@@ -146,12 +146,49 @@ def locationdetailsview(request):
             location_details.user = user
             location_details.loca_fill = True
             location_details.save()
-            return redirect('home')  # All forms are filled, redirect to the home page
+            return redirect('matrimony:home')  # All forms are filled, redirect to the home page
 
     else:
         location_details_form = LocationDetailsForm()
 
     return render(request, 'matrimony/locationdetails.html', {'location_details_form': location_details_form})
+
+
+
+
+
+
+
+from django.shortcuts import render, redirect
+from .models import PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
+
+def homeview(request):
+    user = request.user
+
+    # Check if all forms are filled
+    if all([
+        PersonalDetails.objects.filter(user=user, perso_fill=True).exists(),
+        FamilyDetails.objects.filter(user=user, famil_fill=True).exists(),
+        EducationalDetails.objects.filter(user=user, educ_fill=True).exists(),
+        EmploymentDetails.objects.filter(user=user, empl_fill=True).exists(),
+        LocationDetails.objects.filter(user=user, loca_fill=True).exists(),
+    ]):
+        personal_details = PersonalDetails.objects.get(user=user)
+        profile_image_url = personal_details.profile_image.url
+        return render(request, 'matrimony/home.html', {'profile_image_url': profile_image_url})
+
+    # Redirect to the first unfilled form
+    if not PersonalDetails.objects.filter(user=user, perso_fill=True).exists():
+        return redirect('matrimony:personaldetails')
+    elif not FamilyDetails.objects.filter(user=user, famil_fill=True).exists():
+        return redirect('matrimony:familydetails')
+    elif not EducationalDetails.objects.filter(user=user, educ_fill=True).exists():
+        return redirect('matrimony:educationaldetails')
+    elif not EmploymentDetails.objects.filter(user=user, empl_fill=True).exists():
+        return redirect('matrimony:employmentdetails')
+    elif not LocationDetails.objects.filter(user=user, loca_fill=True).exists():
+        return redirect('matrimony:locationdetails')
+
 
 
 

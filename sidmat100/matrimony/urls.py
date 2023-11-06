@@ -11,6 +11,7 @@ urlpatterns = [
     path('educationaldetails', views.educationaldetailsview, name='educationaldetails'),
     path('employmentdetails', views.employmentdetailsview, name='employmentdetails'),
     path('locationdetails', views.locationdetailsview, name='locationdetails'),
+    path('home', views.homeview, name='home'),
     path('check_phone_number/', views.check_phone_number, name='checkphone'),
     
 ]
