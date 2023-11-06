@@ -6,7 +6,9 @@ from .forms import EducationalDetailsForm
 from .forms import EmploymentDetailsForm
 from .forms import LocationDetailsForm
 from django.http import JsonResponse
-from .models import PersonalDetails
+
+from .models import PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
+
 
 
 def check_phone_number(request):
@@ -19,19 +21,24 @@ def check_phone_number(request):
 
 @login_required
 def personaldetailsview(request):
+    user = request.user
+
+    # Check if the PersonalDetails form is already filled
+    if PersonalDetails.objects.filter(user=user, perso_fill=True).exists():
+        # PersonalDetails form is already filled, move to the next form
+        return redirect('matrimony:familydetails')
+
     if request.method == 'POST':
         personal_details_form = PersonalDetailsForm(request.POST, request.FILES)
-
         if personal_details_form.is_valid():
             personal_details = personal_details_form.save(commit=False)
-            personal_details.user = request.user  # Link to the current user
+            personal_details.user = user
             personal_details.perso_fill = True
             personal_details.save()
-            return redirect('matrimony:familydetails')  # Redirect to a success page
+            return redirect('matrimony:familydetails')  # Move to the next form
 
     else:
         personal_details_form = PersonalDetailsForm()
-        print(personal_details_form.errors)
 
     return render(request, 'matrimony/personaldetails.html', {'personal_details_form': personal_details_form})
 
@@ -46,102 +53,105 @@ def personaldetailsview(request):
 
 
 
-@login_required  # Use the login_required decorator to ensure the user is logged in
+@login_required
 def familydetailsview(request):
-    form_errors = None  # Initialize the form_errors variable
+    user = request.user
+
+    # Check if the FamilyDetails form is already filled
+    if FamilyDetails.objects.filter(user=user, famil_fill=True).exists():
+        # FamilyDetails form is already filled, move to the next form
+        return redirect('matrimony:educationaldetails')
 
     if request.method == 'POST':
         family_details_form = FamilyDetailsForm(request.POST)
         if family_details_form.is_valid():
             family_details = family_details_form.save(commit=False)
-
-            # You can directly set the user field to the current user
-            family_details.user = request.user
-
+            family_details.user = user
             family_details.famil_fill = True
             family_details.save()
-            return redirect('matrimony:educationaldetails')  # Redirect to a success page
-        else:
-            print(family_details_form.errors)  # Get form errors
+            return redirect('matrimony:educationaldetails')  # Move to the next form
 
     else:
         family_details_form = FamilyDetailsForm()
 
-    return render(request, 'matrimony/familydetails.html', {'family_details_form': family_details_form, 'form_errors': form_errors})
+    return render(request, 'matrimony/familydetails.html', {'family_details_form': family_details_form})
 
 
 
 
+@login_required
 def educationaldetailsview(request):
-    form_errors = None  
+    user = request.user
+
+    # Check if the EducationalDetails form is already filled
+    if EducationalDetails.objects.filter(user=user, educ_fill=True).exists():
+        # EducationalDetails form is already filled, move to the next form
+        return redirect('matrimony:employmentdetails')
 
     if request.method == 'POST':
         educational_details_form = EducationalDetailsForm(request.POST)
         if educational_details_form.is_valid():
             educational_details = educational_details_form.save(commit=False)
-
-            
-            educational_details.user = request.user
-
+            educational_details.user = user
             educational_details.educ_fill = True
             educational_details.save()
-            return redirect('matrimony:employmentdetails')  
-        else:
-            print(educational_details_form.errors)  
+            return redirect('matrimony:employmentdetails')  # Move to the next form
 
     else:
         educational_details_form = EducationalDetailsForm()
 
-    return render(request, 'matrimony/educationaldetails.html', {'educational_details_form': educational_details_form, 'form_errors': form_errors})
+    return render(request, 'matrimony/educationaldetails.html', {'educational_details_form': educational_details_form})
 
 
 
 
+@login_required
 def employmentdetailsview(request):
-    form_errors = None
+    user = request.user
+
+    # Check if the EmploymentDetails form is already filled
+    if EmploymentDetails.objects.filter(user=user, empl_fill=True).exists():
+        # EmploymentDetails form is already filled, move to the next form
+        return redirect('matrimony:locationdetails')
 
     if request.method == 'POST':
         employment_details_form = EmploymentDetailsForm(request.POST)
         if employment_details_form.is_valid():
             employment_details = employment_details_form.save(commit=False)
-
-            employment_details.user = request.user
-
+            employment_details.user = user
             employment_details.empl_fill = True
             employment_details.save()
-            return redirect('matrimony:locationdetails')
-        else:
-            print(employment_details_form.errors)
+            return redirect('matrimony:locationdetails')  # Move to the next form
 
     else:
         employment_details_form = EmploymentDetailsForm()
 
-    return render(request, 'matrimony/employmentdetails.html', {'employment_details_form': employment_details_form, 'form_errors': form_errors})
+    return render(request, 'matrimony/employmentdetails.html', {'employment_details_form': employment_details_form})
 
 
 
-
+@login_required
 def locationdetailsview(request):
-    form_errors = None
+    user = request.user
+
+    # Check if the LocationDetails form is already filled
+    if LocationDetails.objects.filter(user=user, loca_fill=True).exists():
+        # LocationDetails form is already filled, redirect to the home page
+        return redirect('home')
 
     if request.method == 'POST':
-        location_details_form = LocationDetailsForm(request.POST, request.FILES)  # Note the use of request.FILES for file upload
+        location_details_form = LocationDetailsForm(request.POST, request.FILES)
         if location_details_form.is_valid():
             location_details = location_details_form.save(commit=False)
-
-            location_details.user = request.user
-
+            location_details.user = user
             location_details.loca_fill = True
             location_details.save()
-            return redirect('matrimony:success_page')
-        else:
-            print(location_details_form.errors)
-            form_errors = location_details_form.errors  # Store the form errors
+            return redirect('home')  # All forms are filled, redirect to the home page
 
     else:
         location_details_form = LocationDetailsForm()
 
-    return render(request, 'matrimony/locationdetails.html', {'location_details_form': location_details_form, 'form_errors': form_errors})
+    return render(request, 'matrimony/locationdetails.html', {'location_details_form': location_details_form})
 
 
 
