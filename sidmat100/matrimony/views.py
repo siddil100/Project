@@ -162,6 +162,9 @@ def locationdetailsview(request):
 from django.shortcuts import render, redirect
 from .models import PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
 
+from django.shortcuts import render, redirect
+from .models import PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
+
 def homeview(request):
     user = request.user
 
@@ -175,7 +178,17 @@ def homeview(request):
     ]):
         personal_details = PersonalDetails.objects.get(user=user)
         profile_image_url = personal_details.profile_image.url
-        return render(request, 'matrimony/home.html', {'profile_image_url': profile_image_url})
+
+        # Determine the opposite gender
+        if personal_details.gender == 'male':
+            opposite_gender = 'female'
+        else:
+            opposite_gender = 'male'
+
+        # Get a list of user profiles (excluding the currently logged-in user) based on gender
+        profiles = PersonalDetails.objects.filter(perso_fill=True, gender=opposite_gender).exclude(user=user)
+        
+        return render(request, 'matrimony/home.html', {'profile_image_url': profile_image_url, 'profiles': profiles})
 
     # Redirect to the first unfilled form
     if not PersonalDetails.objects.filter(user=user, perso_fill=True).exists():
@@ -188,6 +201,7 @@ def homeview(request):
         return redirect('matrimony:employmentdetails')
     elif not LocationDetails.objects.filter(user=user, loca_fill=True).exists():
         return redirect('matrimony:locationdetails')
+
 
 
 

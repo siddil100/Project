@@ -31,9 +31,14 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         
         if user is not None:
-            login(request, user)
-            request.session['suser'] = user.username  # Store the user's username in the 'suser' session
-            return redirect('matrimony:personaldetails')
+            if user.is_superuser:
+                login(request, user)
+                request.session['suser'] = user.username  # Store the user's username in the 'suser' session
+                return redirect('myadmin:myadmin')  # Redirect superuser to custom admin panel
+            else:
+                login(request, user)
+                request.session['suser'] = user.username  # Store the user's username in the 'suser' session
+                return redirect('matrimony:personaldetails')  # Redirect non-superusers to personaldetails
         else:
             messages.info(request, 'Username or Password is Incorrect')
     

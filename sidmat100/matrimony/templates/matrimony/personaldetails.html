@@ -14,6 +14,18 @@
 
     <!-- Include jQuery UI JavaScript (for the date picker) -->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+    <style>
+        /* Add CSS styles for the form indicator */
+        .form-indicator {
+            background-color: #007BFF; /* Background color */
+            color: #fff; /* Text color */
+            padding: 10px; /* Spacing around the text */
+            border-radius: 5px; /* Rounded corners */
+            margin-bottom: 20px; /* Spacing below the indicator */
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -41,7 +53,11 @@
         </div>
     </nav>
 
-    
+    <div class="container mt-5">
+        
+        <div class="form-group">
+            <strong><em>Form 1 of 5</em></strong>
+        </div>
         
         <div class="container mt-5">
             <h2>Personal Details</h2>
@@ -148,6 +164,11 @@
                         <option value="punjabi">Punjabi</option>
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label for="Address">Address:</label>
+                    <textarea class="form-control" id="address" name="address" rows="3" placeholder="Enter your Address"></textarea>
+                </div>
     
                 
     
@@ -216,11 +237,13 @@
             // Initialize the date picker
             $("#birthdate").datepicker({
                 changeYear: true,
-                yearRange: "-100:+0",
+                yearRange: "1970:2005", // Restrict year selection from 1905 to 2005
                 dateFormat: "yy-mm-dd",
                 maxDate: 0
             });
-    
+        
+           
+        
             // Phone number input
             var phoneInput = $("#phone");
             var errorContainer = phoneInput.parent().find('.error-message');

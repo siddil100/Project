@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "accounts",
     "matrimony",
+    "myadmin",
     
 
 ]
@@ -153,6 +154,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'kdoxigen@gmail.com'
-EMAIL_HOST_PASSWORD = 'rrvnojnzayzkywix'
-DEFAULT_FROM_EMAIL = 'sidmatrimonial@gmail.com'
+EMAIL_HOST_USER = 'dreamwedofficials@gmail.com'
+EMAIL_HOST_PASSWORD = 'kkwq tpuh elon jncm'

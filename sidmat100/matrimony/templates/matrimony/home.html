@@ -6,12 +6,22 @@
     <title>Dream Wed</title>
     <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+
+    <style>
+        .card-img-fixed-height {
+            height: 200px; /* Adjust the height as needed */
+            object-fit: cover;
+        }
+    </style>
+    
+    
 </head>
 <body>
 
 <!-- Navigation Bar -->
 <!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f0f0f0;">
     <a class="navbar-brand" href="#">DreamWed</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -47,12 +57,30 @@
 </nav>
 
 <div class="container mt-5">
-    <h1>Welcome to the Matrimonial Website</h1>
-    <!-- Add more content as needed -->
+    
+
+    <div class="row">
+        {% for profile in profiles %} <!-- Assuming 'profiles' contains the list of user profiles -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card">
+                <img src="{{ profile.user.personaldetails.profile_image.url }}" class="card-img-top card-img-fixed-height" alt="Profile Picture">
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ profile.user.personaldetails.first_name }} {{ profile.user.personaldetails.last_name }}</h5>
+                    <p class="card-text">Age: {{ profile.user.personaldetails.calculate_age }}</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn btn-primary">View More Details</a>
+                    <a href="#" class="btn btn-success">Send Interest</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 
 <!-- Footer -->
-<footer class="bg-dark text-white text-center py-3">
+<footer class="bg-light text-white text-center py-3">
     &copy; 2023 Matrimonial Website
 </footer>
 
