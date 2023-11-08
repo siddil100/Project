@@ -20,7 +20,7 @@ html {
   width: 350px;
   height: 550px; /* Increased height */
   margin: auto; /* Center horizontally and vertically */
-  background: #74cfbf;
+  background: #1f171f;
   position: relative;
   display: flex;
   justify-content: center;
@@ -149,11 +149,13 @@ html {
         
             <div class="mt-4">
               <div class="d-flex justify-content-center links">
-                Don't have an account? <a href="{% url 'accounts:register' %}" class="ml-2">Sign Up</a>
+                  <span style="color: white;">Don't have an account?</span> <a href="{% url 'accounts:register' %}" class="ml-2">Sign Up</a>
               </div>
               <div class="d-flex justify-content-center links">
-                Don't remember your password? <a href="{% url 'password_reset' %}" class="ml-2">get password</a>
+                  <span style="color: white;">Don't remember your password?</span> <a href="{% url 'password_reset' %}" class="ml-2">get password</a>
               </div>
+          </div>
+          
           
             </div>
           </div>

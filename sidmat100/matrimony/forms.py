@@ -12,7 +12,14 @@ from .models import LocationDetails
 class PersonalDetailsForm(forms.ModelForm):
     class Meta:
         model = PersonalDetails
-        fields = ['first_name', 'last_name', 'middle_name', 'gender', 'birth_place', 'date_of_birth', 'blood_group', 'phone_number', 'profile_image', 'mother_tongue', 'religion', 'sector', 'marital_status','about_you']
+        fields = ['first_name', 'last_name', 'middle_name', 'gender', 'birth_place', 'date_of_birth', 'blood_group', 'phone_number', 'profile_image', 'mother_tongue', 'religion', 'sector', 'marital_status','about_you', 'address', 'aadhar_card']
+
+
+
+class PersonalDetailsUpdateForm(PersonalDetailsForm):
+    class Meta:
+        model = PersonalDetails
+        exclude = ['user', 'date_of_birth', 'gender', 'mother_tongue', 'blood_group', 'phone_number','perso_fill']
 
 
 

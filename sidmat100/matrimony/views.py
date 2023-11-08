@@ -165,6 +165,11 @@ from .models import PersonalDetails, FamilyDetails, EducationalDetails, Employme
 from django.shortcuts import render, redirect
 from .models import PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
+
+@login_required
 def homeview(request):
     user = request.user
 
@@ -180,15 +185,33 @@ def homeview(request):
         profile_image_url = personal_details.profile_image.url
 
         # Determine the opposite gender
-        if personal_details.gender == 'male':
-            opposite_gender = 'female'
-        else:
-            opposite_gender = 'male'
+        opposite_gender = 'female' if personal_details.gender == 'male' else 'male'
 
         # Get a list of user profiles (excluding the currently logged-in user) based on gender
         profiles = PersonalDetails.objects.filter(perso_fill=True, gender=opposite_gender).exclude(user=user)
-        
-        return render(request, 'matrimony/home.html', {'profile_image_url': profile_image_url, 'profiles': profiles})
+
+        # Retrieve the employment details for each profile
+        employment_details = []
+        location_details = []
+
+        for profile in profiles:
+            try:
+                employment = EmploymentDetails.objects.get(user=profile.user)
+                location = LocationDetails.objects.get(user=profile.user)
+                employment_details.append(employment)
+                location_details.append(location)
+            except (EmploymentDetails.DoesNotExist, LocationDetails.DoesNotExist):
+                # Handle the case where a profile doesn't have employment or location details
+                employment_details.append(None)
+                location_details.append(None)
+
+        # Pair profiles with their employment and location details
+        profiles_info = zip(profiles, employment_details, location_details)
+
+        return render(request, 'matrimony/home.html', {
+            'profile_image_url': profile_image_url,
+            'profiles_info': profiles_info,
+        })
 
     # Redirect to the first unfilled form
     if not PersonalDetails.objects.filter(user=user, perso_fill=True).exists():
@@ -201,6 +224,94 @@ def homeview(request):
         return redirect('matrimony:employmentdetails')
     elif not LocationDetails.objects.filter(user=user, loca_fill=True).exists():
         return redirect('matrimony:locationdetails')
+    
+
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import User, PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
+
+def user_detail(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+
+    personal_details = get_object_or_404(PersonalDetails, user=user)
+    family_details = get_object_or_404(FamilyDetails, user=user)
+    educational_details = get_object_or_404(EducationalDetails, user=user)
+    employment_details = get_object_or_404(EmploymentDetails, user=user)
+    location_details = get_object_or_404(LocationDetails, user=user)
+
+    return render(request, 'matrimony/user_detail.html', {
+        'user': user,
+        'personal_details': personal_details,
+        'family_details': family_details,
+        'educational_details': educational_details,
+        'employment_details': employment_details,
+        'location_details': location_details,
+    })
+
+
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
+
+@login_required
+def myprofileview(request):
+    # Retrieve all the user's profile information
+    user = request.user
+    personal_details = PersonalDetails.objects.get(user=user)
+    family_details = FamilyDetails.objects.get(user=user)
+    educational_details = EducationalDetails.objects.get(user=user)
+    employment_details = EmploymentDetails.objects.get(user=user)
+    location_details = LocationDetails.objects.get(user=user)
+
+    context = {
+        'user': user,
+        'personal_details': personal_details,
+        'family_details': family_details,
+        'educational_details': educational_details,
+        'employment_details': employment_details,
+        'location_details': location_details,
+    }
+
+    return render(request, 'matrimony/my_profile.html', context)
+
+
+
+from django.shortcuts import render, redirect
+
+
+from .forms import PersonalDetailsUpdateForm  # Import the update form
+
+from django.db import IntegrityError  # Import the specific exception if needed
+
+def update_personaldetails(request):
+    personal_details = PersonalDetails.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        form = PersonalDetailsUpdateForm(request.POST, request.FILES, instance=personal_details)
+        if form.is_valid():
+            try:
+                form.save()
+                return redirect('matrimony:myprofile')
+            except IntegrityError as e:
+                print(f"Error saving form: {e}")
+        else:
+            print(form.errors)
+
+    else:
+        form = PersonalDetailsUpdateForm(instance=personal_details)
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'matrimony/update_personaldetails.html', context)
+
+
+
+
+
 
 
 

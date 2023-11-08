@@ -176,6 +176,7 @@
                                     <td>Profile_Image</td>
                                     <td>Address</td>
                                     <td>Email</td>
+                                    <td>Adhaar</td>
                                     <td>Status</td>
                                     <td>Action</td>
                                 </tr>
@@ -191,6 +192,14 @@
                                         </td>
                                         <td>{{ user.personaldetails.address }}</td>
                                         <td>{{ user.email }}</td>
+                                        <td>
+                                            {% if user.personaldetails.aadhar_card %}
+                                                <a href="{{ user.personaldetails.aadhar_card.url }}" target="_blank" class="aadhar-button">View Aadhar</a>
+                                            {% else %}
+                                                No Aadhar Card Uploaded
+                                            {% endif %}
+                                        </td>
+                                        
                                         <td>
                                             {% if user.is_active %}
                                                 <span class="status delivered">Active</span>

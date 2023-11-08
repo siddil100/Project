@@ -35,7 +35,7 @@
                 <a class="nav-link" href="#">Search</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">My Profile</a>
+                <a class="nav-link" href="{% url 'matrimony:myprofile' %}">My Profile</a>
             </li>
         </ul>
         <!-- Profile Picture and Username -->
@@ -46,7 +46,7 @@
                     {{ request.user.username }} <!-- Display the username from the session -->
                 </a>
                 <div class="dropdown-menu" aria-labelledby="profileDropdown">
-                    <a class="dropdown-item" href="#">My Profile</a>
+                    <a class="dropdown-item" href="{% url 'matrimony:myprofile' %}">My Profile</a>
                     <a class="dropdown-item" href="#">Settings</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
@@ -57,20 +57,23 @@
 </nav>
 
 <div class="container mt-5">
-    
-
     <div class="row">
-        {% for profile in profiles %} <!-- Assuming 'profiles' contains the list of user profiles -->
+        {% for profile, employment, location in profiles_info %}
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card">
                 <img src="{{ profile.user.personaldetails.profile_image.url }}" class="card-img-top card-img-fixed-height" alt="Profile Picture">
-
                 <div class="card-body">
-                    <h5 class="card-title">{{ profile.user.personaldetails.first_name }} {{ profile.user.personaldetails.last_name }}</h5>
+                    <h5 class="card-title">{{ profile.user.personaldetails.first_name|title }} {{ profile.user.personaldetails.last_name|title }}</h5>
                     <p class="card-text">Age: {{ profile.user.personaldetails.calculate_age }}</p>
+                    <p class="card-text">Caste: {{ profile.user.personaldetails.religion }}</p>
+                    <p class="card-text">Profession: {{ employment.occupation }}</p>
+                    <p class="card-text">Current City: {{ location.current_city }}</p>  <!-- Access the current city of the profile -->
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="btn btn-primary">View More Details</a>
+                    <a href="{% url 'matrimony:user_detail' user_id=profile.user.id %}" class="btn btn-primary">View Details</a>
+
+
+
                     <a href="#" class="btn btn-success">Send Interest</a>
                 </div>
             </div>

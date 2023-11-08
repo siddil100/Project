@@ -1,4 +1,6 @@
+
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,7 +17,6 @@
     <!-- Include jQuery UI JavaScript (for the date picker) -->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-
     <style>
         /* Add CSS styles for the form indicator */
         .form-indicator {
@@ -25,208 +26,299 @@
             border-radius: 5px; /* Rounded corners */
             margin-bottom: 20px; /* Spacing below the indicator */
         }
+
+        /* Style the container */
+        .container {
+            margin-top: 30px;
+            border: 1px solid #333; /* Darker border color */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Style form fields and labels */
+        .form-group label {
+            font-weight: bold;
+        }
+
+        /* Style submit button */
+        .btn-primary {
+            background-color: #007BFF;
+            border: none;
+        }
+
+        /* Add custom styling to error message */
+        .error-messagephone {
+            color: #f00;
+        }
+
+        .error-message {
+            color: #f00; /* Red color for error messages */
+        }
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">DreamWed</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                
-                {% if request.session.suser %}
-                <li class="nav-item">
-                    <span class="navbar-text">Welcome, {{ request.session.suser }}</span>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
-                </li>
-            {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <div class="container mt-5">
-        
-        <div class="form-group">
+    <div class="container">
+        <div >
             <strong><em>Form 1 of 5</em></strong>
         </div>
-        
-        <div class="container mt-5">
-            <h2>Personal Details</h2>
-            <!-- Your form goes here -->
-            <form method="post" action="{% url 'matrimony:personaldetails' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="firstName">First Name</label>
-                    <input type="text" class="form-control" id="firstName" name="first_name" placeholder="Enter your first name" required>
-                </div>
-    
-                <div class="form-group">
-                    <label for="middleName">Middle Name</label>
-                    <input type="text" class="form-control" id="middleName" name="middle_name" placeholder="Enter your middle name">
-                </div>
-    
+
+        <h2>Personal Details</h2>
+        <form method="post" action="{% url 'matrimony:personaldetails' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" id="firstName" name="first_name" placeholder="Enter your first name" required
+                    oninput="validateFirstName(this)">
+                <div class="error-message" id="firstNameError"></div>
+            </div>
+            
+
+            <div class="form-group">
+                <label for="middleName">Middle Name</label>
+                <input type="text" class="form-control" id="middleName" name="middle_name" placeholder="Enter your middle name">
+                <div class="error-message"></div>
+            </div>
+            
+
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Enter your last name" oninput="validateLastName(this)" required>
+                <div class="error-message" id="lastNameError"></div>
+            </div>
+            
+
+            <div class="form-group">
+                <label for="religion">Religion:</label>
+                <select id="religion" name="religion" class="form-control">
+                    <option value="" disabled selected>Select a Religion</option>
+                    <option value="christian">Christian</option>
+                    <option value="hindu">Hindu</option>
+                    <option value="islam">Islam</option>
+                    <!-- Add more religion options here -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="sector">Sector:</label>
+                <select id="sector" name="sector" class="form-control">
+                    <option value="" disabled selected>Select a sector</option>
+                    <!-- Options in this dropdown will be populated dynamically based on the selected religion -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select class="form-control" id="gender" name="gender">
+                    <option value="" disabled selected>Select a Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="birthPlace">Birth-Place</label>
+                <select class="form-control" id="birthPlace" name="birth_place">
+                    <option value="" disabled selected>Select your Birth-Place</option>
+                    <option value="andhra pradesh">Andhra Pradesh</option>
+                    <option value="arunachal pradesh">Arunachal Pradesh</option>
+                    <option value="assam">Assam</option>
+                    <option value="bihar">Bihar</option>
+                    <option value="chhattisgarh">Chhattisgarh</option>
+                    <option value="goa">Goa</option>
+                    <option value="gujarat">Gujarat</option>
+                    <option value="haryana">Haryana</option>
+                    <option value="himachal pradesh">Himachal Pradesh</option>
+                    <option value="jammu and kashmir">Jammu and Kashmir</option>
+                    <option value="jharkhand">Jharkhand</option>
+                    <option value="karnataka">Karnataka</option>
+                    <option value="kerala">Kerala</option>
+                    <option value="madhya pradesh">Madhya Pradesh</option>
+                    <option value="maharashtra">Maharashtra</option>
+                    <option value="manipur">Manipur</option>
+                    <option value="meghalaya">Meghalaya</option>
+                    <option value="mizoram">Mizoram</option>
+                    <option value="nagaland">Nagaland</option>
+                    <option value="odisha">Odisha</option>
+                    <option value="punjab">Punjab</option>
+                    <option value="rajasthan">Rajasthan</option>
+                    <option value="sikkim">Sikkim</option>
+                    <option value="tamil nadu">Tamil Nadu</option>
+                    <option value="telangana">Telangana</option>
+                    <option value="tripura">Tripura</option>
+                    <option value="uttar pradesh">Uttar Pradesh</option>
+                    <option value="uttarakhand">Uttarakhand</option>
+                    <option value="west bengal">West Bengal</option>
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="motherTongue">Mother Tongue</label>
                 
 
-                <div class="form-group">
-                    <label for="middleName">Last Name</label>
-                    <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Enter your last name" required>
-                </div>
-    
-                <div class="form-group">
-                    <label for="religion">Religion:</label>
-                    <select id="religion" name="religion" class="form-control">
-                        <option value="" disabled selected>Select a Religion</option>
-                        <option value="christian">Christian</option>
-                        <option value="hindu">Hindu</option>
-                        <option value="islam">Islam</option>
-                        <!-- Add more religion options here -->
-                    </select>
-                </div>
-    
-                <div class="form-group">
-                    <label for="sector">Sector:</label>
-                    <select id="sector" name="sector" class="form-control">
-                        <option value="" disabled selected>Select a sector</option>
-                        <!-- Options in this dropdown will be populated dynamically based on the selected religion -->
-                    </select>
-                </div>
-    
-                <div class="form-group">
-                    <label for="gender">Gender</label>
-                    <select class="form-control" id="gender" name="gender">
-                        <option value="" disabled selected>Select a Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
-                </div>
+                <select class="form-control" id="motherTongue" name="mother_tongue">
+                    <option value="" disabled selected>Select your Mother Tongue</option>
+                    <option value="telugu">Telugu</option>
+                    <option value="tamil">Tamil</option>
+                    <option value="kannada">Kannada</option>
+                    <option value="malayalam">Malayalam</option>
+                    <option value="hindi">Hindi</option>
+                    <option value="bengali">Bengali</option>
+                    <option value="marathi">Marathi</option>
+                    <option value="gujarati">Gujarati</option>
+                    <option value="odia">Odia</option>
+                    <option value="punjabi">Punjabi</option>
+                </select>
+            </div>
 
-                <div class="form-group">
-                    <label for="birthPlace">Birth-Place</label>
-                    <select class="form-control" id="birthPlace" name="birth_place">
-                        <option value="" disabled selected>Select your Birth-Place</option>
-                        <option value="andhra pradesh">Andhra Pradesh</option>
-                        <option value="arunachal pradesh">Arunachal Pradesh</option>
-                        <option value="assam">Assam</option>
-                        <option value="bihar">Bihar</option>
-                        <option value="chhattisgarh">Chhattisgarh</option>
-                        <option value="goa">Goa</option>
-                        <option value="gujarat">Gujarat</option>
-                        <option value="haryana">Haryana</option>
-                        <option value="himachal pradesh">Himachal Pradesh</option>
-                        <option value="jammu and kashmir">Jammu and Kashmir</option>
-                        <option value="jharkhand">Jharkhand</option>
-                        <option value="karnataka">Karnataka</option>
-                        <option value="kerala">Kerala</option>
-                        <option value="madhya pradesh">Madhya Pradesh</option>
-                        <option value="maharashtra">Maharashtra</option>
-                        <option value="manipur">Manipur</option>
-                        <option value="meghalaya">Meghalaya</option>
-                        <option value="mizoram">Mizoram</option>
-                        <option value="nagaland">Nagaland</option>
-                        <option value="odisha">Odisha</option>
-                        <option value="punjab">Punjab</option>
-                        <option value="rajasthan">Rajasthan</option>
-                        <option value="sikkim">Sikkim</option>
-                        <option value="tamil nadu">Tamil Nadu</option>
-                        <option value="telangana">Telangana</option>
-                        <option value="tripura">Tripura</option>
-                        <option value="uttar pradesh">Uttar Pradesh</option>
-                        <option value="uttarakhand">Uttarakhand</option>
-                        <option value="west bengal">West Bengal</option>
-                    </select>
-                </div>
+            <div class="form-group">
+                <label for="Address">Address:</label>
+                <textarea class="form-control" id="address" name="address" rows="3" placeholder="Enter your Address" oninput="validateAddress(this)"></textarea>
+                <div class="error-message" id="addressError"></div>
+            </div>
+            
 
+            
 
-                <div class="form-group">
-                    <label for="motherTongue">Mother Tongue</label>
+            <div class="form-group">
+                <label for="birthdate">Date of Birth</label>
+                <input type="text" class="form-control" id="birthdate" name="date_of_birth" placeholder="Select your date of birth" required>
+            </div>
+
+            <div class="form-group">
+                <label for="bloodGroup">Blood Group</label>
+                <select class="form-control" id="bloodGroup" name="blood_group">
+                    <option value="" disabled selected>Select a Blood Group</option>
+                    <option value="a+">A+</option>
+                    <option value="a-">A-</option>
+                    <option value="b+">B+</option>
+                    <option value="b-">B-</option>
+                    <option value="ab+">AB+</option>
+                    <option value="ab-">AB-</option>
+                    <option value="o+">O+</option>
+                    <option value="o-">O-</option>
                     
+                </select>
+            </div>
+            
 
-                    <select class="form-control" id="motherTongue" name="mother_tongue">
-                        <option value="" disabled selected>Select your Mother Tongue</option>
-                        <option value="telugu">Telugu</option>
-                        <option value="tamil">Tamil</option>
-                        <option value="kannada">Kannada</option>
-                        <option value="malayalam">Malayalam</option>
-                        <option value="hindi">Hindi</option>
-                        <option value="bengali">Bengali</option>
-                        <option value="marathi">Marathi</option>
-                        <option value="gujarati">Gujarati</option>
-                        <option value="odia">Odia</option>
-                        <option value="punjabi">Punjabi</option>
-                    </select>
-                </div>
 
-                <div class="form-group">
-                    <label for="Address">Address:</label>
-                    <textarea class="form-control" id="address" name="address" rows="3" placeholder="Enter your Address"></textarea>
-                </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" class="form-control" id="phone" name="phone_number" placeholder="Enter your phone number">
+                <div class="error-messagephone"></div>
+            </div>
+            
+
+            <div class="form-group">
+                <label for="martitalstatus">Marital Status</label>
+                <select class="form-control" id="maritalstatus" name="marital_status">
+                    <option value="" disabled selected>Select a Gender</option>
+                    <option value="unmarried">Unmarried</option>
+                    
+                    <option value="widowed">Widowed</option>
+                    <option value="divorced">Divorced</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="aboutyourself">About Yourself:</label>
+                <textarea class="form-control" id="aboutyou" name="about_you" rows="3" placeholder="Tell us something about you" oninput="validateAboutYourself(this)"></textarea>
+                <div class="error-message" id="aboutyouError"></div>
+            </div>
+            
+
+            <div class="form-group">
+                <label for="profileImage">Profile Image</label>
+                <input type="file" class="form-control" id="profileImage" name="profile_image" accept="image/*">
+            </div>
+
+            <div class="form-group">
+                <label for="pdfFile">Upload Aadhar Card (PDF):</label>
+                <input type="file" class="form-control-file" id="pdfFile" name="aadhar_card" accept=".pdf">
+            </div>
+            
+
+            
+            <button type="submit" class="btn btn-primary">Save Next</button>
+        </form>
+    </div>
+    
+
+    <!-- Include Bootstrap JS (optional) -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            // Initialize the date picker
+            $("#birthdate").datepicker({
+                changeYear: true,
+                yearRange: "1970:2005", // Restrict year selection from 1905 to 2005
+                dateFormat: "yy-mm-dd",
+                maxDate: 0
+            });
+
+            // Phone number input
+            var phoneInput = $("#phone");
+            var errorContainer = phoneInput.parent().find('.error-messagephone');
+
+            phoneInput.on('input', function () {
+                var phoneNumber = $(this).val();
+                if (phoneNumber) {
+                    // Get the CSRF token
+                    var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+
+                    // Make an AJAX request to check phone number existence
+                    $.ajax({
+                        url: "{% url 'matrimony:checkphone' %}",
+                        type: "POST",
+                        data: {
+                            phone_number: phoneNumber
+                        },
+                        headers: {
+                            "X-CSRFToken": csrfToken  // Include the CSRF token in the headers
+                        },
+                        success: function (data) {
+                            if (data.exists) {
+                                errorContainer.text('Phone number already exists.');
+                            } else {
+                                errorContainer.text('');
+                            }
+                        },
+                        error: function () {
+                            // Handle the error
+                        }
+                    });
+                } else {
+                    errorContainer.text('Phone number is required.');
+                }
+            });
+        });
+    </script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const phoneInput = document.getElementById('phone');
+            const errorContainer = document.querySelector('.error-messagephone');
+        
+            phoneInput.addEventListener('input', function () {
+                const phoneNumber = phoneInput.value;
+                const isValid = /^\d{10}$/.test(phoneNumber);
+        
+                if (isValid) {
+                    errorContainer.textContent = ''; // Clear any error message
+                } else {
+                    errorContainer.textContent = 'Please enter a 10-digit numeric phone number with no alphabets.';
+                }
+            });
+        });
+        </script>
+</body>
+</html>
+
     
                 
-    
-                <div class="form-group">
-                    <label for="birthdate">Date of Birth</label>
-                    <input type="text" class="form-control" id="birthdate" name="date_of_birth" placeholder="Select your date of birth" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="bloodGroup">Blood Group</label>
-                    <select class="form-control" id="bloodGroup" name="blood_group">
-                        <option value="" disabled selected>Select a Blood Group</option>
-                        <option value="a+">A+</option>
-                        <option value="a-">A-</option>
-                        <option value="b+">B+</option>
-                        <option value="b-">B-</option>
-                        <option value="ab+">AB+</option>
-                        <option value="ab-">AB-</option>
-                        <option value="o+">O+</option>
-                        <option value="o-">O-</option>
-                        
-                    </select>
-                </div>
-                
-
-    
-                <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" class="form-control" id="phone" name="phone_number" placeholder="Enter your phone number" required>
-                    <div class="error-message"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="gender">Marital Status</label>
-                    <select class="form-control" id="maritalstatus" name="marital_status">
-                        <option value="" disabled selected>Select a Gender</option>
-                        <option value="unmarried">Unmarried</option>
-                        <option value="married">Married</option>
-                        <option value="widowed">Widowed</option>
-                        <option value="divorced">Divorced</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="aboutyourself">About Yourself:</label>
-                    <textarea class="form-control" id="aboutyou" name="about_you" rows="3" placeholder="Tell us something about you"></textarea>
-                </div>
-
-    
-                <div class="form-group">
-                    <label for="profileImage">Profile Image</label>
-                    <input type="file" class="form-control" id="profileImage" name="profile_image" accept="image/*">
-                </div>
-    
-                
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-        </div>
 
     
 
@@ -325,7 +417,108 @@
             updateSectorOptions();
         </script>
         
+        <script>
+            function validateFirstName(input) {
+                const firstName = input.value;
+                const errorContainer = document.getElementById("firstNameError");
+        
+                // Regular expression for letters only
+                const lettersOnly = /^[A-Za-z]+$/;
+        
+                if (firstName.length < 3) {
+                    errorContainer.textContent = "First Name should be at least 3 characters.";
+                } else if (firstName.length > 15) {
+                    errorContainer.textContent = "First Name should be at most 15 characters.";
+                } else if (!firstName.match(lettersOnly)) {
+                    errorContainer.textContent = "First Name should contain only letters.";
+                } else {
+                    errorContainer.textContent = ""; // Clear any error message
+                }
+            }
+            function validateLastName(input) {
+                const lastName = input.value;
+                const errorContainer = document.getElementById("lastNameError");
+            
+                // Regular expression for letters only
+                const lettersOnly = /^[A-Za-z]+$/;
+            
+                if (lastName.length < 3) {
+                    errorContainer.textContent = "Last Name should be at least 3 characters.";
+                } else if (lastName.length > 15) {
+                    errorContainer.textContent = "Last Name should be at most 15 characters.";
+                } else if (!lastName.match(lettersOnly)) {
+                    errorContainer.textContent = "Last Name should contain only letters.";
+                } else {
+                    errorContainer.textContent = ""; // Clear any error message
+                }
+            }
+            
+            
+        </script>
 
+        
+        
+<script>
+
+
+   // Add this script after your jQuery script
+$(document).ready(function () {
+    $("#middleName").on('input', function () {
+        var middleName = $(this).val();
+        var errorContainer = $(this).parent().find('.error-message');
+        
+        if (middleName.length > 0) {
+            // Add your validation logic here
+            var isValid = /^[A-Za-z]{1,15}$/.test(middleName); // Only letters (no spaces) allowed, up to 15 characters
+            
+            if (!isValid) {
+                errorContainer.text('Middle name should only contain letters (no spaces) and be up to 15 characters.');
+            } else {
+                errorContainer.text('');
+            }
+        } else {
+            errorContainer.text(''); // Clear error message when the field is empty
+        }
+    });
+});
+
+
+</script>
+
+
+<script>
+    function validateAddress(input) {
+        const address = input.value;
+        const errorContainer = document.getElementById("addressError");
+        const validPattern = /^[A-Za-z\s]+$/; // Only characters and spaces allowed
+    
+        if (address.length === 0) {
+            errorContainer.textContent = "Address cannot be empty.";
+        } else if (address.length > 60) {
+            errorContainer.textContent = "Address should be less than 60 characters.";
+        } else if (!address.match(validPattern)) {
+            errorContainer.textContent = "Only characters and spaces are allowed.";
+        } else {
+            errorContainer.textContent = ""; // Clear any error message
+        }
+    }
+    
+
+    function validateAboutYourself(input) {
+        const aboutYou = input.value;
+        const errorContainer = document.getElementById("aboutyouError");
+        const validPattern = /^[A-Za-z\s]+$/; // Only characters and spaces allowed
+    
+        if (aboutYou.length > 80) {
+            errorContainer.textContent = "About Yourself should be less than 80 characters.";
+        } else if (!aboutYou.match(validPattern)) {
+            errorContainer.textContent = "Only characters and spaces are allowed.";
+        } else {
+            errorContainer.textContent = ""; // Clear any error message
+        }
+    }
+    
+</script>
 
 
 

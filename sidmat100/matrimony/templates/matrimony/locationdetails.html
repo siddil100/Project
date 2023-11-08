@@ -14,49 +14,67 @@
 
     <!-- Include jQuery UI JavaScript (for the date picker) -->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <style>
+        /* Add CSS styles for the form indicator */
+        .form-indicator {
+            background-color: #007BFF; /* Background color */
+            color: #fff; /* Text color */
+            padding: 10px; /* Spacing around the text */
+            border-radius: 5px; /* Rounded corners */
+            margin-bottom: 20px; /* Spacing below the indicator */
+        }
+
+        /* Style the container */
+        .container {
+            margin-top: 30px;
+            border: 1px solid #333; /* Darker border color */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Style form fields and labels */
+        .form-group label {
+            font-weight: bold;
+        }
+
+        /* Style submit button */
+        .btn-primary {
+            background-color: #007BFF;
+            border: none;
+        }
+
+        /* Add custom styling to error message */
+        .error-messagephone {
+            color: #f00;
+        }
+
+        .error-message {
+            color: #f00; /* Red color for error messages */
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">DreamWed</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                
-                {% if request.session.suser %}
-                <li class="nav-item">
-                    <span class="navbar-text">Welcome, {{ request.session.suser }}</span>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
-                </li>
-            {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    
 
 
-    <div class="container mt-5">
+    <div class="container">
         
         <div class="form-group">
             <strong><em>Form 5 of 5</em></strong>
         </div>
 
-    <div class="container mt-5">
+    
         <h2>Location Details</h2>
         <!-- Your form goes here -->
         <form method="post" action="{% url 'matrimony:locationdetails' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
                 <label for="currentCity">Current City or Area:</label>
-                <input type="text" class="form-control" id="currentCity" name="current_city" placeholder="Enter your current city or area">
+                <input type="text" class="form-control" id="currentCity" name="current_city" placeholder="Enter your current city or area" oninput="validateCurrentCity(this)">
+                <div class="error-message" id="currentCityError"></div>
             </div>
+            
 
             <div class="form-group">
                 <label for="currentState">Current State/Region:</label>
@@ -100,8 +118,10 @@
 
             <div class="form-group">
                 <label for="currentPinCode">Pin Code/ZIP Code:</label>
-                <input type="text" class="form-control" id="currentPinCode" name="current_pin_code" placeholder="Enter your postal code">
+                <input type="text" class="form-control" id="currentPinCode" name="current_pin_code" placeholder="Enter your postal code" oninput="validateZipCode(this)">
+                <div class="error-message" id="currentPinCodeError"></div>
             </div>
+            
 
             <div class="form-group">
                 <label for="willingToMove">Willing to Move After Marriage:</label>
@@ -114,8 +134,10 @@
 
             <div class="form-group">
                 <label for="additionalComments">Additional Comments:</label>
-                <textarea class="form-control" id="additionalComments" name="additional_comments" rows="3" placeholder="Provide additional comments or details related to your location preferences or constraints"></textarea>
+                <textarea class="form-control" id="additionalComments" name="additional_comments" rows="3" placeholder="Provide additional comments or details related to your location preferences or constraints" oninput="validateAdditionalComments(this)"></textarea>
+                <div class="error-message" id="additionalCommentsError"></div>
             </div>
+            
 
             <div class="form-group">
                 <label for="locationPhotos">Location Photos (if applicable):</label>
@@ -125,5 +147,62 @@
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
+
+
+    <script>
+        function validateCurrentCity(input) {
+            const currentCity = input.value;
+            const errorContainer = document.getElementById("currentCityError");
+            const validPattern = /^[A-Za-z\s]+$/; // Only characters and spaces allowed
+        
+            if (currentCity.trim() === "") {
+                errorContainer.textContent = "Current City or Area cannot be empty.";
+            } else if (currentCity.length > 25) {
+                errorContainer.textContent = "Current City or Area should be less than 25 characters.";
+            } else if (!currentCity.match(validPattern) || /^\s/.test(currentCity) || /\s$/.test(currentCity)) {
+                errorContainer.textContent = "Only characters and spaces are allowed, and beginning/trailing spaces are not allowed.";
+            } else {
+                errorContainer.textContent = ""; // Clear any error message
+            }
+        }
+        
+
+        function validateZipCode(input) {
+            const zipCode = input.value;
+            const errorContainer = document.getElementById("currentPinCodeError");
+            const zipCodePattern = /^\d{6}$/; // Exactly 6 digits
+        
+            if (zipCode.trim() !== zipCode) {
+                errorContainer.textContent = "Leading or trailing spaces are not allowed.";
+            } else if (zipCode === "") {
+                errorContainer.textContent = "Pin Code/ZIP Code cannot be empty.";
+            } else if (!zipCode.match(zipCodePattern)) {
+                errorContainer.textContent = "Please enter a 6-digit Zip Code/Postal Code.";
+            } else {
+                errorContainer.textContent = ""; // Clear any error message
+            }
+        }
+
+        function validateAdditionalComments(input) {
+            const additionalComments = input.value;
+            const errorContainer = document.getElementById("additionalCommentsError");
+            const validPattern = /^[A-Za-z\s]+$/; // Only characters and spaces allowed
+        
+            if (additionalComments.trim() !== additionalComments) {
+                errorContainer.textContent = "Leading or trailing spaces are not allowed.";
+            } else if (additionalComments.length > 50) {
+                errorContainer.textContent = "Additional Comments should be less than 50 characters.";
+            } else if (!additionalComments.match(validPattern)) {
+                errorContainer.textContent = "Only characters and spaces are allowed.";
+            } else {
+                errorContainer.textContent = ""; // Clear any error message
+            }
+        }
+        
+        
+        
+        
+        
+    </script>
 </body>
 </html>

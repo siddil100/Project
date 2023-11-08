@@ -26,6 +26,7 @@ class PersonalDetails(models.Model):
     perso_fill = models.BooleanField(default=False)
     marital_status = models.CharField(max_length=100)
     about_you = models.TextField(blank=True)
+    aadhar_card = models.FileField(upload_to='aadhar_cards/', blank=True, null=True)  
     def calculate_age(self):
         today = date.today()
         age = today.year - self.date_of_birth.year - ((today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day))
@@ -74,7 +75,7 @@ class EmploymentDetails(models.Model):
     job_location = models.CharField(max_length=100, blank=True)
     about_job = models.TextField(blank=True)
     working_hours = models.CharField(max_length=100, blank=True)
-    linkedin_profile = models.URLField(blank=True)
+    social_link = models.URLField(blank=True)
     empl_fill = models.BooleanField(default=False)
 
 
