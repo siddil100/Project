@@ -8,6 +8,15 @@ from datetime import date
 from django.db import models
 from django.contrib.auth.models import User
 
+
+class Hobby(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+
 class PersonalDetails(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # Create a one-to-one relationship with the User model
     first_name = models.CharField(max_length=100)
@@ -26,11 +35,14 @@ class PersonalDetails(models.Model):
     perso_fill = models.BooleanField(default=False)
     marital_status = models.CharField(max_length=100)
     about_you = models.TextField(blank=True)
-    aadhar_card = models.FileField(upload_to='aadhar_cards/', blank=True, null=True)  
+    aadhar_card = models.FileField(upload_to='aadhar_cards/', blank=True, null=True)
+    hobbies = models.ManyToManyField(Hobby, blank=True,null=True)
+   
     def calculate_age(self):
         today = date.today()
         age = today.year - self.date_of_birth.year - ((today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day))
         return age
+    
 
     # Now family details
 

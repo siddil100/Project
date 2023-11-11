@@ -57,7 +57,7 @@
         }
     </style>
 </head>
-<body>
+<body style="background-color: #d4d4d4;">
     <div class="container">
         <div >
             <strong><em>Form 1 of 5</em></strong>
@@ -227,6 +227,25 @@
                 <textarea class="form-control" id="aboutyou" name="about_you" rows="3" placeholder="Tell us something about you" oninput="validateAboutYourself(this)"></textarea>
                 <div class="error-message" id="aboutyouError"></div>
             </div>
+
+
+            <div class="form-group">
+                <label>Hobbies:</label>
+                {% for hobby in hobbies %}
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="hobby{{ hobby.id }}" name="hobbies" value="{{ hobby.id }}">
+
+                        <label class="form-check-label" for="hobby{{ hobby.id }}">{{ hobby.name }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            
+            
+            
+
+            
+            
             
 
             <div class="form-group">

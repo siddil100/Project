@@ -24,7 +24,7 @@
     </style>
     
 </head>
-<body>
+<body style="background-color: #d4d4d4;">
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f0f0f0;">
         <a class="navbar-brand" href="#">DreamWed</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,6 +75,15 @@
                         <p><strong>Middle Name:</strong> {{ personal_details.middle_name }}</p>
                         <p><strong>Last Name:</strong> {{ personal_details.last_name }}</p>
                         <p><strong>Gender:</strong> {{ personal_details.gender }}</p>
+                        <p><strong>Hobbies:</strong>
+                            {% if personal_details.hobbies.all %}
+                                {% for hobby in personal_details.hobbies.all %}
+                                    {{ hobby.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                Not specified
+                            {% endif %}
+                        </p>
                         <!-- Add more personal details here -->
                     </div>
                     <div class="profile-image">
@@ -102,7 +111,7 @@
                         <!-- Add any other content for the right side of the card -->
                     </div>
                 </div>
-                <button class="btn btn-primary mt-3">Update Family Details</button>
+                <button class="btn btn-primary mt-3" onclick="location.href='{% url 'matrimony:update_familydetails' %}'">Update Educational Details</button>
             </div>
         </div>
         <!-- Educational Details Card -->
@@ -115,13 +124,14 @@
                         <p><strong>UG Degree:</strong> {{ educational_details.ug_degree }}</p>
                         <p><strong>PG Degree:</strong> {{ educational_details.pg_degree }}</p>
                         <p><strong>Doctorate Field:</strong> {{ educational_details.doctorate_field }}</p>
+                        <p><strong>College/Institution:</strong> {{ educational_details.college_institution }}</p>
                         <!-- Add more educational details here -->
                     </div>
                     <div class="col-md-6">
                         <!-- Add any other content for the right side of the card -->
                     </div>
                 </div>
-                <button class="btn btn-primary mt-3">Update Educational Details</button>
+                <button class="btn btn-primary mt-3" onclick="location.href='{% url 'matrimony:update_educationaldetails' %}'">Update Educational Details</button>
             </div>
         </div>
         <!-- Employment Details Card -->
@@ -140,7 +150,7 @@
                         <!-- Add any other content for the right side of the card -->
                     </div>
                 </div>
-                <button class="btn btn-primary mt-3">Update Employment Details</button>
+                <button class="btn btn-primary mt-3" onclick="location.href='{% url 'matrimony:update_employmentdetails' %}'">Update Employment Details</button>
             </div>
         </div>
         <!-- Location Details Card -->
@@ -159,7 +169,7 @@
                         <!-- Add any other content for the right side of the card -->
                     </div>
                 </div>
-                <button class="btn btn-primary mt-3">Update Location Details</button>
+                <button class="btn btn-primary mt-3" onclick="location.href='{% url 'matrimony:update_locationdetails' %}'">Update Employment Details</button>
                 
         </div>
     </div>

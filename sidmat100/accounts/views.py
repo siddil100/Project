@@ -5,6 +5,9 @@ from django.contrib.auth import logout, login, authenticate
 from .forms import CreateUserForm
 from django.contrib import messages
 from matrimony.models import PersonalDetails
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+
 # Create your views here.
 
 
@@ -14,6 +17,14 @@ def register(request):
         if form.is_valid():
             form.save()
             m = form.cleaned_data.get('username')
+            mymail = form.cleaned_data.get('email')
+            subject = 'Registration Confirmation'
+            message = f'Welcome to DreamWed - Your Journey of Love Begins Here! 🎉 Congratulations on Registering with Us, {m}! Explore a World of Love, Hope, and New Beginnings. ❤️🥂'
+
+            from_email = 'your-email@example.com'  # Replace with your email
+            recipient_list = [mymail]  # Use the user's email
+            
+            send_mail(subject, message, from_email, recipient_list, fail_silently=False)
             messages.success(request, 'Account was created for: ' + m)
            
             return redirect ('accounts:login')
@@ -65,7 +76,7 @@ def login_view(request):
     return render(request, 'accounts/login.html', context)
 
     
-
+@login_required(login_url='accounts:login')
 def logout_view(request):
     if 'suser' in request.session:
         del request.session['suser']  # Remove the "suser" session

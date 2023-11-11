@@ -11,7 +11,7 @@
 
     
 </head>
-<body>
+<body style="background-color: #d4d4d4;">
 
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f0f0f0;">
         <a class="navbar-brand" href="#">DreamWed</a>
@@ -34,7 +34,7 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="{{user.session.profile_image_url }}" alt="Profile Picture" width="40" height="40" class="rounded-circle">
+                       
                         {{ request.user.username }} <!-- Display the username from the session -->
                     </a>
                     <div class="dropdown-menu" aria-labelledby="profileDropdown">
@@ -63,35 +63,53 @@
                         <p><strong>Last Name:</strong> {{ personal_details.last_name }}</p>
                         <p><strong>Gender:</strong> {{ personal_details.gender }}</p>
                         <p><strong>Birth Place:</strong> {{ personal_details.birth_place }}</p>
-                        <!-- Add other personal details here -->
 
-                        <!-- Display family details -->
-                        <h3 class="card-title">Family Details</h3>
-                        <p><strong>Father's Name:</strong> {{ family_details.father_name }}</p>
-                        <p><strong>Mother's Name:</strong> {{ family_details.mother_name }}</p>
-                        <p><strong>Number of Siblings:</strong> {{ family_details.number_of_siblings }}</p>
-                        <!-- Add other family details here -->
+                        <p><strong>Hobbies:</strong>
+                            {% if personal_details.hobbies.all %}
+                                {% for hobby in personal_details.hobbies.all %}
+                                    {{ hobby.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                Not available
+                            {% endif %}
+                        </p>
+
+                        
 
                         <!-- Display educational details -->
                         <h3 class="card-title">Educational Details</h3>
-                        <p><strong>Highest Qualification:</strong> {{ educational_details.highest_qualification }}</p>
-                        <p><strong>UG Degree:</strong> {{ educational_details.ug_degree }}</p>
-                        <p><strong>PG Degree:</strong> {{ educational_details.pg_degree }}</p>
-                        <!-- Add other educational details here -->
+                        {% if educational_details %}
+                            <p><strong>Highest Qualification:</strong> {{ educational_details.highest_qualification }}</p>
+                            <p><strong>UG Degree:</strong> {{ educational_details.ug_degree }}</p>
+                            <p><strong>PG Degree:</strong> {{ educational_details.pg_degree }}</p>
+                            <!-- Add other educational details here -->
+                        {% else %}
+                            <p>No educational details available.</p>
+                        {% endif %}
+                        
 
                         <!-- Display employment details -->
                         <h3 class="card-title">Employment Details</h3>
-                        <p><strong>Employment Status:</strong> {{ employment_details.employment_status }}</p>
-                        <p><strong>Occupation:</strong> {{ employment_details.occupation }}</p>
-                        <p><strong>Employer of:</strong> {{ employment_details.employerof }}</p>
-                        <!-- Add other employment details here -->
+                        {% if employment_details %}
+                            <p><strong>Employment Status:</strong> {{ employment_details.employment_status }}</p>
+                            <p><strong>Occupation:</strong> {{ employment_details.occupation }}</p>
+                            <p><strong>Employer of:</strong> {{ employment_details.employerof }}</p>
+                            <!-- Add other employment details here -->
+                        {% else %}
+                            <p>No employment details available.</p>
+                        {% endif %}
+                                                <!-- Add other employment details here -->
 
                         <!-- Display location details -->
                         <h3 class="card-title">Location Details</h3>
-                        <p><strong>Current City:</strong> {{ location_details.current_city }}</p>
-                        <p><strong>Current State:</strong> {{ location_details.current_state }}</p>
-                        <p><strong>Current Pin Code:</strong> {{ location_details.current_pin_code }}</p>
-                        <!-- Add other location details here -->
+                        {% if location_details %}
+                            <p><strong>Current City:</strong> {{ location_details.current_city }}</p>
+                            <p><strong>Current State:</strong> {{ location_details.current_state }}</p>
+                            <p><strong>Current Pin Code:</strong> {{ location_details.current_pin_code }}</p>
+                            <!-- Add other location details here -->
+                        {% else %}
+                            <p>No location details available.</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>

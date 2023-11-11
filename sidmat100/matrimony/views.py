@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import PersonalDetailsForm
+from .forms import PersonalDetailsForm,Hobby
 from .forms import FamilyDetailsForm
 from .forms import EducationalDetailsForm
 from .forms import EmploymentDetailsForm
 from .forms import LocationDetailsForm
 from django.http import JsonResponse
+from django.views.decorators.cache import never_cache
 
 from .models import PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
 
@@ -19,9 +20,13 @@ def check_phone_number(request):
     return JsonResponse({'exists': False})
 
 
-@login_required
+
+@login_required(login_url='accounts:login')
 def personaldetailsview(request):
     user = request.user
+
+    # Get the list of hobbies from the database
+    hobbies = Hobby.objects.all()
 
     # Check if the PersonalDetails form is already filled
     if PersonalDetails.objects.filter(user=user, perso_fill=True).exists():
@@ -31,16 +36,26 @@ def personaldetailsview(request):
     if request.method == 'POST':
         personal_details_form = PersonalDetailsForm(request.POST, request.FILES)
         if personal_details_form.is_valid():
+            print("Selected Hobbies:", personal_details_form.cleaned_data['hobbies'])
             personal_details = personal_details_form.save(commit=False)
             personal_details.user = user
             personal_details.perso_fill = True
             personal_details.save()
-            return redirect('matrimony:familydetails')  # Move to the next form
 
+            # Handle hobbies
+            selected_hobbies = request.POST.getlist('hobbies')
+            personal_details.hobbies.set(Hobby.objects.filter(id__in=selected_hobbies))
+
+
+            return redirect('matrimony:familydetails')  # Move to the next form
+        else:
+            # Print form data and errors to the console
+            print("Form Data:", request.POST)
+            print("Form Errors:", personal_details_form.errors)
     else:
         personal_details_form = PersonalDetailsForm()
 
-    return render(request, 'matrimony/personaldetails.html', {'personal_details_form': personal_details_form})
+    return render(request, 'matrimony/personaldetails.html', {'personal_details_form': personal_details_form, 'hobbies': hobbies})
 
 
 
@@ -50,10 +65,7 @@ def personaldetailsview(request):
 
 
 
-
-
-
-@login_required
+@login_required(login_url='accounts:login')
 def familydetailsview(request):
     user = request.user
 
@@ -79,7 +91,7 @@ def familydetailsview(request):
 
 
 
-@login_required
+@login_required(login_url='accounts:login')
 def educationaldetailsview(request):
     user = request.user
 
@@ -105,7 +117,7 @@ def educationaldetailsview(request):
 
 
 
-@login_required
+@login_required(login_url='accounts:login')
 def employmentdetailsview(request):
     user = request.user
 
@@ -130,7 +142,7 @@ def employmentdetailsview(request):
 
 
 
-@login_required
+@login_required(login_url='accounts:login')
 def locationdetailsview(request):
     user = request.user
 
@@ -169,7 +181,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
 
-@login_required
+@login_required(login_url='accounts:login')
 def homeview(request):
     user = request.user
 
@@ -230,15 +242,32 @@ def homeview(request):
 
 from django.shortcuts import render, get_object_or_404
 from .models import User, PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
-
+@never_cache
+@login_required(login_url='accounts:login')
 def user_detail(request, user_id):
     user = get_object_or_404(User, id=user_id)
 
     personal_details = get_object_or_404(PersonalDetails, user=user)
-    family_details = get_object_or_404(FamilyDetails, user=user)
-    educational_details = get_object_or_404(EducationalDetails, user=user)
-    employment_details = get_object_or_404(EmploymentDetails, user=user)
-    location_details = get_object_or_404(LocationDetails, user=user)
+
+    try:
+        family_details = FamilyDetails.objects.get(user=user)
+    except FamilyDetails.DoesNotExist:
+        family_details = None
+
+    try:
+        educational_details = EducationalDetails.objects.get(user=user)
+    except EducationalDetails.DoesNotExist:
+        educational_details = None
+
+    try:
+        employment_details = EmploymentDetails.objects.get(user=user)
+    except EmploymentDetails.DoesNotExist:
+        employment_details = None
+
+    try:
+        location_details = LocationDetails.objects.get(user=user)
+    except LocationDetails.DoesNotExist:
+        location_details = None
 
     return render(request, 'matrimony/user_detail.html', {
         'user': user,
@@ -247,15 +276,17 @@ def user_detail(request, user_id):
         'educational_details': educational_details,
         'employment_details': employment_details,
         'location_details': location_details,
+        'hobbies': personal_details.hobbies.all(),  # Access the hobbies related to PersonalDetails
     })
+
 
 
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
-
-@login_required
+@never_cache
+@login_required(login_url='accounts:login')
 def myprofileview(request):
     # Retrieve all the user's profile information
     user = request.user
@@ -284,12 +315,44 @@ from django.shortcuts import render, redirect
 from .forms import PersonalDetailsUpdateForm  # Import the update form
 
 from django.db import IntegrityError  # Import the specific exception if needed
-
+@never_cache
+@login_required(login_url='accounts:login')
 def update_personaldetails(request):
     personal_details = PersonalDetails.objects.get(user=request.user)
+    hobbies = Hobby.objects.all()  # Assuming Hobby is the model for hobbies
 
     if request.method == 'POST':
         form = PersonalDetailsUpdateForm(request.POST, request.FILES, instance=personal_details)
+        if form.is_valid():
+            try:
+                updated_personal_details = form.save(commit=False)
+                form.save_m2m()
+                updated_personal_details.save()
+
+                return redirect('matrimony:myprofile')
+            except IntegrityError as e:
+                print(f"Error saving form: {e}")
+        else:
+            print(form.errors)
+    else:
+        form = PersonalDetailsUpdateForm(instance=personal_details)
+
+    context = {
+        'form': form,
+        'hobbies': hobbies,
+        'personal_details': personal_details,  # Include personal_details in the context
+    }
+
+    return render(request, 'matrimony/update_personaldetails.html', context)
+
+from .forms import FamilyDetailsUpdateForm
+@never_cache
+@login_required(login_url='accounts:login')
+def update_familydetails(request):
+    family_details = FamilyDetails.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        form = FamilyDetailsUpdateForm(request.POST, instance=family_details)  # Use FamilyDetailsUpdateForm
         if form.is_valid():
             try:
                 form.save()
@@ -300,13 +363,89 @@ def update_personaldetails(request):
             print(form.errors)
 
     else:
-        form = PersonalDetailsUpdateForm(instance=personal_details)
+        form = FamilyDetailsUpdateForm(instance=family_details)  # Use FamilyDetailsUpdateForm
 
     context = {
         'form': form,
     }
 
-    return render(request, 'matrimony/update_personaldetails.html', context)
+    return render(request, 'matrimony/update_familydetails.html', context)
+
+
+
+from django.shortcuts import render, redirect
+from .models import EducationalDetails
+from .forms import EducationalDetailsUpdateForm
+@never_cache
+@login_required(login_url='accounts:login')
+def update_educationaldetails(request):
+    educational_details = EducationalDetails.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        form = EducationalDetailsUpdateForm(request.POST, instance=educational_details)
+        if form.is_valid():
+            try:
+                form.save()
+                return redirect('matrimony:myprofile')  # Redirect to the user's profile page
+            except IntegrityError as e:
+                print(f"Error saving form: {e}")
+        else:
+            print(form.errors)
+
+    else:
+        form = EducationalDetailsUpdateForm(instance=educational_details)
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'matrimony/update_educationaldetails.html', context)
+
+
+from django.shortcuts import render, redirect
+from .models import EmploymentDetails
+from .forms import EmploymentDetailsUpdateForm
+@never_cache
+@login_required(login_url='accounts:login')
+def update_employmentdetails(request):
+    employment_details = EmploymentDetails.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        form = EmploymentDetailsUpdateForm(request.POST, instance=employment_details)
+        if form.is_valid():
+            form.save()
+            return redirect('matrimony:myprofile')  # Redirect to the profile page after successful update
+    else:
+        form = EmploymentDetailsUpdateForm(instance=employment_details)
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'matrimony/update_employmentdetails.html', context)
+
+
+from django.shortcuts import render, redirect
+from .models import LocationDetails
+from .forms import LocationDetailsUpdateForm
+@never_cache
+@login_required(login_url='accounts:login')
+def update_locationdetails(request):
+    location_details = LocationDetails.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        form = LocationDetailsUpdateForm(request.POST, request.FILES, instance=location_details)
+        if form.is_valid():
+            form.save()
+            return redirect('matrimony:myprofile')  # Redirect to the profile page after a successful update
+    else:
+        form = LocationDetailsUpdateForm(instance=location_details)
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'matrimony/update_locationdetails.html', context)
 
 
 
