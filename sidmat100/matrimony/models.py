@@ -102,6 +102,8 @@ class LocationDetails(models.Model):
     additional_comments = models.TextField(blank=True)
     location_photos = models.ImageField(upload_to='location_photos/', blank=True, null=True)
     loca_fill = models.BooleanField(default=False)
+    is_email_verified = models.BooleanField(default=False)
+    email_verification_token=models.CharField (max_length=200, blank=True, null=True)
 
     
 

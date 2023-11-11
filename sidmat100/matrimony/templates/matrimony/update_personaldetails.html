@@ -107,6 +107,13 @@
                 <input type="text" class="form-control" id="birthPlace" name="birth_place" placeholder="Enter your birth place" value="{{ form.birth_place.value }}">
                 <div class="error-message" id="birthPlaceError">{{ form.birth_place.errors }}</div>
             </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" class="form-control" id="phone" name="phone_number" placeholder="Enter your phone number" value="{{ form.phone_number.value }}">
+                <div class="error-message" id="phoneError">{{ form.phone_number.errors }}</div>
+            </div>
+            
             
 
             

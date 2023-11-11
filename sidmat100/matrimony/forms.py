@@ -2,6 +2,7 @@ from django import forms
 from django.core.validators import EmailValidator
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
+from django.core.validators import RegexValidator
 
 
 from .models import PersonalDetails,Hobby
@@ -18,6 +19,26 @@ class PersonalDetailsForm(forms.ModelForm):
     hobbies = forms.ModelMultipleChoiceField(
         queryset=Hobby.objects.all(),
         widget=forms.CheckboxSelectMultiple,
+        required=False,
+    )
+
+    phone_number = forms.CharField(
+        validators=[
+            RegexValidator(
+                regex=r'^\d{10}$',
+                message="Please enter a valid 10-digit phone number.",
+            )
+        ]
+    )
+
+    aadhar_card = forms.FileField(
+        required=False,
+        validators=[FileExtensionValidator(allowed_extensions=['pdf'])]
+    )
+
+    profile_image = forms.ImageField(
+        required=False,
+        validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])]
     )
 
 
@@ -25,7 +46,7 @@ class PersonalDetailsForm(forms.ModelForm):
 class PersonalDetailsUpdateForm(PersonalDetailsForm):
     class Meta:
         model = PersonalDetails
-        exclude = ['user', 'date_of_birth', 'gender', 'mother_tongue', 'blood_group', 'phone_number', 'perso_fill']
+        exclude = ['user', 'date_of_birth', 'gender', 'mother_tongue', 'blood_group', 'perso_fill']
 
     hobbies = forms.ModelMultipleChoiceField(
         queryset=Hobby.objects.all(),

@@ -185,6 +185,7 @@
                 <label for="birthdate">Date of Birth</label>
                 <input type="text" class="form-control" id="birthdate" name="date_of_birth" placeholder="Select your date of birth" required>
             </div>
+            <div class="error-message" id="profileImageError">{{ personal_details_form.date_of_birth.errors }}</div>
 
             <div class="form-group">
                 <label for="bloodGroup">Blood Group</label>
@@ -201,6 +202,8 @@
                     
                 </select>
             </div>
+            <div class="error-message" id="profileImageError">{{ personal_details_form.blood_group.errors }}</div>
+
             
 
 
@@ -209,18 +212,21 @@
                 <input type="tel" class="form-control" id="phone" name="phone_number" placeholder="Enter your phone number">
                 <div class="error-messagephone"></div>
             </div>
+            <div class="error-message" id="profileImageError">{{ personal_details_form.phone_number.errors }}</div>
             
 
             <div class="form-group">
                 <label for="martitalstatus">Marital Status</label>
                 <select class="form-control" id="maritalstatus" name="marital_status">
-                    <option value="" disabled selected>Select a Gender</option>
+                    <option value="" disabled selected>Select Your Marital Status</option>
                     <option value="unmarried">Unmarried</option>
                     
                     <option value="widowed">Widowed</option>
                     <option value="divorced">Divorced</option>
                 </select>
             </div>
+            <div class="error-message" id="profileImageError">{{ personal_details_form.marital_status.errors }}</div>
+
 
             <div class="form-group">
                 <label for="aboutyourself">About Yourself:</label>
@@ -252,12 +258,14 @@
                 <label for="profileImage">Profile Image</label>
                 <input type="file" class="form-control" id="profileImage" name="profile_image" accept="image/*">
             </div>
+            <div class="error-message" id="profileImageError">{{ personal_details_form.profile_image.errors }}</div>
+            
 
             <div class="form-group">
                 <label for="pdfFile">Upload Aadhar Card (PDF):</label>
                 <input type="file" class="form-control-file" id="pdfFile" name="aadhar_card" accept=".pdf">
             </div>
-            
+            <div class="error-message" id="profileImageError">{{ personal_details_form.aadhar_card.errors }}</div>
 
             
             <button type="submit" class="btn btn-primary">Save Next</button>

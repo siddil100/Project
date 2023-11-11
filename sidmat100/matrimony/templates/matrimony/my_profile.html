@@ -75,6 +75,8 @@
                         <p><strong>Middle Name:</strong> {{ personal_details.middle_name }}</p>
                         <p><strong>Last Name:</strong> {{ personal_details.last_name }}</p>
                         <p><strong>Gender:</strong> {{ personal_details.gender }}</p>
+                        <p><strong>Email:</strong> {{ user.email }}</p>
+                        <p><strong>Phone:</strong> {{ personal_details.phone_number }}</p>
                         <p><strong>Hobbies:</strong>
                             {% if personal_details.hobbies.all %}
                                 {% for hobby in personal_details.hobbies.all %}

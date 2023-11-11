@@ -11,6 +11,10 @@ from django.views.decorators.cache import never_cache
 from .models import PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
 
 
+import uuid
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail
+
 
 def check_phone_number(request):
     if request.method == 'POST':
@@ -56,6 +60,8 @@ def personaldetailsview(request):
         personal_details_form = PersonalDetailsForm()
 
     return render(request, 'matrimony/personaldetails.html', {'personal_details_form': personal_details_form, 'hobbies': hobbies})
+
+
 
 
 
@@ -148,8 +154,13 @@ def locationdetailsview(request):
 
     # Check if the LocationDetails form is already filled
     if LocationDetails.objects.filter(user=user, loca_fill=True).exists():
-        # LocationDetails form is already filled, redirect to the home page
-        return redirect('matrimony:home')
+        # LocationDetails form is already filled
+
+        # Check if the email is verified
+        if LocationDetails.objects.filter(user=user, is_email_verified=True).exists():
+            return redirect('matrimony:home')  # Email is verified, redirect to the home page
+        else:
+            return render(request, 'matrimony/regsuccess.html')
 
     if request.method == 'POST':
         location_details_form = LocationDetailsForm(request.POST, request.FILES)
@@ -157,15 +168,45 @@ def locationdetailsview(request):
             location_details = location_details_form.save(commit=False)
             location_details.user = user
             location_details.loca_fill = True
+            location_details.is_email_verified = False
+            location_details.email_verification_token = str(uuid.uuid4())
             location_details.save()
-            return redirect('matrimony:home')  # All forms are filled, redirect to the home page
+
+            current_site = get_current_site(request)
+            subject = "Activate your Account"
+            activation_link = f"http://{current_site}/matrimony/verify_email/{location_details.email_verification_token}/"
+            message = f'Click the link to activate your account: {activation_link}'
+            send_mail(subject, message, 'matrimony@gmail.com', [user.email])
+            return render(request, 'matrimony/registration_success.html')
+            # You may consider showing a message instead of redirecting immediately
 
     else:
         location_details_form = LocationDetailsForm()
 
     return render(request, 'matrimony/locationdetails.html', {'location_details_form': location_details_form})
 
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from .models import LocationDetails
 
+def verify_email_view(request, token):
+    try:
+        user_details = LocationDetails.objects.get(email_verification_token=token)
+        if user_details:
+            # Assuming you want to verify the email for the associated user
+            user_details.is_email_verified = True
+            user_details.email_verification_token = None
+            user_details.save()
+            
+            # Redirect to the login page or any other desired page
+            return redirect('accounts:login')
+    except LocationDetails.DoesNotExist:
+        # Catch the specific exception when the details are not found
+        return HttpResponse("Activation link is invalid!")
+    except Exception as e:
+        # Log the exception for debugging purposes
+        print(f"Error in email verification: {e}")
+        return HttpResponse("An error occurred during email verification. Please try again later.")
 
 
 
