@@ -43,6 +43,7 @@ def personaldetailsview(request):
             print("Selected Hobbies:", personal_details_form.cleaned_data['hobbies'])
             personal_details = personal_details_form.save(commit=False)
             personal_details.user = user
+            personal_details.aadhar_valid = True
             personal_details.perso_fill = True
             personal_details.save()
 
@@ -177,7 +178,7 @@ def locationdetailsview(request):
             activation_link = f"http://{current_site}/matrimony/verify_email/{location_details.email_verification_token}/"
             message = f'Click the link to activate your account: {activation_link}'
             send_mail(subject, message, 'matrimony@gmail.com', [user.email])
-            return render(request, 'matrimony/registration_success.html')
+            return render(request, 'matrimony/regsuccess.html')
             # You may consider showing a message instead of redirecting immediately
 
     else:
@@ -487,6 +488,40 @@ def update_locationdetails(request):
     }
 
     return render(request, 'matrimony/update_locationdetails.html', context)
+
+
+
+from django.shortcuts import render, redirect
+from .forms import PersonalDetailsAadharForm
+from .models import PersonalDetails
+from django.conf import settings
+def update_aadhar(request):
+    personal_details = PersonalDetails.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        form = PersonalDetailsAadharForm(request.POST, request.FILES, instance=personal_details)
+        if form.is_valid():
+            try:
+                updated_personal_details = form.save(commit=False)
+                
+                updated_personal_details.save()
+                send_mail(
+                    'Aadhar Update Notification',
+                    f'The user {request.user.username} has updated their Aadhar details for re-verification.',
+                    settings.DEFAULT_FROM_EMAIL,  # Sender's email
+                    ['thunderboltleo10@gmail.com'],  # Replace with the admin's email
+                    fail_silently=False,
+                )
+
+                return render(request, 'matrimony/aadharsuccess.html')
+            except IntegrityError as e:
+                print(f"Error saving form: {e}")
+        else:
+            print(form.errors)
+    else:
+        form = PersonalDetailsAadharForm(instance=personal_details)
+
+    return render(request, 'matrimony/updateaadhar.html', {'form': form})
 
 
 

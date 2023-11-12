@@ -26,7 +26,7 @@ class EmploymentDetailsAdmin(admin.ModelAdmin):
 
 @admin.register(LocationDetails)
 class LocationDetailsAdmin(admin.ModelAdmin):
-    list_display = ['user', 'current_city', 'current_state', 'current_pin_code', 'willing_to_move']  # Customize as needed
+    list_display = ['user', 'current_city', 'current_state', 'current_pin_code', 'willing_to_move',]  # Customize as needed
 
 
 admin.site.register(Hobby)

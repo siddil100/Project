@@ -63,12 +63,18 @@ def login_view(request):
                 # Retrieve the PersonalDetails instance for the user
                 try:
                     personal_details = PersonalDetails.objects.get(user=user)
-                    if personal_details.profile_image:
-                        request.session['profile_image_url'] = personal_details.profile_image.url  # Store the profile image URL in the session
+                    if personal_details.aadhar_valid:
+                        # If aadhar_valid is True, redirect to personal details
+                        if personal_details.profile_image:
+                            request.session['profile_image_url'] = personal_details.profile_image.url  # Store the profile image URL in the session
+                        return redirect('matrimony:personaldetails')  # Redirect non-superusers to personaldetails
+                    else:
+                        # If aadhar_valid is False, redirect to Aadhar update page
+                        return redirect('matrimony:update_aadhar')  # Adjust this to your actual Aadhar update page URL
                 except PersonalDetails.DoesNotExist:
                     request.session['profile_image_url'] = ''  # No PersonalDetails for the user
 
-                return redirect('matrimony:personaldetails')  # Redirect non-superusers to personaldetails
+                return redirect('matrimony:personaldetails')  # Default redirect to personal details
         else:
             messages.info(request, 'Username or Password is Incorrect')
     

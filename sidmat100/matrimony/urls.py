@@ -21,6 +21,7 @@ urlpatterns = [
     path('update_employmentdetails', views.update_employmentdetails, name='update_employmentdetails'),
     path('update_locationdetails', views.update_locationdetails, name='update_locationdetails'),
     path('verify_email/<str:token>/', views.verify_email_view, name='verify_email'),
+    path('update_aadhar', views.update_aadhar, name='update_aadhar'),
 
     
 ]

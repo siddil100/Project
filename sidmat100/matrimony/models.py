@@ -36,12 +36,18 @@ class PersonalDetails(models.Model):
     marital_status = models.CharField(max_length=100)
     about_you = models.TextField(blank=True)
     aadhar_card = models.FileField(upload_to='aadhar_cards/', blank=True, null=True)
+    aadhar_valid = models.BooleanField(default=True)
     hobbies = models.ManyToManyField(Hobby, blank=True,null=True)
+
    
     def calculate_age(self):
         today = date.today()
         age = today.year - self.date_of_birth.year - ((today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day))
         return age
+    
+    def update_aadhar_valid(self, value):
+        self.aadhar_valid = value
+        self.save()
     
 
     # Now family details
@@ -91,19 +97,30 @@ class EmploymentDetails(models.Model):
     empl_fill = models.BooleanField(default=False)
 
 
+from django.utils import timezone
+
 
 
 class LocationDetails(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Create a foreign key relationship with the User model
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     current_city = models.CharField(max_length=100)
     current_state = models.CharField(max_length=100)
     current_pin_code = models.CharField(max_length=20)
-    willing_to_move = models.CharField(max_length=3)  # 'yes' or 'no'
+    willing_to_move = models.CharField(max_length=3)
     additional_comments = models.TextField(blank=True)
     location_photos = models.ImageField(upload_to='location_photos/', blank=True, null=True)
     loca_fill = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
-    email_verification_token=models.CharField (max_length=200, blank=True, null=True)
+    email_verification_token = models.CharField(max_length=200, blank=True, null=True)
+    
+
+    def is_token_expired(self):
+        expiration_time = self.get_token_expiration_time()
+        return timezone.now() > expiration_time
+
+    def get_token_expiration_time(self):
+        expiration_time = self.created_at + timezone.timedelta(minutes=5)
+        return expiration_time
 
     
 

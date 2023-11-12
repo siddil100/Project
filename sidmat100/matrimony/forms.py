@@ -14,7 +14,7 @@ from .models import LocationDetails
 class PersonalDetailsForm(forms.ModelForm):
     class Meta:
         model = PersonalDetails
-        fields = ['first_name', 'last_name', 'middle_name', 'gender', 'birth_place', 'date_of_birth', 'blood_group', 'phone_number', 'profile_image', 'mother_tongue', 'religion', 'sector', 'marital_status', 'about_you', 'address', 'aadhar_card', 'hobbies']
+        fields = ['first_name', 'last_name', 'middle_name', 'gender', 'birth_place', 'date_of_birth', 'blood_group', 'phone_number', 'profile_image', 'mother_tongue', 'religion', 'sector', 'marital_status', 'about_you', 'address', 'aadhar_card', 'aadhar_valid', 'hobbies']
 
     hobbies = forms.ModelMultipleChoiceField(
         queryset=Hobby.objects.all(),
@@ -57,6 +57,20 @@ class PersonalDetailsUpdateForm(PersonalDetailsForm):
         required=False,
         validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])]
     )
+
+
+
+
+class PersonalDetailsAadharForm(forms.ModelForm):
+    aadhar_card = forms.FileField(
+        required=True,
+        label='Upload Aadhar Card (PDF)',
+        validators=[FileExtensionValidator(allowed_extensions=['pdf'])]
+    )
+
+    class Meta:
+        model = PersonalDetails
+        exclude = ['user','first_name', 'last_name', 'middle_name', 'gender', 'birth_place', 'date_of_birth', 'blood_group', 'phone_number', 'profile_image', 'mother_tongue', 'religion', 'sector', 'marital_status', 'about_you', 'address','perso_fill', 'aadhar_valid', 'hobbies']
 
 
 

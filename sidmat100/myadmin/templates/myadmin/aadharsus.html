@@ -190,7 +190,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{% url 'myadmin:myadmin' %}">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
                         </span>
@@ -277,13 +277,7 @@
                         <form method="get">
                             <label for="name">Filter by Name (A-Z):</label>
                             <input type="text" name="name" id="name" value="{{ request.GET.name }}">
-                            <br>
-                            <label for="status">Filter by Account Status:</label>
-                            <select name="status" id="status">
-                                <option value="all" {% if request.GET.status == 'all' %}selected{% endif %}>All</option>
-                                <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>Active</option>
-                                <option value="inactive" {% if request.GET.status == 'inactive' %}selected{% endif %}>Inactive</option>
-                            </select>
+                            
                             <br>
                             <label for="gender">Filter by Gender:</label>
                             <select name="gender" id="gender">
@@ -292,6 +286,16 @@
                                 <option value="female" {% if request.GET.gender == 'female' %}selected{% endif %}>Female</option>
                             </select>
                             <br>
+
+                                <label for="aadhar_valid">Filter by Aadhar Valid:</label>
+                                <select name="aadhar_valid" id="aadhar_valid">
+                                    <option value="all" {% if request.GET.aadhar_valid == 'all' %}selected{% endif %}>All</option>
+                                    <option value="valid" {% if request.GET.aadhar_valid == 'valid' %}selected{% endif %}>Valid</option>
+                                    <option value="invalid" {% if request.GET.aadhar_valid == 'invalid' %}selected{% endif %}>Invalid</option>
+                                </select>
+                                <br>
+                                                            
+                            
                             <button type="submit">Apply Filters</button>
                         </form>
                     </div>
@@ -321,7 +325,8 @@
                                                 <img src="{{ user.personaldetails.profile_image.url }}" alt="{{ user.username }}" style="width: 100%; height: 100%; object-fit: cover;">
                                             </div>
                                         </td>
-                                        <td><a href="{% url 'matrimony:user_detail' user.id %}" class="view-more-link">View</a></td>
+                                        <td><a href="{% url 'myadmin:generate_pdf' user.id %}" class="view-more-link">View</a></td>
+
 
                                         <td>{{ user.personaldetails.address }}</td>
                                         <td>{{ user.email }}</td>
@@ -334,7 +339,7 @@
                                             {% endif %}
                                         </td>
                                         <td class="user-status">
-                                            {% if user.is_active %}
+                                            {% if user.personaldetails.aadhar_valid %}
                                                 <span class="status delivered">Active</span>
                                                 {% else %}
                                                 <span class="status return">Suspended</span>
@@ -344,26 +349,22 @@
                                                 <form method="post" style="display: inline-block;">
                                                     {% csrf_token %}
                                                     <!-- HTML -->
-<select class="custom-select" name="suspension_reason" id="suspensionReason">
-    <option value="" class="custom-option" disabled selected>Select your reason</option>
-    <option value="Fraud" class="custom-option">Fraud</option>
-    <option value="Duplicate Profile Creation" class="custom-option">Duplicate Profiles</option>
-    <option value="Adhaar mismatch" class="custom-option">Fake Identity Proof</option>
-</select>
+                                                    <select class="custom-select" name="suspension_reason" id="suspensionReason">
+                                                        
+                                                        <option value="Adhaar mismatch" class="custom-option">Aadhar Mismatch</option>
+                                                    </select>
 
                                                 </td>
-                                            <td>
-                                                {% if user.is_active %}
-                                                    <button type="submit" name="user_id" value="{{ user.id }}" class="suspend-button" style="background-color: #e74c3c; color: #fff;">Suspend Now</button>
-
+                                                <td>
+                                                    {% if user.personaldetails.aadhar_valid %}
+                                                        <button type="submit" name="user_id" value="{{ user.id }}" class="suspend-button" style="background-color: #e74c3c; color: #fff;">Suspend Aadhar</button>
+                                                    {% else %}
+                                                        <span>{{ user.suspension_reason }}</span>
+                                                        <button type="submit" name="user_id" value="{{ user.id }}" class="unsuspend-button">Unsuspend Aadhar</button>
                                                 </form>
-                                            
-                                                {% else %}
-                                                <span> {{ user.suspension_reason }}</span>
-                                                <button type="submit" name="user_id" value="{{ user.id }}" class="unsuspend-button">Unsuspend Now</button>
-                                            </form>
-                                            {%endif%}
-                                        </td>
+                                                    {% endif %}
+                                                </td>
+                                                
                                         
                                     </tr>
                                 {% endfor %}
