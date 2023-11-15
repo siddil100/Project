@@ -30,3 +30,5 @@ class LocationDetailsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Hobby)
+admin.site.register(ImageUpload)
+admin.site.register(Image)

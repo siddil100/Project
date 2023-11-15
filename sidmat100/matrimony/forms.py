@@ -141,6 +141,24 @@ class LocationDetailsUpdateForm(forms.ModelForm):
     
 
 
+from .models import*
+
+from django import forms
+
+class ImageUploadForm(forms.ModelForm):
+    class Meta:
+        model = ImageUpload
+        fields = []
+
+class ImageForm(forms.ModelForm):
+    class Meta:
+        model = Image
+        fields = ['image']
+
+ImageFormSet = forms.modelformset_factory(Image, form=ImageForm, extra=5, max_num=5)
+
+
+
 
 
 

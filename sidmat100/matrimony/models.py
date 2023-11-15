@@ -50,6 +50,35 @@ class PersonalDetails(models.Model):
         self.save()
     
 
+
+
+
+class ImageUpload(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    upload_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Images for User {self.user.username}"
+
+class Image(models.Model):
+    image_upload = models.ForeignKey(ImageUpload, on_delete=models.CASCADE, null=True, blank=True)
+    image = models.ImageField(upload_to='user_images/')
+
+    def delete(self, *args, **kwargs):
+        # Get the associated ImageUpload
+        image_upload = self.image_upload
+
+        # Delete the Image instance
+        super().delete(*args, **kwargs)
+
+        # Check if the Image is the only image associated with the ImageUpload
+        if image_upload and not image_upload.image_set.exists():
+            # If no more images are associated, delete the ImageUpload
+            image_upload.delete()
+
+
+    
+    
     # Now family details
 
     from django.db import models

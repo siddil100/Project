@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Images</title>
+    <style>
+        /* Add your CSS styles for image cards */
+        .image-card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+            display: inline-block;
+        }
+        .image-card img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ image_upload_form.as_p }}
+    <input type="file" name="image" multiple>
+    <input type="submit" value="Upload">
+</form>
+
+<!-- Display uploaded images in cards -->
+<div class="image-gallery">
+  {% for image_upload in user_images %}
+      <div class="image-card">
+          {% if image_upload.image_set.exists %}
+              <img src="{{ image_upload.image_set.first.image.url }}" alt="User Image">
+              Image ID: {{ image_upload.image_set.first.id }}
+              <form method="post" action="{% url 'matrimony:edit_image' image_upload_id=image_upload.id image_id=image_upload.image_set.first.id %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="image">
+                <input type="submit" value="Edit">
+            </form>
+              
+              <form method="post" action="{% url 'matrimony:delete_image' image_upload_id=image_upload.id image_id=image_upload.image_set.first.id %}">
+
+                  {% csrf_token %}
+                  <input type="submit" value="Delete">
+              </form>
+          {% else %}
+              <p>No image available</p>
+          {% endif %}
+      </div>
+  {% endfor %}
+</div>
+
+
+
+</body>
+</html>

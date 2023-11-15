@@ -526,6 +526,75 @@ def update_aadhar(request):
 
 
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .forms import ImageUploadForm, ImageFormSet
+from .models import ImageUpload,Image
+
+@login_required
+def upload_images(request):
+    if request.method == 'POST':
+        image_upload_form = ImageUploadForm(request.POST, request.FILES)
+        if image_upload_form.is_valid():
+            image_upload = image_upload_form.save(commit=False)
+            image_upload.user = request.user
+            image_upload.save()
+
+            # Process uploaded files
+            for file in request.FILES.getlist('image'):
+                Image.objects.create(image_upload=image_upload, image=file)
+
+            return redirect('matrimony:upload_images')  # Redirect to a success page
+    else:
+        image_upload_form = ImageUploadForm()
+
+    user_images = ImageUpload.objects.filter(user=request.user)
+
+    return render(request, 'matrimony/upload_images.html', {'image_upload_form': image_upload_form, 'user_images': user_images})
+
+
+
+from django.shortcuts import redirect, get_object_or_404
+from .models import ImageUpload, Image
+from .forms import ImageForm
+
+
+
+from django.shortcuts import get_object_or_404
+
+def delete_image(request, image_upload_id, image_id):
+    image_upload = get_object_or_404(ImageUpload, pk=image_upload_id, user=request.user)
+
+    # Get the specific image
+    image = get_object_or_404(Image, pk=image_id, image_upload=image_upload)
+
+    # Delete the image
+    image.delete()
+
+    # Check if the ImageUpload has no more associated images
+    if not image_upload.image_set.exists():
+        # If no more images, delete the ImageUpload
+        image_upload.delete()
+
+    return redirect('matrimony:upload_images')  # Redirect to a success page or any other appropriate URL
+
+
+
+def edit_image(request, image_upload_id, image_id):
+    image_upload = get_object_or_404(ImageUpload, pk=image_upload_id, user=request.user)
+    image = get_object_or_404(Image, pk=image_id, image_upload=image_upload)
+
+    if request.method == 'POST':
+        form = ImageForm(request.POST, request.FILES, instance=image)
+        if form.is_valid():
+            form.save()
+            return redirect('matrimony:upload_images')  # Redirect to a success page or any other appropriate URL
+    else:
+        form = ImageForm(instance=image)
+
+    return render(request, 'edit_image.html', {'form': form})
+
+
 
 
 

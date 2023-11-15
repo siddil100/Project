@@ -22,6 +22,9 @@ urlpatterns = [
     path('update_locationdetails', views.update_locationdetails, name='update_locationdetails'),
     path('verify_email/<str:token>/', views.verify_email_view, name='verify_email'),
     path('update_aadhar', views.update_aadhar, name='update_aadhar'),
+    path('upload_images', views.upload_images, name='upload_images'),
+    path('edit_image/<int:image_upload_id>/<int:image_id>/', views.edit_image, name='edit_image'),
+    path('delete_image/<int:image_upload_id>/<int:image_id>/', views.delete_image, name='delete_image'),
 
     
 ]
