@@ -111,6 +111,29 @@
                             <p>No location details available.</p>
                         {% endif %}
                     </div>
+
+                    <!-- Display user images -->
+<div class="card mt-3">
+    <div class="card-body">
+        <h3 class="card-title">Uploaded Photos</h3>
+        <div class="row">
+            {% if user_images %}
+                {% for user_image in user_images %}
+                    <div class="col-md-4 mt-3">
+                        <div class="card">
+                            <img src="{{ user_image.image.url }}" alt="User Image" class="card-img-top img-fluid">
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <p>No photos uploaded yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
                 </div>
             </div>
             <div class="col-md-4">

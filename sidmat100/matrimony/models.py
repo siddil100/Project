@@ -154,6 +154,23 @@ class LocationDetails(models.Model):
     
 
 
+from django.db import models
+from django.contrib.auth.models import User
+
+class PhysicalDetails(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    height = models.DecimalField(max_digits=5, decimal_places=2)  # 
+    weight = models.DecimalField(max_digits=5, decimal_places=2)  # Weight in kilograms (e.g., 70.5 kg)
+    body_type = models.CharField(max_length=50)  # Body type: slim, average, athletic, etc.
+    complexion = models.CharField(max_length=50)  # Complexion: fair, medium, dark, etc.
+    hair_color = models.CharField(max_length=50)  # Hair color: blonde, brunette, black, etc.
+    eye_color = models.CharField(max_length=50)  # Eye color: blue, brown, green, etc.
+    tattoos = models.BooleanField(default=False)  # Presence of tattoos (True/False)
+    piercings = models.BooleanField(default=False)  # Presence of piercings (True/False)
+    phys_fill = models.BooleanField(default=False)  # Flag for physical details filled
+    
+    def __str__(self):
+        return f"Physical Details of {self.user.username}"
 
 
 

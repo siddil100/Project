@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physical Details Form</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Add CSS styles for the form indicator */
+        .form-indicator {
+            background-color: #007BFF; /* Background color */
+            color: #fff; /* Text color */
+            padding: 10px; /* Spacing around the text */
+            border-radius: 5px; /* Rounded corners */
+            margin-bottom: 20px; /* Spacing below the indicator */
+        }
+
+        /* Style the container */
+        .container {
+            margin-top: 30px;
+            border: 1px solid #333; /* Darker border color */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Style form fields and labels */
+        .form-group label {
+            font-weight: bold;
+        }
+
+        /* Style submit button */
+        .btn-primary {
+            background-color: #007BFF;
+            border: none;
+        }
+
+        /* Add custom styling to error message */
+        .error-messagephone {
+            color: #f00;
+        }
+
+        .error-message {
+            color: #f00; /* Red color for error messages */
+        }
+    </style>
+</head>
+<body style="background-color: #d4d4d4;">
+
+    <div class="container">
+        <div class="form-group">
+            <strong><em>Form X of Y</em></strong> <!-- Replace X and Y with appropriate form numbers -->
+        </div>
+    
+        <h2>Physical Details</h2>
+        <!-- Your form goes here -->
+        <form method="post" action="{% url 'matrimony:physicaldetails' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="bodyType">Body Type:</label>
+                <select class="form-control" id="bodyType" name="body_type">
+                    <option value="" disabled selected>Select Body Type</option>
+                    <option value="slim">Slim</option>
+                    <option value="average">Average</option>
+                    <option value="athletic">Athletic</option>
+                    <!-- Add more body type options here -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="complexion">Complexion:</label>
+                <select class="form-control" id="complexion" name="complexion">
+                    <option value="" disabled selected>Select Complexion</option>
+                    <option value="fair">Fair</option>
+                    <option value="medium">Medium</option>
+                    <option value="dark">Dark</option>
+                    <!-- Add more complexion options here -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="hairColor">Hair Color:</label>
+                <select class="form-control" id="hairColor" name="hair_color">
+                    <option value="" disabled selected>Select Hair Color</option>
+                    <option value="blonde">Blonde</option>
+                    <option value="brunette">Brunette</option>
+                    <option value="black">Black</option>
+                    <!-- Add more hair color options here -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="eyeColor">Eye Color:</label>
+                <select class="form-control" id="eyeColor" name="eye_color">
+                    <option value="" disabled selected>Select Eye Color</option>
+                    <option value="blue">Blue</option>
+                    <option value="brown">Brown</option>
+                    <option value="green">Green</option>
+                    <!-- Add more eye color options here -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="height">Height:</label>
+                <input type="text" class="form-control" id="height" name="height" placeholder="Enter height">
+            </div>
+            
+            <div class="form-group">
+                <label for="weight">Weight:</label>
+                <input type="text" class="form-control" id="weight" name="weight" placeholder="Enter weight">
+            </div>
+
+            <div class="form-group">
+                <label for="tattoos">Tattoos:</label>
+                <select class="form-control" id="tattoos" name="tattoos">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="piercings">Piercings:</label>
+                <select class="form-control" id="piercings" name="piercings">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                </select>
+            </div>
+
+            <!-- Add submit button and other fields if needed -->
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <!-- Include jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -311,6 +311,9 @@ def user_detail(request, user_id):
     except LocationDetails.DoesNotExist:
         location_details = None
 
+    # Retrieve images uploaded by the user
+    user_images = Image.objects.filter(image_upload__user=user)
+
     return render(request, 'matrimony/user_detail.html', {
         'user': user,
         'personal_details': personal_details,
@@ -319,7 +322,9 @@ def user_detail(request, user_id):
         'employment_details': employment_details,
         'location_details': location_details,
         'hobbies': personal_details.hobbies.all(),  # Access the hobbies related to PersonalDetails
+        'user_images': user_images,  # Pass the user's uploaded images to the template
     })
+
 
 
 
@@ -330,13 +335,23 @@ from .models import PersonalDetails, FamilyDetails, EducationalDetails, Employme
 @never_cache
 @login_required(login_url='accounts:login')
 def myprofileview(request):
-    # Retrieve all the user's profile information
     user = request.user
+
+    # Retrieve all the user's profile information
     personal_details = PersonalDetails.objects.get(user=user)
     family_details = FamilyDetails.objects.get(user=user)
     educational_details = EducationalDetails.objects.get(user=user)
     employment_details = EmploymentDetails.objects.get(user=user)
     location_details = LocationDetails.objects.get(user=user)
+
+    # Retrieve user images
+    user_images = Image.objects.filter(image_upload__user=user)
+
+    try:
+        # Fetch the user's physical details if available
+        physical_details = PhysicalDetails.objects.get(user=user)
+    except PhysicalDetails.DoesNotExist:
+        physical_details = None
 
     context = {
         'user': user,
@@ -345,9 +360,13 @@ def myprofileview(request):
         'educational_details': educational_details,
         'employment_details': employment_details,
         'location_details': location_details,
+        'user_images': user_images,
+        'physical_details': physical_details,  # Include physical details in the context
     }
 
     return render(request, 'matrimony/my_profile.html', context)
+
+
 
 
 
@@ -597,7 +616,70 @@ def edit_image(request, image_upload_id, image_id):
 
 
 
+from django.shortcuts import render, redirect
+from .models import PhysicalDetails
+from .forms import PhysicalDetailsForm
 
+def physicaldetailsview(request):
+    user = request.user
+    physical_details_instance = None  # Initialize the variable outside the try block
+    
+    try:
+        # Check if the PhysicalDetails form is already filled for the user
+        physical_details_instance = PhysicalDetails.objects.get(user=user)
+        form = PhysicalDetailsForm(instance=physical_details_instance)
+    except PhysicalDetails.DoesNotExist:
+        form = PhysicalDetailsForm()
+
+    if request.method == 'POST':
+        form = PhysicalDetailsForm(request.POST, instance=physical_details_instance)
+        if form.is_valid():
+            physical_details = form.save(commit=False)
+            physical_details.user = user
+            physical_details.phys_fill = True
+            physical_details.save()
+            return redirect('matrimony:some_next_step_view')  # Move to the next form or process
+
+    return render(request, 'matrimony/physicaldetails.html', {'physical_details_form': form})
+
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.db import IntegrityError
+from .models import PhysicalDetails
+from .forms import PhysicalDetailsUpdateForm
+
+def update_physicaldetails(request):
+    try:
+        physical_details = PhysicalDetails.objects.get(user=request.user)
+    except PhysicalDetails.DoesNotExist:
+        physical_details = None
+
+    if request.method == 'POST':
+        form = PhysicalDetailsUpdateForm(request.POST, instance=physical_details)
+        if form.is_valid():
+            try:
+                updated_physical_details = form.save(commit=False)
+                updated_physical_details.user = request.user
+                updated_physical_details.phys_fill = True
+                updated_physical_details.save()
+                messages.success(request, 'Physical details updated successfully!')
+                return redirect('matrimony:myprofile')
+            except IntegrityError as e:
+                messages.error(request, f"Error saving form: {e}")
+        else:
+            print(form.errors)
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = PhysicalDetailsUpdateForm(instance=physical_details)
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'matrimony/update_physicaldetails.html', context)
 
 
 

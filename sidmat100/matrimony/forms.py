@@ -159,13 +159,22 @@ ImageFormSet = forms.modelformset_factory(Image, form=ImageForm, extra=5, max_nu
 
 
 
+from django import forms
+from .models import PhysicalDetails
 
-
-
+class PhysicalDetailsForm(forms.ModelForm):
+    class Meta:
+        model = PhysicalDetails
+        exclude = ('user', 'phys_fill')
 
     
         
 
+
+class PhysicalDetailsUpdateForm(forms.ModelForm):
+    class Meta:
+        model = PhysicalDetails
+        exclude = ['user', 'phys_fill','height','eye_color']
 
 
 

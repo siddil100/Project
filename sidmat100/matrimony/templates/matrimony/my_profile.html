@@ -47,6 +47,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="updateDetailsDropdown">
                         <a class="dropdown-item" href="{% url 'matrimony:upload_images' %}">Upload photo</a>
+                        <a class="dropdown-item" href="{% url 'matrimony:physicaldetails' %}">Add PhysicalDetails</a>
                         <a class="dropdown-item" href="{% url 'matrimony:update_familydetails' %}">Update Family Details</a>
                         <a class="dropdown-item" href="{% url 'matrimony:update_educationaldetails' %}">Update Educational Details</a>
                         <a class="dropdown-item" href="{% url 'matrimony:update_employmentdetails' %}">Update Employment Details</a>
@@ -180,12 +181,71 @@
                         <p><strong>Willing to Move:</strong> {{ location_details.willing_to_move }}</p>
                         <!-- Add more location details here -->
                     </div>
+
+                    <!-- Display user images -->
+<!-- Display user images in smaller cards -->
+
+
+
                     <div class="col-md-6">
                         <!-- Add any other content for the right side of the card -->
                     </div>
                 </div>
-                <button class="btn btn-primary mt-3" onclick="location.href='{% url 'matrimony:update_locationdetails' %}'">Update Employment Details</button>
+                <button class="btn btn-primary mt-3" onclick="location.href='{% url 'matrimony:update_locationdetails' %}'">Update Location Details</button>
                 
+
+                <!-- Physical Details Card -->
+<div class="card mt-3">
+    <div class="card-body">
+        <h3 class="card-title">Physical Details</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Display physical details fields -->
+                {% if physical_details %}
+                    <p><strong>Height:</strong> {{ physical_details.height }}</p>
+                    <p><strong>Weight:</strong> {{ physical_details.weight }}</p>
+                    <p><strong>Body Type:</strong> {{ physical_details.body_type }}</p>
+                    <p><strong>Complexion:</strong> {{ physical_details.complexion }}</p>
+                    <p><strong>Hair Color:</strong> {{ physical_details.hair_color }}</p>
+                    <p><strong>Eye Color:</strong> {{ physical_details.eye_color }}</p>
+                    <p><strong>Tattoos:</strong> {{ physical_details.tattoos }}</p>
+                    <p><strong>Piercings:</strong> {{ physical_details.piercings }}</p>
+                    <!-- Add more physical details if available -->
+                {% else %}
+                    <p>No physical details available.</p>
+                {% endif %}
+            </div>
+            <!-- Additional columns if needed -->
+        </div>
+        <!-- Update button or other actions -->
+        <button class="btn btn-primary mt-3" onclick="location.href='{% url 'matrimony:update_physicaldetails' %}'">Update Physical Details</button>
+    </div>
+</div>
+
+
+        </div>
+        <div class="card mt-3">
+            <div class="card-body">
+                <h3 class="card-title">Uploaded Images</h3>
+                <div class="row">
+                    {% if user_images %}
+                        {% for user_image in user_images %}
+                            <div class="col-md-3 mt-3">
+                                <div class="card">
+                                    <img src="{{ user_image.image.url }}" alt="User Image" class="card-img-top img-fluid">
+                                    <div class="card-body">
+                                        <p class="card-text">Uploaded on: {{  user_image.image_upload.upload_date }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-12">
+                            <p>No images uploaded yet.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
