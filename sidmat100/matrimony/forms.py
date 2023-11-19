@@ -182,6 +182,14 @@ class PhysicalDetailsUpdateForm(forms.ModelForm):
 
 
 
+from django import forms
+from .models import Preference
+
+class PreferenceForm(forms.ModelForm):
+    class Meta:
+        model = Preference
+        fields = ['current_city', 'occupation', 'religion']
+        # Add other fields as needed
 
 
 

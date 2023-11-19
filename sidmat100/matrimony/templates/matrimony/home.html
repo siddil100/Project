@@ -7,8 +7,6 @@
     <title>Dream Wed</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
-    <!-- Include Google Fonts for a stylish font -->
-
     <style>
         body {
             background-color: #010101d1;
@@ -26,7 +24,7 @@
             transition: transform 0.2s;
         }
         .card .img-container:hover img {
-            transform: scale(1.2); /* Add zoom effect on image hover */
+            transform: scale(1.2);
         }
         .card-img-fixed-height {
             height: 200px;
@@ -37,11 +35,11 @@
             font-size: 14px;
             font-weight: bold;
             padding: 8px;
-            font-family: 'Roboto', sans-serif; /* Apply the stylish font */
-            transition: color 0.2s; /* Add a color transition effect */
+            font-family: 'Roboto', sans-serif;
+            transition: color 0.2s;
         }
         .card:hover .card-text {
-            color: blue; /* Change the text color to white on hover */
+            color: blue;
         }
     </style>
 </head>
@@ -81,16 +79,14 @@
 </nav>
 <div class="container mt-5">
     <div class="row">
-        {% for profile, employment, location in profiles_info %}
+        {% for profile, employment, location in filtered_profiles_info %}
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card">
                 {% if profile.user.personaldetails.profile_image %}
-    <img src="{{ profile.user.personaldetails.profile_image.url }}" class="card-img-top card-img-fixed-height" alt="Profile Picture" style="object-fit: contain;">
-{% else %}
-    <!-- Provide a placeholder image or some default content when 'profile_image' is not present -->
-    <img src="{% static '/nodp/no.jpg' %}" class="card-img-top card-img-fixed-height" alt="Placeholder Image">
-{% endif %}
-
+                    <img src="{{ profile.user.personaldetails.profile_image.url }}" class="card-img-top card-img-fixed-height" alt="Profile Picture" style="object-fit: contain;">
+                {% else %}
+                    <img src="{% static '/nodp/no.jpg' %}" class="card-img-top card-img-fixed-height" alt="Placeholder Image">
+                {% endif %}
 
                 <div class="card-body" style="padding: 5px; margin: 2px;">
                     <h5 class="card-title" style="font-size: 16px; margin-bottom: 3px;">{{ profile.user.personaldetails.first_name|title }} {{ profile.user.personaldetails.last_name|title }}</h5>
@@ -98,16 +94,50 @@
                     <p class="card-text" style="font-size: 12px; margin-bottom: 3px;">Religion: {{ profile.user.personaldetails.religion }}</p>
                     {% if employment.occupation %}
                         <p class="card-text" style="font-size: 12px; margin-bottom: 3px;">Profession: {{ employment.occupation }}</p>
-                        {% else %}
+                    {% else %}
                         <p class="card-text" style="font-size: 12px; margin-bottom: 3px;">Profession: Not available</p>
-                        {% endif %}
-                        {% if location.current_city %}
+                    {% endif %}
+                    {% if location.current_city %}
                         <p class="card-text" style="font-size: 12px;">Location: {{ location.current_city }}</p>
                     {% else %}
                         <p class="card-text" style="font-size: 12px;">Location: Not available</p>
-                        {% endif %}
+                    {% endif %}
                 </div>
-                
+
+                <div class="card-footer">
+                    <a href="{% url 'matrimony:user_detail' user_id=profile.user.id %}" class="btn btn-primary">View Details</a>
+                    <a href="#" class="btn btn-success">Send Interest</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% for profile, employment, location in all_profiles_info %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card">
+                <!-- Display all other profiles -->
+                {% if profile.user.personaldetails.profile_image %}
+                    <img src="{{ profile.user.personaldetails.profile_image.url }}" class="card-img-top card-img-fixed-height" alt="Profile Picture" style="object-fit: contain;">
+                {% else %}
+                    <img src="{% static '/nodp/no.jpg' %}" class="card-img-top card-img-fixed-height" alt="Placeholder Image">
+                {% endif %}
+
+                <div class="card-body" style="padding: 5px; margin: 2px;">
+                    <h5 class="card-title" style="font-size: 16px; margin-bottom: 3px;">{{ profile.user.personaldetails.first_name|title }} {{ profile.user.personaldetails.last_name|title }}</h5>
+                    <p class="card-text" style="font-size: 12px; margin-bottom: 3px;">Age: {{ profile.user.personaldetails.calculate_age }}</p>
+                    <p class="card-text" style="font-size: 12px; margin-bottom: 3px;">Religion: {{ profile.user.personaldetails.religion }}</p>
+                    {% if employment.occupation %}
+                        <p class="card-text" style="font-size: 12px; margin-bottom: 3px;">Profession: {{ employment.occupation }}</p>
+                    {% else %}
+                        <p class="card-text" style="font-size: 12px; margin-bottom: 3px;">Profession: Not available</p>
+                    {% endif %}
+                    {% if location.current_city %}
+                        <p class="card-text" style="font-size: 12px;">Location: {{ location.current_city }}</p>
+                    {% else %}
+                        <p class="card-text" style="font-size: 12px;">Location: Not available</p>
+                    {% endif %}
+                </div>
+
                 <div class="card-footer">
                     <a href="{% url 'matrimony:user_detail' user_id=profile.user.id %}" class="btn btn-primary">View Details</a>
                     <a href="#" class="btn btn-success">Send Interest</a>

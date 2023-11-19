@@ -174,7 +174,15 @@ class PhysicalDetails(models.Model):
 
 
 
+class Preference(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    current_city = models.CharField(max_length=100)
+    occupation = models.CharField(max_length=100, blank=True)
+    religion = models.CharField(max_length=100)
+    # Add other preference fields as needed
 
+    def __str__(self):
+        return f"Preferences for {self.user.username}"
 
 
 

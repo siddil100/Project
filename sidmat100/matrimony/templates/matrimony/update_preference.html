@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Preferences</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Add CSS styles for the form indicator */
+        .form-indicator {
+            background-color: #007BFF; /* Background color */
+            color: #fff; /* Text color */
+            padding: 10px; /* Spacing around the text */
+            border-radius: 5px; /* Rounded corners */
+            margin-bottom: 20px; /* Spacing below the indicator */
+        }
+
+        /* Style the container */
+        .container {
+            margin-top: 30px;
+            border: 1px solid #333; /* Darker border color */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style form fields and labels */
+        .form-group label {
+            font-weight: bold;
+        }
+
+        /* Style submit button */
+        .btn-primary {
+            background-color: #007BFF;
+            border: none;
+        }
+
+        /* Add custom styling to error message */
+        .error-message {
+            color: #f00; /* Red color for error messages */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Update Your Preferences</h2>
+        <form method="post" action="{% url 'matrimony:update_preference' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Add form fields for Preferences -->
+            <div class="form-group">
+                <label for="currentCity">Current City</label>
+                <input type="text" class="form-control" id="currentCity" name="current_city" placeholder="Enter current city" value="{{ preference_form.current_city.value }}">
+                <div class="error-message">{{ preference_form.current_city.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="occupation">Occupation</label>
+                <input type="text" class="form-control" id="occupation" name="occupation" placeholder="Enter occupation" value="{{ preference_form.occupation.value }}">
+                <div class="error-message">{{ preference_form.occupation.errors }}</div>
+            </div>
+
+             <!-- Religion Dropdown Field -->
+             <div class="form-group">
+                <label for="religion">Religion:</label>
+                <select id="religion" name="religion" class="form-control">
+                    <option value="" disabled selected>Select a Religion</option>
+                    <option value="christian">Christian</option>
+                    <option value="hindu">Hindu</option>
+                    <option value="islam">Islam</option>
+                    <!-- Add more religion options here -->
+                </select>
+                <div class="error-message">{{ preference_form.religion.errors }}</div>
+            </div>
+            
+            <!-- Add other preference fields as needed -->
+
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a href="javascript:history.back()" class="btn btn-secondary">Back</a>
+        </form>
+    </div>
+</body>
+</html>

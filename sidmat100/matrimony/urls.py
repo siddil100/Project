@@ -27,6 +27,7 @@ urlpatterns = [
     path('upload_images', views.upload_images, name='upload_images'),
     path('edit_image/<int:image_upload_id>/<int:image_id>/', views.edit_image, name='edit_image'),
     path('delete_image/<int:image_upload_id>/<int:image_id>/', views.delete_image, name='delete_image'),
+    path('update-preference/', views.update_preference, name='update_preference'),
 
     
 ]

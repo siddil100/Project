@@ -227,47 +227,112 @@ from .models import PersonalDetails, FamilyDetails, EducationalDetails, Employme
 def homeview(request):
     user = request.user
 
-    # Check if all forms are filled
-    if all([
-        PersonalDetails.objects.filter(user=user, perso_fill=True).exists(),
-        FamilyDetails.objects.filter(user=user, famil_fill=True).exists(),
-        EducationalDetails.objects.filter(user=user, educ_fill=True).exists(),
-        EmploymentDetails.objects.filter(user=user, empl_fill=True).exists(),
-        LocationDetails.objects.filter(user=user, loca_fill=True).exists(),
-    ]):
+    try:
+        # Retrieve user preferences
+        preferences = Preference.objects.get(user=user)
+
+        # Check if all forms are filled
+        if all([
+            PersonalDetails.objects.filter(user=user, perso_fill=True).exists(),
+            FamilyDetails.objects.filter(user=user, famil_fill=True).exists(),
+            EducationalDetails.objects.filter(user=user, educ_fill=True).exists(),
+            EmploymentDetails.objects.filter(user=user, empl_fill=True).exists(),
+            LocationDetails.objects.filter(user=user, loca_fill=True).exists(),
+        ]):
+            personal_details = PersonalDetails.objects.get(user=user)
+            profile_image_url = personal_details.profile_image.url
+
+            # Determine the opposite gender
+            opposite_gender = 'female' if personal_details.gender == 'male' else 'male'
+
+            # Get filtered profiles based on gender and preferences
+            filtered_profiles = PersonalDetails.objects.filter(
+                perso_fill=True,
+                gender=opposite_gender,
+                religion=preferences.religion,
+            ).exclude(user=user)
+
+            # Filter profiles further by occupation if preference is filled
+            if preferences.occupation:
+                filtered_profile_user_ids = EmploymentDetails.objects.filter(occupation=preferences.occupation).values_list('user_id', flat=True)
+                filtered_profiles = filtered_profiles.filter(user_id__in=filtered_profile_user_ids)
+
+            # Filter profiles by current city if preference is filled
+            if preferences.current_city:
+                filtered_profile_user_ids = LocationDetails.objects.filter(current_city=preferences.current_city).values_list('user_id', flat=True)
+                filtered_profiles = filtered_profiles.filter(user_id__in=filtered_profile_user_ids)
+
+            # Retrieve the employment details and location details for each filtered profile
+            filtered_employment_details = []
+            filtered_location_details = []
+
+            for profile in filtered_profiles:
+                try:
+                    employment = EmploymentDetails.objects.get(user=profile.user)
+                    location = LocationDetails.objects.get(user=profile.user)
+                    filtered_employment_details.append(employment)
+                    filtered_location_details.append(location)
+                except (EmploymentDetails.DoesNotExist, LocationDetails.DoesNotExist):
+                    filtered_employment_details.append(None)
+                    filtered_location_details.append(None)
+
+            # Pair filtered profiles with their employment and location details
+            filtered_profiles_info = zip(filtered_profiles, filtered_employment_details, filtered_location_details)
+
+            # Get all profiles except the filtered ones based on the user's gender
+            all_profiles = PersonalDetails.objects.exclude(user=user)
+
+            if personal_details.gender == 'female' and preferences.religion:
+                opposite_gender_profiles = all_profiles.filter(gender=opposite_gender, perso_fill=True, religion=preferences.religion)
+            else:
+                opposite_gender_profiles = all_profiles.filter(gender=opposite_gender, perso_fill=True)
+
+            # Exclude profiles that are already in the filtered_profiles from all_profiles_info
+            all_profiles_info = []
+            for profile in opposite_gender_profiles.exclude(id__in=filtered_profiles):
+                try:
+                    employment = EmploymentDetails.objects.get(user=profile.user)
+                    location = LocationDetails.objects.get(user=profile.user)
+                    all_profiles_info.append((profile, employment, location))
+                except (EmploymentDetails.DoesNotExist, LocationDetails.DoesNotExist):
+                    all_profiles_info.append((profile, None, None))
+
+            return render(request, 'matrimony/home.html', {
+                'profile_image_url': profile_image_url,
+                'filtered_profiles_info': filtered_profiles_info,
+                'all_profiles_info': all_profiles_info,
+            })
+
+    except Preference.DoesNotExist:
         personal_details = PersonalDetails.objects.get(user=user)
         profile_image_url = personal_details.profile_image.url
+        opposite_gender = 'female' if request.user.personaldetails.gender == 'male' else 'male'
 
-        # Determine the opposite gender
-        opposite_gender = 'female' if personal_details.gender == 'male' else 'male'
+        opposite_gender_profiles = PersonalDetails.objects.filter(gender=opposite_gender,perso_fill=True).exclude(user=request.user)
 
-        # Get a list of user profiles (excluding the currently logged-in user) based on gender
-        profiles = PersonalDetails.objects.filter(perso_fill=True, gender=opposite_gender).exclude(user=user)
+        all_employment_details = []
+        all_location_details = []
 
-        # Retrieve the employment details for each profile
-        employment_details = []
-        location_details = []
-
-        for profile in profiles:
+        for profile in opposite_gender_profiles:
             try:
                 employment = EmploymentDetails.objects.get(user=profile.user)
                 location = LocationDetails.objects.get(user=profile.user)
-                employment_details.append(employment)
-                location_details.append(location)
+                all_employment_details.append(employment)
+                all_location_details.append(location)
             except (EmploymentDetails.DoesNotExist, LocationDetails.DoesNotExist):
-                # Handle the case where a profile doesn't have employment or location details
-                employment_details.append(None)
-                location_details.append(None)
+                all_employment_details.append(None)
+                all_location_details.append(None)
 
-        # Pair profiles with their employment and location details
-        profiles_info = zip(profiles, employment_details, location_details)
+        all_profiles_info = zip(opposite_gender_profiles, all_employment_details, all_location_details)
 
         return render(request, 'matrimony/home.html', {
             'profile_image_url': profile_image_url,
-            'profiles_info': profiles_info,
+            'filtered_profiles_info': None,  # No filtered profiles
+            'all_profiles_info': all_profiles_info,
         })
 
-    # Redirect to the first unfilled form
+    # Redirect to the first unfilled form if preferences are filled
+    # (User needs to complete other details)
     if not PersonalDetails.objects.filter(user=user, perso_fill=True).exists():
         return redirect('matrimony:personaldetails')
     elif not FamilyDetails.objects.filter(user=user, famil_fill=True).exists():
@@ -278,6 +343,13 @@ def homeview(request):
         return redirect('matrimony:employmentdetails')
     elif not LocationDetails.objects.filter(user=user, loca_fill=True).exists():
         return redirect('matrimony:locationdetails')
+
+
+
+
+
+
+
     
 
 
@@ -686,5 +758,29 @@ def update_physicaldetails(request):
 
 
 
+from django.shortcuts import render, redirect
+from .forms import PreferenceForm
+from django.contrib.auth.decorators import login_required
+from .models import Preference
+
+@login_required
+def update_preference(request):
+    user = request.user
+    try:
+        preference = Preference.objects.get(user=user)
+    except Preference.DoesNotExist:
+        preference = None
+
+    if request.method == 'POST':
+        preference_form = PreferenceForm(request.POST, instance=preference)
+        if preference_form.is_valid():
+            preference = preference_form.save(commit=False)
+            preference.user = user
+            preference.save()
+            return redirect('matrimony:myprofile')  # Redirect to a success page
+    else:
+        preference_form = PreferenceForm(instance=preference)
+
+    return render(request, 'matrimony/update_preference.html', {'preference_form': preference_form})
 
 
