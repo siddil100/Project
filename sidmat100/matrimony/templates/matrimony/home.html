@@ -86,14 +86,7 @@
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card">
 
-                <div class="dropdown" style="position: absolute; top: 10px; right: 10px;">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="blockDropdown{{ profile.user.id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                        Block
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="blockDropdown{{ profile.user.id }}">
-                        <li><a class="dropdown-item" href="#">Block Profile</a></li>
-                    </ul>
-                </div>
+               
                 {% if profile.user.personaldetails.profile_image %}
                     <img src="{{ profile.user.personaldetails.profile_image.url }}" class="card-img-top card-img-fixed-height" alt="Profile Picture" style="object-fit: contain;">
                 {% else %}

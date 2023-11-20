@@ -190,6 +190,10 @@ class Preference(models.Model):
 
 class BlockedUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blocked_users')
-    blocked_user_details = models.OneToOneField('PersonalDetails', on_delete=models.CASCADE)
+    blocked_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blocked_by')
+    blocked_user_details = models.ForeignKey('PersonalDetails', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.username}'s blocked user"
 
 
