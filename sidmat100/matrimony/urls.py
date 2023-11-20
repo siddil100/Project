@@ -28,6 +28,9 @@ urlpatterns = [
     path('edit_image/<int:image_upload_id>/<int:image_id>/', views.edit_image, name='edit_image'),
     path('delete_image/<int:image_upload_id>/<int:image_id>/', views.delete_image, name='delete_image'),
     path('update-preference/', views.update_preference, name='update_preference'),
+    path('block_user/<int:user_id>/', views.block_user, name='block_user'),
+    path('blocked_users/', views.blocked_users_list, name='blocked_users_list'),
+    path('unblock_user/<int:user_id>/', views.unblock_user, name='unblock_user'),
 
     
 ]

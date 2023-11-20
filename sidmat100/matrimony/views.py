@@ -228,6 +228,25 @@ def homeview(request):
     user = request.user
     all_profiles_info = []
 
+    # Check and redirect if any form is not filled
+    if not all([
+        PersonalDetails.objects.filter(user=user, perso_fill=True).exists(),
+        FamilyDetails.objects.filter(user=user, famil_fill=True).exists(),
+        EducationalDetails.objects.filter(user=user, educ_fill=True).exists(),
+        EmploymentDetails.objects.filter(user=user, empl_fill=True).exists(),
+        LocationDetails.objects.filter(user=user, loca_fill=True).exists(),
+    ]):
+        if not PersonalDetails.objects.filter(user=user, perso_fill=True).exists():
+            return redirect('matrimony:personaldetails')
+        elif not FamilyDetails.objects.filter(user=user, famil_fill=True).exists():
+            return redirect('matrimony:familydetails')
+        elif not EducationalDetails.objects.filter(user=user, educ_fill=True).exists():
+            return redirect('matrimony:educationaldetails')
+        elif not EmploymentDetails.objects.filter(user=user, empl_fill=True).exists():
+            return redirect('matrimony:employmentdetails')
+        elif not LocationDetails.objects.filter(user=user, loca_fill=True).exists():
+            return redirect('matrimony:locationdetails')
+
     try:
         preferences = Preference.objects.get(user=user)
 
@@ -287,7 +306,7 @@ def homeview(request):
         profile_image_url = personal_details.profile_image.url
         opposite_gender = 'female' if request.user.personaldetails.gender == 'male' else 'male'
 
-        opposite_gender_profiles = PersonalDetails.objects.filter(gender=opposite_gender,perso_fill=True).exclude(user=request.user)
+        opposite_gender_profiles = PersonalDetails.objects.filter(gender=opposite_gender, perso_fill=True).exclude(user=request.user)
 
         all_employment_details = []
         all_location_details = []
@@ -310,18 +329,7 @@ def homeview(request):
             'all_profiles_info': all_profiles_info,
         })
 
-    # Redirect to the first unfilled form if preferences are filled
-    # (User needs to complete other details)
-    if not PersonalDetails.objects.filter(user=user, perso_fill=True).exists():
-        return redirect('matrimony:personaldetails')
-    elif not FamilyDetails.objects.filter(user=user, famil_fill=True).exists():
-        return redirect('matrimony:familydetails')
-    elif not EducationalDetails.objects.filter(user=user, educ_fill=True).exists():
-        return redirect('matrimony:educationaldetails')
-    elif not EmploymentDetails.objects.filter(user=user, empl_fill=True).exists():
-        return redirect('matrimony:employmentdetails')
-    elif not LocationDetails.objects.filter(user=user, loca_fill=True).exists():
-        return redirect('matrimony:locationdetails')
+    
 
 
 
@@ -762,4 +770,34 @@ def update_preference(request):
 
     return render(request, 'matrimony/update_preference.html', {'preference_form': preference_form})
 
+from .models import BlockedUser
 
+from django.contrib import messages
+
+def block_user(request, user_id):
+    user_to_block = get_object_or_404(User, id=user_id)
+    
+    # Check if the user is already blocked
+    if BlockedUser.objects.filter(user=request.user, blocked_user_details__user=user_to_block).exists():
+        # If the user is already blocked, display a message
+        messages.warning(request, 'This user is already blocked.')
+    else:
+        blocked_user_details = user_to_block.personaldetails  # Retrieve personal details of the user to block
+        BlockedUser.objects.create(user=request.user, blocked_user_details=blocked_user_details)
+        # Optionally, perform additional actions after blocking the user
+
+    return redirect('matrimony:blocked_users_list')
+
+
+
+def blocked_users_list(request):
+    blocked_users = BlockedUser.objects.all()  # Retrieve all blocked users
+    return render(request, 'matrimony/blocked_users_list.html', {'blocked_users': blocked_users})
+
+
+def unblock_user(request, user_id):
+    user_to_unblock = get_object_or_404(User, id=user_id)
+    blocked_user = get_object_or_404(BlockedUser, user=request.user, blocked_user_details__user=user_to_unblock)
+    blocked_user.delete()  # Unblock the user by deleting the BlockedUser instance
+    # Optionally, perform additional actions after unblocking the user
+    return redirect('matrimony:blocked_users_list')

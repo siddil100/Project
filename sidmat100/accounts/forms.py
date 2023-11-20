@@ -18,6 +18,16 @@ class CreateUserForm(UserCreationForm):
     
 
 
+from django.contrib.auth.forms import PasswordChangeForm
+
+class ChangePasswordForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super(ChangePasswordForm, self).__init__(*args, **kwargs)
+        # Modify form fields' attributes if needed
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({'class': 'form-control'})
+
+
 
 
 

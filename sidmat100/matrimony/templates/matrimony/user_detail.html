@@ -124,11 +124,14 @@
                             <img src="{{ user_image.image.url }}" alt="User Image" class="card-img-top img-fluid">
                         </div>
                     </div>
+                    
                 {% endfor %}
+                <a href="{% url 'matrimony:block_user' user_id=personal_details.user.id %}" class="btn btn-danger btn-block">Block User</a>
             {% else %}
                 <div class="col-12">
                     <p>No photos uploaded yet.</p>
                 </div>
+                <a href="{% url 'matrimony:block_user' user_id=personal_details.user.id %}" class="btn btn-danger btn-block">Block User</a>
             {% endif %}
         </div>
     </div>
@@ -142,6 +145,7 @@
             </div>
         </div>
     </div>
+    
 
     <!-- Load Bootstrap JS (Optional, if needed) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

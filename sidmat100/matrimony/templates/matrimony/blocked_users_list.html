@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blocked Users List</title>
+    <!-- Include Bootstrap CSS or your preferred CSS framework -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your custom styles -->
+    <style>
+        /* Add your custom CSS styles here */
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1>Blocked Users List</h1>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Profile Picture</th>
+                        <!-- Add other relevant columns -->
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+                    {% for blocked_user in blocked_users %}
+                        <tr>
+                            <td>{{ blocked_user.blocked_user_details.first_name }} {{ blocked_user.blocked_user_details.last_name }}</td>
+                            <td>
+                                {% if blocked_user.blocked_user_details.profile_image %}
+                                    <img src="{{ blocked_user.blocked_user_details.profile_image.url }}" alt="Profile Picture" width="50" height="50">
+                                {% else %}
+                                    <img src="{% static '/path/to/default/profile/image.jpg' %}" alt="Default Profile Picture" width="50" height="50">
+                                {% endif %}
+                            </td>
+                            <!-- Add other columns with user details -->
+                            <td>
+                                <a href="{% url 'matrimony:unblock_user' blocked_user.blocked_user_details.user.id %}" class="btn btn-danger">Unblock</a>
+                                <!-- Optionally add other actions or details -->
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">No users are currently blocked.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Load Bootstrap JS and other scripts if needed -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Your custom scripts -->
+<script>
+    // Add your custom JavaScript code here if needed
+</script>
+
+</body>
+</html>
