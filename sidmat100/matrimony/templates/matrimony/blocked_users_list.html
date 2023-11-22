@@ -85,7 +85,7 @@
                                                 {% if blocked_user.blocked_user_details.profile_image %}
                                                     <img src="{{ blocked_user.blocked_user_details.profile_image.url }}" alt="Profile Picture" width="50" height="50">
                                                 {% else %}
-                                                    <img src="{% static '/path/to/default/profile/image.jpg' %}" alt="Default Profile Picture" width="50" height="50">
+                                                    <img src="{% static '/nodp/no.jpg' %}" alt="Default Profile Picture" width="50" height="50">
                                                 {% endif %}
                                             </td>
                                             <!-- Add other columns with user details -->
