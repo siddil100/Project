@@ -65,3 +65,94 @@ def reject_interest(request, interest_id):
     # Handle cases where the interest is already rejected or the user doesn't have permission
 
 
+
+
+# views.py
+
+from django.shortcuts import render
+@login_required
+def search_view(request):
+    return render(request, 'matint/search_form.html')
+
+
+
+# views.py
+
+from django.shortcuts import render
+from matrimony.models import PersonalDetails, LocationDetails, EducationalDetails, EmploymentDetails
+
+from django.contrib.auth.models import User
+
+def global_search(request):
+    query = {}
+    personal_details_qs = PersonalDetails.objects.all()
+    location_details_qs = LocationDetails.objects.all()
+    educational_details_qs = EducationalDetails.objects.all()
+    employment_details_qs = EmploymentDetails.objects.all()
+
+    if request.GET:
+        query = {
+            'first_name': request.GET.get('first_name'),
+            'last_name': request.GET.get('last_name'),
+            
+            'religion': request.GET.get('religion'),
+            'current_city': request.GET.get('current_city'),
+            'current_state': request.GET.get('current_state'),
+            'highest_qualification': request.GET.get('highest_qualification'),
+            'occupation': request.GET.get('occupation'),
+            # Add more fields from the form as needed
+        }
+
+        # Filtering PersonalDetails
+        if query['first_name']:
+            personal_details_qs = personal_details_qs.filter(first_name__icontains=query['first_name'])
+        if query['last_name']:
+            personal_details_qs = personal_details_qs.filter(last_name__icontains=query['last_name'])
+        
+
+        if query['religion']:
+            personal_details_qs = personal_details_qs.filter(religion__icontains=query['religion'])
+
+        # Filtering LocationDetails
+        if query['current_city']:
+            location_details_qs = location_details_qs.filter(current_city__iexact=query['current_city'])
+        if query['current_state']:
+            location_details_qs = location_details_qs.filter(current_state__iexact=query['current_state'])
+
+
+
+
+        # Filtering EducationalDetails
+        if query['highest_qualification']:
+            educational_details_qs = educational_details_qs.filter(highest_qualification__icontains=query['highest_qualification'])
+
+        # Filtering EmploymentDetails
+        if query['occupation']:
+            employment_details_qs = employment_details_qs.filter(occupation__icontains=query['occupation'])
+
+    # Additional condition to exclude profiles based on logged-in user's gender
+    user_gender = None
+    if request.user.is_authenticated:
+        user = request.user
+        try:
+            personal_details = PersonalDetails.objects.get(user=user)
+            user_gender = personal_details.gender
+        except PersonalDetails.DoesNotExist:
+            pass
+
+    if user_gender:
+        # Exclude profiles of the logged-in user's gender
+        personal_details_qs = personal_details_qs.exclude(gender=user_gender)
+
+    context = {
+        'query': query,
+        'personal_details': personal_details_qs,
+        'location_details': location_details_qs,
+        'educational_details': educational_details_qs,
+        'employment_details': employment_details_qs,
+        # Add more querysets as needed for other models
+    }
+
+    return render(request, 'matint/search_results.html', context)
+
+
