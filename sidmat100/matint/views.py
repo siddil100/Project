@@ -83,54 +83,57 @@ from matrimony.models import PersonalDetails, LocationDetails, EducationalDetail
 
 from django.contrib.auth.models import User
 
+from django.db.models import Q
+
 def global_search(request):
-    query = {}
+    query = {
+        'first_name': request.GET.get('first_name', ''),
+        'last_name': request.GET.get('last_name', ''),
+        'religion': request.GET.get('religion', ''),
+        'current_city': request.GET.get('current_city', ''),
+        'current_state': request.GET.get('current_state', ''),
+        'highest_qualification': request.GET.get('highest_qualification', ''),
+        'occupation': request.GET.get('occupation', ''),
+        # Add more fields from the form as needed
+    }
+
+    # Filtering PersonalDetails
     personal_details_qs = PersonalDetails.objects.all()
+    if query['first_name']:
+        personal_details_qs = personal_details_qs.filter(first_name__icontains=query['first_name'])
+    if query['last_name']:
+        personal_details_qs = personal_details_qs.filter(last_name__icontains=query['last_name'])
+    if query['religion']:
+        personal_details_qs = personal_details_qs.filter(religion__icontains=query['religion'])
+
+    # Filtering LocationDetails and linking back to PersonalDetails
     location_details_qs = LocationDetails.objects.all()
+    if query['current_city']:
+        location_details_qs = location_details_qs.filter(current_city__iexact=query['current_city'])
+        # Link filtered LocationDetails back to corresponding PersonalDetails
+    if query['current_state']:
+        location_details_qs = location_details_qs.filter(current_state__iexact=query['current_state'])
+        location_users = location_details_qs.values_list('user', flat=True)
+        personal_details_qs = personal_details_qs.filter(user__in=location_users)
+
+    # Filtering EducationalDetails and linking back to PersonalDetails
     educational_details_qs = EducationalDetails.objects.all()
+    if query['highest_qualification']:
+        educational_details_qs = educational_details_qs.filter(highest_qualification__icontains=query['highest_qualification'])
+        # Link filtered EducationalDetails back to corresponding PersonalDetails
+        educational_users = educational_details_qs.values_list('user', flat=True)
+        personal_details_qs = personal_details_qs.filter(user__in=educational_users)
+
+    # Filtering EmploymentDetails and linking back to PersonalDetails
     employment_details_qs = EmploymentDetails.objects.all()
+    if query['occupation']:
+        employment_details_qs = employment_details_qs.filter(occupation__icontains=query['occupation'])
+        # Link filtered EmploymentDetails back to corresponding PersonalDetails
+        employment_users = employment_details_qs.values_list('user', flat=True)
+        personal_details_qs = personal_details_qs.filter(user__in=employment_users)
 
-    if request.GET:
-        query = {
-            'first_name': request.GET.get('first_name'),
-            'last_name': request.GET.get('last_name'),
-            
-            'religion': request.GET.get('religion'),
-            'current_city': request.GET.get('current_city'),
-            'current_state': request.GET.get('current_state'),
-            'highest_qualification': request.GET.get('highest_qualification'),
-            'occupation': request.GET.get('occupation'),
-            # Add more fields from the form as needed
-        }
+    # Additional conditions, exclusions, etc. (if needed)
 
-        # Filtering PersonalDetails
-        if query['first_name']:
-            personal_details_qs = personal_details_qs.filter(first_name__icontains=query['first_name'])
-        if query['last_name']:
-            personal_details_qs = personal_details_qs.filter(last_name__icontains=query['last_name'])
-        
-
-        if query['religion']:
-            personal_details_qs = personal_details_qs.filter(religion__icontains=query['religion'])
-
-        # Filtering LocationDetails
-        if query['current_city']:
-            location_details_qs = location_details_qs.filter(current_city__iexact=query['current_city'])
-        if query['current_state']:
-            location_details_qs = location_details_qs.filter(current_state__iexact=query['current_state'])
-
-
-
-
-        # Filtering EducationalDetails
-        if query['highest_qualification']:
-            educational_details_qs = educational_details_qs.filter(highest_qualification__icontains=query['highest_qualification'])
-
-        # Filtering EmploymentDetails
-        if query['occupation']:
-            employment_details_qs = employment_details_qs.filter(occupation__icontains=query['occupation'])
-
-    # Additional condition to exclude profiles based on logged-in user's gender
     user_gender = None
     if request.user.is_authenticated:
         user = request.user
@@ -154,5 +157,7 @@ def global_search(request):
     }
 
     return render(request, 'matint/search_results.html', context)
+
+
 
 
