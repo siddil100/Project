@@ -65,6 +65,7 @@
         <thead class="thead-dark">
             <tr>
                 <th>From</th>
+                <th>Profile Image</th>
                 <th>Message</th>
                 <th>Actions</th>
             </tr>
@@ -72,7 +73,14 @@
         <tbody>
             {% for interest in received_interests %}
                 <tr>
-                    <td>{{ interest.sender.username }}</td>
+                    <td>{{ interest.sender.personaldetails.first_name }} {{ interest.sender.personaldetails.last_name }}</td>
+                    <td>
+                        {% if interest.sender.personaldetails.profile_image %}
+                            <img src="{{ interest.sender.personaldetails.profile_image.url }}" alt="Profile Image" style="max-width: 100px; max-height: 100px;">
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
                     <td>{{ interest.message }}</td>
                     <td class="action-buttons">
                         <form method="post" action="{% url 'matint:accept_interest' interest.id %}">
@@ -83,11 +91,12 @@
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger">Reject</button>
                         </form>
+                        <a href="{% url 'matrimony:user_detail' user_id=interest.sender.id %}" class="btn btn-primary">View Details</a>
                     </td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="3">No pending interests</td>
+                    <td colspan="4">No pending interests</td>
                 </tr>
             {% endfor %}
         </tbody>

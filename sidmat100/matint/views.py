@@ -11,24 +11,49 @@ from .forms import InterestForm
 from .models import Interest
 from django.contrib.auth.decorators import login_required
 
-@login_required
+
+from django.shortcuts import get_object_or_404, render, redirect
+from .models import Interest
+from .forms import InterestForm
+
 def send_interest(request, user_id):
     recipient = get_object_or_404(User, id=user_id)
+    already_sent = False
+    already_accepted = False
+    pending = False  # Initialize pending variable
+
     if request.method == 'POST':
         form = InterestForm(request.POST)
         if form.is_valid():
             message = form.cleaned_data['message']
-            sender = request.user  # Get the currently logged-in user
-            Interest.objects.create(receiver=recipient, message=message, sender=sender)
-            return redirect('matrimony:home')  # Replace 'success_page' with your actual success URL name
+            sender = request.user
+            existing_interest = Interest.objects.filter(sender=sender, receiver=recipient, status='pending').exists()
+            if not existing_interest:
+                Interest.objects.create(receiver=recipient, message=message, sender=sender)
+                return redirect('matrimony:home')
+            else:
+                already_sent = True
+
     else:
         form = InterestForm()
+
+    accepted_interest = Interest.objects.filter(sender=request.user, receiver=recipient, status='accepted').exists()
+    if accepted_interest:
+        already_accepted = True
+
+    pending_interest = Interest.objects.filter(sender=request.user, receiver=recipient, status='pending').exists()
+    if pending_interest:
+        pending = True  # Set pending to True if there's a pending interest
 
     context = {
         'form': form,
         'recipient': recipient,
+        'already_sent': already_sent,
+        'already_accepted': already_accepted,
+        'pending': pending,  # Pass pending to the template
     }
     return render(request, 'matint/send_interest.html', context)
+
 
 
 
@@ -67,6 +92,12 @@ def reject_interest(request, interest_id):
 
 
 
+
+
+
+
+
+
 # views.py
 
 from django.shortcuts import render
@@ -79,11 +110,12 @@ def search_view(request):
 # views.py
 
 from django.shortcuts import render
-from matrimony.models import PersonalDetails, LocationDetails, EducationalDetails, EmploymentDetails
+from matrimony.models import PersonalDetails, LocationDetails, EducationalDetails, EmploymentDetails,BlockedUser
 
 from django.contrib.auth.models import User
 
 from django.db.models import Q
+from datetime import timedelta,date
 
 def global_search(request):
     query = {
@@ -94,9 +126,16 @@ def global_search(request):
         'current_state': request.GET.get('current_state', ''),
         'highest_qualification': request.GET.get('highest_qualification', ''),
         'occupation': request.GET.get('occupation', ''),
+        'min_age': request.GET.get('min_age', ''),  # Add min_age field to query dictionary
+        'max_age': request.GET.get('max_age', ''),  # Add max_age field to query dictionary
+        'exact_age': request.GET.get('exact_age', ''),
+        
         # Add more fields from the form as needed
     }
+    
 
+# Filter PersonalDetails based on age criteria
+    
     # Filtering PersonalDetails
     personal_details_qs = PersonalDetails.objects.all()
     if query['first_name']:
@@ -105,6 +144,32 @@ def global_search(request):
         personal_details_qs = personal_details_qs.filter(last_name__icontains=query['last_name'])
     if query['religion']:
         personal_details_qs = personal_details_qs.filter(religion__icontains=query['religion'])
+
+
+    if query['min_age']:
+        min_age = int(query['min_age'])
+        min_birth_year = date.today().year - min_age
+        min_birth_date = date(min_birth_year, date.today().month, date.today().day)
+        personal_details_qs = personal_details_qs.filter(date_of_birth__lte=min_birth_date)
+
+    if query['max_age']:
+        max_age = int(query['max_age'])
+        max_birth_year = date.today().year - max_age - 1
+        max_birth_date = date(max_birth_year, date.today().month, date.today().day)
+        personal_details_qs = personal_details_qs.filter(date_of_birth__gte=max_birth_date)
+
+    if query['exact_age']:
+        exact_age = int(query['exact_age'])
+        exact_birth_year = date.today().year - exact_age
+        exact_birth_date_start = date(exact_birth_year, date.today().month, date.today().day)
+        exact_birth_date_end = exact_birth_date_start.replace(year=exact_birth_date_start.year + 1)
+        personal_details_qs = personal_details_qs.filter(
+            date_of_birth__gte=exact_birth_date_start,
+            date_of_birth__lt=exact_birth_date_end
+        )
+
+
+
 
     # Filtering LocationDetails and linking back to PersonalDetails
     location_details_qs = LocationDetails.objects.all()
@@ -146,6 +211,13 @@ def global_search(request):
     if user_gender:
         # Exclude profiles of the logged-in user's gender
         personal_details_qs = personal_details_qs.exclude(gender=user_gender)
+
+    logged_in_user = request.user if request.user.is_authenticated else None
+
+    # Exclude blocked users from the search results
+    if logged_in_user:
+        blocked_users = BlockedUser.objects.filter(user=logged_in_user).values_list('blocked_user', flat=True)
+        personal_details_qs = personal_details_qs.exclude(user__in=blocked_users)
 
     context = {
         'query': query,

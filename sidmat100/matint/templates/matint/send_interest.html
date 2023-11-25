@@ -4,6 +4,22 @@
     <meta charset="UTF-8">
     <title>Send Interest</title>
     <style>
+        /* Your CSS styles */
+        /* ... (existing CSS) ... */
+        .pending-button {
+            margin-top: 20px;
+        }
+        .pending-button a {
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 3px;
+        }
+        .pending-button a:hover {
+            background-color: #0056b3;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
@@ -46,16 +62,46 @@
         button[type="submit"]:hover {
             background-color: #0056b3;
         }
+        .back-button {
+            margin-top: 20px;
+        }
+        .back-button a {
+            padding: 8px 15px;
+            background-color: #ccc;
+            color: #333;
+            text-decoration: none;
+            border-radius: 3px;
+        }
+        .back-button a:hover {
+            background-color: #bbb;
+        }
     </style>
 </head>
 <body>
     <div>
         <h1>Send Interest</h1>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Send Interest</button>
-        </form>
+        
+        {% if already_accepted %}
+            <p>An interest has already been accepted between you and this user.</p>
+            
+        {% elif already_sent %}
+            <p>You have already sent an interest request. Please wait for a response.</p>
+            <div class="back-button">
+                <a href="{% url 'matrimony:home' %}">Back</a>
+            </div>
+        {% elif pending %}
+            <p>You already have a pending interest request with this user.</p>
+            <div class="pending-button">
+                <a href="{% url 'matrimony:home' %}">View Pending Request</a>
+            </div>
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Send Interest</button>
+            </form>
+        {% endif %}
+        
     </div>
 </body>
 </html>

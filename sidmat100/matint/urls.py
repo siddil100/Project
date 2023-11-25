@@ -15,4 +15,7 @@ urlpatterns = [
      path('reject-interest/<int:interest_id>/', views.reject_interest, name='reject_interest'),
      path('search/', views.search_view, name='search_page'),
      path('global-search/', views.global_search, name='global_search'),
+     
+ 
+
 ]

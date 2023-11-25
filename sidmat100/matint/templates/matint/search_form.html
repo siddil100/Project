@@ -26,6 +26,7 @@
         }
 
         input[type="text"],
+        input[type="number"],
         select {
             width: calc(100% - 22px);
             padding: 8px;
@@ -49,6 +50,14 @@
             cursor: pointer;
             font-size: 16px;
         }
+
+        /* Style for labels if needed */
+        /* label {
+            color: #333;
+            font-size: 16px;
+        } */
+
+        /* Additional styles can be added as needed */
     </style>
 </head>
 <body>
@@ -59,10 +68,17 @@
         <label for="last_name">Last Name:</label>
         <input type="text" name="last_name">
 
-        
-
         <label for="religion">Religion:</label>
         <input type="text" name="religion">
+
+        <label for="min_age">Minimum Age:</label>
+        <input type="number" name="min_age">
+
+        <label for="max_age">Maximum Age:</label>
+        <input type="number" name="max_age">
+
+        <label for="exact_age">Exact Age:</label>
+        <input type="number" name="exact_age">
 
         <label for="current_city">Current City:</label>
         <input type="text" name="current_city">

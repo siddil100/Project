@@ -12,4 +12,6 @@ class InterestForm(forms.ModelForm):
         self.fields['message'].widget = forms.Textarea(attrs={'rows': 4})  # Customize textarea widget, if desired
         self.fields['message'].label = 'Your Message'  # Change label text, if desired
         self.fields['message'].widget.attrs['placeholder'] = 'Type your message here'
+        default_message = 'Hey, I found your profile impressive!'
+        self.fields['message'].initial = default_message
 
