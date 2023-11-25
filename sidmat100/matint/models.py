@@ -22,4 +22,30 @@ class Interest(models.Model):
 
     def __str__(self):
         return f"Interest from {self.sender.username} to {self.receiver.username} - {self.get_status_display()}"
+    
+
+    from django.db import models
+from django.contrib.auth.models import User
+from matrimony.models import PersonalDetails
+
+
+
+# Your code using the PersonalDetails model in the matint app
+
+
+class InterestedProfile(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='expressed_interests')
+    interested_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='expressed_interest_by')
+    interested_user_details = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
+
+    # Add additional fields as needed
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} added in {self.interested_user.username}'s profile to interested profiles'"
+    
+
+
+
+
 

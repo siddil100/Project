@@ -349,6 +349,7 @@ def homeview(request):
 
 from django.shortcuts import render, get_object_or_404
 from .models import User, PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
+from matint.models import Interest
 @never_cache
 @login_required(login_url='accounts:login')
 def user_detail(request, user_id):
@@ -376,6 +377,11 @@ def user_detail(request, user_id):
     except LocationDetails.DoesNotExist:
         location_details = None
 
+    try:
+        interests = Interest.objects.filter(receiver=user)
+    except Interest.DoesNotExist:
+        interests = None
+
     # Retrieve images uploaded by the user
     user_images = Image.objects.filter(image_upload__user=user)
 
@@ -386,8 +392,9 @@ def user_detail(request, user_id):
         'educational_details': educational_details,
         'employment_details': employment_details,
         'location_details': location_details,
-        'hobbies': personal_details.hobbies.all(),  # Access the hobbies related to PersonalDetails
-        'user_images': user_images,  # Pass the user's uploaded images to the template
+        'hobbies': personal_details.hobbies.all(),
+        'user_images': user_images,
+        'interests': interests,
     })
 
 

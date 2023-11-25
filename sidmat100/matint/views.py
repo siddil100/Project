@@ -92,6 +92,65 @@ def reject_interest(request, interest_id):
 
 
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import InterestedProfile  # Import your InterestedProfile model
+
+@login_required
+def add_interested(request, user_id):
+    user_to_show_interest = get_object_or_404(User, id=user_id)
+    
+    # Check if the user is trying to express interest in themselves
+    if user_to_show_interest == request.user:
+        messages.warning(request, 'You cannot express interest in yourself.')
+    else:
+        # Check if the user has already expressed interest in the profile
+        if InterestedProfile.objects.filter(user=request.user, interested_user=user_to_show_interest).exists():
+            messages.warning(request, 'You have already added this profile to Interested-Profiles.')
+        else:
+            interested_user_details = user_to_show_interest.personaldetails  # Retrieve personal details of the user to show interest
+            InterestedProfile.objects.create(user=request.user, interested_user=user_to_show_interest, interested_user_details=interested_user_details)
+            # Optionally, perform additional actions after expressing interest
+
+    return redirect('matint:interested_profiles_list')
+
+
+
+
+
+from .models import Interest
+
+def interested_profiles_list(request):
+    current_user = request.user
+
+    # Retrieve accepted interests where the logged-in user is the sender
+    accepted_interests = Interest.objects.filter(sender=current_user, status='accepted')
+
+    # Retrieve interested profiles of the current user excluding those related to accepted interests
+    interested_profiles = InterestedProfile.objects.filter(
+        Q(user=current_user) | Q(interested_user=current_user)
+    ).exclude(
+        interested_user_id__in=[interest.receiver_id for interest in accepted_interests]
+    )
+
+    return render(request, 'matint/interested_profiles_list.html', {'interested_profiles': interested_profiles})
+
+
+from django.shortcuts import get_object_or_404
+
+from .models import InterestedProfile
+
+
+def remove_interest_profiles(request, user_id):
+    interested_profile = get_object_or_404(InterestedProfile, user=request.user, interested_user_id=user_id)
+    interested_profile.delete()
+    return redirect('matint:interested_profiles_list')
+
+
+
+
+
 
 
 

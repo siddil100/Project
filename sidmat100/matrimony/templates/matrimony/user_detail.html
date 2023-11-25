@@ -21,13 +21,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home</a>
+                    <a class="nav-link" href="{% url 'matrimony:home' %}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Search</a>
+                    <a class="nav-link" href="{% url 'matint:search_page' %}">Search</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">My Profile</a>
+                    <a class="nav-link" href="{% url 'matrimony:myprofile' %}">My Profile</a>
                 </li>
             </ul>
             <!-- Profile Picture and Username -->
@@ -126,11 +126,16 @@
                     </div>
                     
                 {% endfor %}
+                <a href="{% url 'matint:send_interest' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Sent Interest</a>
+                <a href="{% url 'matint:add_interested' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Add to Interested</a>
                 <a href="{% url 'matrimony:block_user' user_id=personal_details.user.id %}" class="btn btn-danger btn-block">Block User</a>
+
             {% else %}
                 <div class="col-12">
                     <p>No photos uploaded yet.</p>
                 </div>
+                <a href="{% url 'matint:send_interest' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Sent Interest</a>
+                <a href="{% url 'matint:add_interested' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Add to Interested</a>
                 <a href="{% url 'matrimony:block_user' user_id=personal_details.user.id %}" class="btn btn-danger btn-block">Block User</a>
             {% endif %}
         </div>

@@ -15,6 +15,9 @@ urlpatterns = [
      path('reject-interest/<int:interest_id>/', views.reject_interest, name='reject_interest'),
      path('search/', views.search_view, name='search_page'),
      path('global-search/', views.global_search, name='global_search'),
+     path('add_interested/<int:user_id>/', views.add_interested, name='add_interested'),
+     path('interested_profiles/', views.interested_profiles_list, name='interested_profiles_list'),
+     path('remove_interest_profiles/<int:user_id>/', views.remove_interest_profiles, name='remove_interest_profiles'),
      
  
 
