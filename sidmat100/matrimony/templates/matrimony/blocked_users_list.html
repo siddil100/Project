@@ -91,6 +91,7 @@
                                             <!-- Add other columns with user details -->
                                             <td>
                                                 <a href="{% url 'matrimony:unblock_user' blocked_user.blocked_user_details.user.id %}" class="btn btn-danger">Unblock</a>
+                                                <a href="{% url 'matrimony:user_detail' blocked_user.blocked_user_details.user.id %}" class="btn btn-info">View Details</a>
                                                 <!-- Optionally add other actions or details -->
                                             </td>
                                         </tr>

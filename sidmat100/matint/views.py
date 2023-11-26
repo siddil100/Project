@@ -59,10 +59,19 @@ def send_interest(request, user_id):
 
 from django.shortcuts import render, get_object_or_404
 from .models import Interest
+from matrimony.models import BlockedUser
 
 @login_required
 def received_interests(request):
+    # Get received interests for the user with a pending status
     received_interests = Interest.objects.filter(receiver=request.user, status=Interest.PENDING)
+
+    # Get a list of blocked user IDs for the current user
+    blocked_user_ids = BlockedUser.objects.filter(user=request.user).values_list('blocked_user_id', flat=True)
+
+    # Exclude blocked users from the received interests queryset
+    received_interests = received_interests.exclude(sender_id__in=blocked_user_ids)
+
     context = {
         'received_interests': received_interests,
     }
@@ -90,7 +99,7 @@ def reject_interest(request, interest_id):
     # Handle cases where the interest is already rejected or the user doesn't have permission
 
 
-
+########################################################################################
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
