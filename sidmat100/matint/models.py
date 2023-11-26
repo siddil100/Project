@@ -55,6 +55,22 @@ class NotInterested(models.Model):
     def __str__(self):
         return f"{self.user.username} marked {self.not_interested_user.username} as not interested"
 
+
+
+
+
+##FOR CHECK ticks
+
+class UserActivity(models.Model):
+    user = models.ForeignKey(User, related_name='user_activities', on_delete=models.CASCADE)
+    viewed_user = models.ForeignKey(User, related_name='viewed_by', on_delete=models.CASCADE)
+    viewed_details = models.BooleanField(default=False)
+    # Add more fields as needed for other user interactions or activities
+
+    # Add methods or properties as needed for this model
+
+    def __str__(self):
+        return f"{self.user.username}'s Activity for {self.viewed_user.username}"
     
 
 

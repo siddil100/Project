@@ -223,6 +223,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
 from matint.models import NotInterested
+from matint.models import UserActivity
 
 @login_required(login_url='accounts:login')
 def homeview(request):
@@ -257,6 +258,8 @@ def homeview(request):
         blocked_users = BlockedUser.objects.filter(user=user).values_list('blocked_user', flat=True)
         not_interested_users = NotInterested.objects.filter(user=user).values_list('not_interested_user', flat=True)
         
+        # Fetch UserActivity data for the logged-in user
+        user_activities = UserActivity.objects.filter(user=user)
 
         # Populating filtered_profiles based on preferences
         filtered_profiles = PersonalDetails.objects.filter(
@@ -275,9 +278,10 @@ def homeview(request):
             filtered_profiles = filtered_profiles.exclude(user__in=blocked_users)
             filtered_profiles = filtered_profiles.exclude(user__in=not_interested_users)
 
-
         filtered_employment_details = []
         filtered_location_details = []
+        filtered_profiles_info = [] 
+        viewed_profile_ids = user_activities.values_list('viewed_user_id', flat=True)
 
         for profile in filtered_profiles:
             try:
@@ -285,36 +289,45 @@ def homeview(request):
                 location = LocationDetails.objects.get(user=profile.user)
                 filtered_employment_details.append(employment)
                 filtered_location_details.append(location)
+
+                # Check if the profile has been viewed by the user
+                profile_viewed = profile.user_id in viewed_profile_ids
+                filtered_profiles_info.append((profile, employment, location, profile_viewed))
             except (EmploymentDetails.DoesNotExist, LocationDetails.DoesNotExist):
                 filtered_employment_details.append(None)
                 filtered_location_details.append(None)
-
-        filtered_profiles_info = zip(filtered_profiles, filtered_employment_details, filtered_location_details)
+                filtered_profiles_info.append((profile, None, None, False))
 
         # Populating all_profiles_info regardless of preferences
         all_profiles = PersonalDetails.objects.exclude(user=user).filter(gender=opposite_gender, perso_fill=True)
         all_profiles = all_profiles.exclude(user__in=blocked_users)
         all_profiles = all_profiles.exclude(user__in=not_interested_users)
 
+        viewed_profile_ids = user_activities.values_list('viewed_user_id', flat=True)
 
         for profile in all_profiles.exclude(id__in=filtered_profiles):
             try:
                 employment = EmploymentDetails.objects.get(user=profile.user)
                 location = LocationDetails.objects.get(user=profile.user)
-                all_profiles_info.append((profile, employment, location))
+                profile_viewed = profile.user_id in viewed_profile_ids
+                all_profiles_info.append((profile, employment, location, profile_viewed))
             except (EmploymentDetails.DoesNotExist, LocationDetails.DoesNotExist):
-                all_profiles_info.append((profile, None, None))
+                all_profiles_info.append((profile, None, None, False))
 
         return render(request, 'matrimony/home.html', {
             'profile_image_url': profile_image_url,
             'filtered_profiles_info': filtered_profiles_info,
             'all_profiles_info': all_profiles_info,
+            'user_activities': user_activities,
         })
 
     except Preference.DoesNotExist:
         personal_details = PersonalDetails.objects.get(user=user)
         profile_image_url = personal_details.profile_image.url
         opposite_gender = 'female' if request.user.personaldetails.gender == 'male' else 'male'
+
+        # Fetch UserActivity data for the logged-in user
+        user_activities = UserActivity.objects.filter(user=user)
 
         opposite_gender_profiles = PersonalDetails.objects.filter(gender=opposite_gender, perso_fill=True).exclude(user=request.user)
 
@@ -330,6 +343,7 @@ def homeview(request):
             try:
                 employment = EmploymentDetails.objects.get(user=profile.user)
                 location = LocationDetails.objects.get(user=profile.user)
+                profile_viewed = profile.user_id in viewed_profile_ids
                 all_employment_details.append(employment)
                 all_location_details.append(location)
             except (EmploymentDetails.DoesNotExist, LocationDetails.DoesNotExist):
@@ -342,9 +356,8 @@ def homeview(request):
             'profile_image_url': profile_image_url,
             'filtered_profiles_info': None,  # No filtered profiles
             'all_profiles_info': all_profiles_info,
+            'user_activities': user_activities,
         })
-
-    
 
 
 
@@ -358,11 +371,13 @@ def homeview(request):
 
 from django.shortcuts import render, get_object_or_404
 from .models import User, PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
-from matint.models import Interest
+from matint.models import Interest,UserActivity
+from django.db.models import Q
 @never_cache
 @login_required(login_url='accounts:login')
 def user_detail(request, user_id):
     user = get_object_or_404(User, id=user_id)
+    viewed_user = user  # Store the user being viewed
 
     personal_details = get_object_or_404(PersonalDetails, user=user)
 
@@ -394,7 +409,13 @@ def user_detail(request, user_id):
     # Retrieve images uploaded by the user
     user_images = Image.objects.filter(image_upload__user=user)
 
-    return render(request, 'matrimony/user_detail.html', {
+    activity_exists = UserActivity.objects.filter(
+        Q(user=request.user, viewed_user=viewed_user) |
+        Q(user=viewed_user, viewed_user=request.user)
+    ).exists()
+
+    # Render the page with existing context data
+    context = {
         'user': user,
         'personal_details': personal_details,
         'family_details': family_details,
@@ -404,7 +425,25 @@ def user_detail(request, user_id):
         'hobbies': personal_details.hobbies.all(),
         'user_images': user_images,
         'interests': interests,
-    })
+    }
+
+    # Create UserActivity entry when viewing another user's profile
+    if request.user != viewed_user:
+    # Use update_or_create to either update existing or create a new UserActivity
+        activity, created = UserActivity.objects.update_or_create(
+            user=request.user,
+            viewed_user=viewed_user,
+            defaults={'viewed_details': True}
+        )
+
+    # If the activity already exists, update the viewed_details to True
+    if not created:
+        activity.viewed_details = True
+        activity.save()
+
+
+
+    return render(request, 'matrimony/user_detail.html', context)
 
 
 

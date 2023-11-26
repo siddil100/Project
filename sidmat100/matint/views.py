@@ -99,6 +99,25 @@ def reject_interest(request, interest_id):
     # Handle cases where the interest is already rejected or the user doesn't have permission
 
 
+
+
+
+
+# views.py
+
+from django.shortcuts import render
+from .models import Interest
+
+def accepted_interests_view(request):
+    # Retrieve accepted interests received by the current user
+    accepted_interests = Interest.objects.filter(receiver=request.user, status=Interest.ACCEPTED)
+
+    return render(request, 'matint/accepted_interests.html', {
+        'accepted_interests': accepted_interests,
+    })
+
+
+
 ########################################################################################
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -196,7 +215,7 @@ def global_search(request):
         'occupation': request.GET.get('occupation', ''),
         'min_age': request.GET.get('min_age', ''),  # Add min_age field to query dictionary
         'max_age': request.GET.get('max_age', ''),  # Add max_age field to query dictionary
-        'exact_age': request.GET.get('exact_age', ''),
+        
         
         # Add more fields from the form as needed
     }
@@ -226,15 +245,7 @@ def global_search(request):
         max_birth_date = date(max_birth_year, date.today().month, date.today().day)
         personal_details_qs = personal_details_qs.filter(date_of_birth__gte=max_birth_date)
 
-    if query['exact_age']:
-        exact_age = int(query['exact_age'])
-        exact_birth_year = date.today().year - exact_age
-        exact_birth_date_start = date(exact_birth_year, date.today().month, date.today().day)
-        exact_birth_date_end = exact_birth_date_start.replace(year=exact_birth_date_start.year + 1)
-        personal_details_qs = personal_details_qs.filter(
-            date_of_birth__gte=exact_birth_date_start,
-            date_of_birth__lt=exact_birth_date_end
-        )
+    
 
 
 
@@ -299,7 +310,7 @@ def global_search(request):
     return render(request, 'matint/search_results.html', context)
 
 
-
+####   NOT INTERESTED MODEL
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -320,6 +331,9 @@ def add_notinterested(request, user_id):
 
     return redirect('matint:notinterested_list')
 
+
+
+
 def notinterested_list(request):
     current_user = request.user
     
@@ -327,6 +341,9 @@ def notinterested_list(request):
     not_interested_users = NotInterested.objects.filter(user=current_user)
     
     return render(request, 'matint/notinterested_list.html', {'not_interested_users': not_interested_users})
+
+
+
 
 def remove_notinterested(request, user_id):
     user_to_remove = get_object_or_404(User, id=user_id)

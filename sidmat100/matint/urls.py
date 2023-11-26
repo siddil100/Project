@@ -13,6 +13,7 @@ urlpatterns = [
      path('received-interests/', views.received_interests, name='received_interests'),
      path('accept-interest/<int:interest_id>/', views.accept_interest, name='accept_interest'),
      path('reject-interest/<int:interest_id>/', views.reject_interest, name='reject_interest'),
+     path('accepted_interests/', views.accepted_interests_view, name='accepted_interests'),
      path('search/', views.search_view, name='search_page'),
      path('global-search/', views.global_search, name='global_search'),
      path('add_interested/<int:user_id>/', views.add_interested, name='add_interested'),

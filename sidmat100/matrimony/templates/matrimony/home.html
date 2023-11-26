@@ -7,6 +7,7 @@
     <title>Dream Wed</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
     <style>
@@ -84,7 +85,7 @@
 </nav>
 <div class="container mt-5">
     <div class="row">
-        {% for profile, employment, location in filtered_profiles_info %}
+        {% for profile, employment, location, profile_viewed in filtered_profiles_info %}
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card">
 
@@ -112,14 +113,19 @@
                 </div>
 
                 <div class="card-footer">
-                    <a href="{% url 'matrimony:user_detail' user_id=profile.user.id %}" class="btn btn-primary">View Details</a>
+                    <a href="{% url 'matrimony:user_detail' user_id=profile.user.id %}" class="btn btn-primary">
+                        <i class="fas fa-eye"></i> View Details
+                        {% if profile_viewed %}
+                        <i class="fas fa-check-circle"></i>
+                    {% endif %}
+                    </a>
                     <a href="{% url 'matint:send_interest' user_id=profile.user.id %}" class="btn btn-success">Send Interest</a>
                 </div>
             </div>
         </div>
         {% endfor %}
 
-        {% for profile, employment, location in all_profiles_info %}
+        {% for profile, employment, location, profile_viewed in all_profiles_info %}
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card">
                 
@@ -147,7 +153,12 @@
                 </div>
 
                 <div class="card-footer">
-                    <a href="{% url 'matrimony:user_detail' user_id=profile.user.id %}" class="btn btn-primary">View Details</a>
+                    <a href="{% url 'matrimony:user_detail' user_id=profile.user.id %}" class="btn btn-primary">
+                        <i class="fas fa-eye"></i> View Details
+                        {% if profile_viewed %}
+                        <i class="fas fa-check-circle"></i>
+                    {% endif %}
+                    </a>
                     <a href="{% url 'matint:send_interest' user_id=profile.user.id %}" class="btn btn-success">Send Interest</a>
 
                     

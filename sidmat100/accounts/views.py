@@ -45,6 +45,10 @@ def login_view(request):
         if user is not None:
             if user.is_superuser:
                 login(request, user)
+                personal_details = PersonalDetails.objects.get(user=request.user)
+                profile_image_url = personal_details.profile_image.url if personal_details.profile_image else None
+                request.session['profile_image_url'] = profile_image_url
+
                 request.session['suser'] = user.username  # Store the user's username in the 'suser' session
 
                 # Retrieve the PersonalDetails instance for the superuser

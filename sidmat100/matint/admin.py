@@ -9,3 +9,4 @@ from .models import *
 admin.site.register(Interest)
 admin.site.register(InterestedProfile)
 admin.site.register(NotInterested)
+admin.site.register(UserActivity)
