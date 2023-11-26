@@ -128,6 +128,7 @@
                 {% endfor %}
                 <a href="{% url 'matint:send_interest' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Sent Interest</a>
                 <a href="{% url 'matint:add_interested' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Add to Interested</a>
+                <a href="{% url 'matint:add_notinterested' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Mark as Not-Interested</a>
                 <a href="{% url 'matrimony:block_user' user_id=personal_details.user.id %}" class="btn btn-danger btn-block">Block User</a>
 
             {% else %}
@@ -136,6 +137,7 @@
                 </div>
                 <a href="{% url 'matint:send_interest' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Sent Interest</a>
                 <a href="{% url 'matint:add_interested' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Add to Interested</a>
+                <a href="{% url 'matint:add_notinterested' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Mark as Not-Interested</a>
                 <a href="{% url 'matrimony:block_user' user_id=personal_details.user.id %}" class="btn btn-danger btn-block">Block User</a>
             {% endif %}
         </div>

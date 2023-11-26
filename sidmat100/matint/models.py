@@ -45,6 +45,18 @@ class InterestedProfile(models.Model):
         return f"{self.user.username} added in {self.interested_user.username}'s profile to interested profiles'"
     
 
+#NOT INTERESTED PROFILE MODELS
+
+class NotInterested(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='not_interested_users')
+    not_interested_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='not_interested_by')
+    not_interested_user_details = models.ForeignKey(PersonalDetails, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.username} marked {self.not_interested_user.username} as not interested"
+
+    
+
 
 
 

@@ -222,6 +222,7 @@ from .models import PersonalDetails, FamilyDetails, EducationalDetails, Employme
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
+from matint.models import NotInterested
 
 @login_required(login_url='accounts:login')
 def homeview(request):
@@ -254,6 +255,7 @@ def homeview(request):
         profile_image_url = personal_details.profile_image.url
         opposite_gender = 'female' if personal_details.gender == 'male' else 'male'
         blocked_users = BlockedUser.objects.filter(user=user).values_list('blocked_user', flat=True)
+        not_interested_users = NotInterested.objects.filter(user=user).values_list('not_interested_user', flat=True)
         
 
         # Populating filtered_profiles based on preferences
@@ -271,6 +273,8 @@ def homeview(request):
             filtered_profile_user_ids = LocationDetails.objects.filter(current_city=preferences.current_city).values_list('user_id', flat=True)
             filtered_profiles = filtered_profiles.filter(user_id__in=filtered_profile_user_ids)
             filtered_profiles = filtered_profiles.exclude(user__in=blocked_users)
+            filtered_profiles = filtered_profiles.exclude(user__in=not_interested_users)
+
 
         filtered_employment_details = []
         filtered_location_details = []
@@ -290,6 +294,8 @@ def homeview(request):
         # Populating all_profiles_info regardless of preferences
         all_profiles = PersonalDetails.objects.exclude(user=user).filter(gender=opposite_gender, perso_fill=True)
         all_profiles = all_profiles.exclude(user__in=blocked_users)
+        all_profiles = all_profiles.exclude(user__in=not_interested_users)
+
 
         for profile in all_profiles.exclude(id__in=filtered_profiles):
             try:
@@ -313,7 +319,10 @@ def homeview(request):
         opposite_gender_profiles = PersonalDetails.objects.filter(gender=opposite_gender, perso_fill=True).exclude(user=request.user)
 
         blocked_users = BlockedUser.objects.filter(user=user).values_list('blocked_user', flat=True)
+        not_interested_users = NotInterested.objects.filter(user=user).values_list('not_interested_user', flat=True)
         opposite_gender_profiles = opposite_gender_profiles.exclude(user__in=blocked_users)
+        opposite_gender_profiles = opposite_gender_profiles.exclude(user__in=not_interested_users)
+
         all_employment_details = []
         all_location_details = []
         

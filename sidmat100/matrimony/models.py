@@ -194,5 +194,5 @@ class BlockedUser(models.Model):
     blocked_user_details = models.ForeignKey('PersonalDetails', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.user.username}'s blocked user"
+        return f"{self.user.username} blocked {self.blocked_user.username}"
 

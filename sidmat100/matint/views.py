@@ -301,3 +301,36 @@ def global_search(request):
 
 
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import NotInterested
+from matrimony.models import PersonalDetails
+
+def add_notinterested(request, user_id):
+    user_not_interested = get_object_or_404(User, id=user_id)
+    
+    # Check if the user is already marked as not interested
+    if NotInterested.objects.filter(user=request.user, not_interested_user_id=user_id).exists():
+        # If the user is already marked as not interested, display a message
+        messages.warning(request, 'This user is already marked as not interested.')
+    else:
+        not_interested_user_details = user_not_interested.personaldetails
+        NotInterested.objects.create(user=request.user, not_interested_user_details=not_interested_user_details, not_interested_user_id=user_id)
+        # Optionally, perform additional actions after marking the user as not interested
+
+    return redirect('matint:notinterested_list')
+
+def notinterested_list(request):
+    current_user = request.user
+    
+    # Retrieve users marked as not interested by the current user
+    not_interested_users = NotInterested.objects.filter(user=current_user)
+    
+    return render(request, 'matint/notinterested_list.html', {'not_interested_users': not_interested_users})
+
+def remove_notinterested(request, user_id):
+    user_to_remove = get_object_or_404(User, id=user_id)
+    not_interested_user = get_object_or_404(NotInterested, user=request.user, not_interested_user_details__user=user_to_remove)
+    not_interested_user.delete()  # Remove the user from the not interested list
+    # Optionally, perform additional actions after removing the user from the not interested list
+    return redirect('matint:notinterested_list')
