@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "matrimony",
     "myadmin",
     "matint",
+    "matchat",
     
 
 ]

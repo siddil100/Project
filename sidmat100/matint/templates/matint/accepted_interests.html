@@ -92,6 +92,8 @@
                                 <div class="row no-gutters">
                                     <div class="col text-center">
                                         <a href="{% url 'matrimony:user_detail' user_id=accepted_interest.sender.id %}" class="btn btn-primary">View Details</a>
+                                        <a href="{% url 'matchat:chat' receiver_id=accepted_interest.sender.id %}" class="btn btn-primary">Chat</a>
+
                                     </div>
                                 </div>
                                 <!-- Add more actions if needed -->
