@@ -328,6 +328,7 @@ def homeview(request):
 
         # Fetch UserActivity data for the logged-in user
         user_activities = UserActivity.objects.filter(user=user)
+        viewed_profile_ids = user_activities.values_list('viewed_user_id', flat=True)
 
         opposite_gender_profiles = PersonalDetails.objects.filter(gender=opposite_gender, perso_fill=True).exclude(user=request.user)
 
@@ -339,6 +340,7 @@ def homeview(request):
         all_employment_details = []
         all_location_details = []
         
+        
         for profile in opposite_gender_profiles:
             try:
                 employment = EmploymentDetails.objects.get(user=profile.user)
@@ -346,11 +348,11 @@ def homeview(request):
                 profile_viewed = profile.user_id in viewed_profile_ids
                 all_employment_details.append(employment)
                 all_location_details.append(location)
+                all_profiles_info.append((profile, employment, location, profile_viewed))
             except (EmploymentDetails.DoesNotExist, LocationDetails.DoesNotExist):
                 all_employment_details.append(None)
                 all_location_details.append(None)
-
-        all_profiles_info = zip(opposite_gender_profiles, all_employment_details, all_location_details)
+                all_profiles_info.append((profile, None, None, False))
 
         return render(request, 'matrimony/home.html', {
             'profile_image_url': profile_image_url,

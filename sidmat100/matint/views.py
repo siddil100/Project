@@ -109,8 +109,17 @@ from django.shortcuts import render
 from .models import Interest
 
 def accepted_interests_view(request):
-    # Retrieve accepted interests received by the current user
-    accepted_interests = Interest.objects.filter(receiver=request.user, status=Interest.ACCEPTED)
+    blocked_users = BlockedUser.objects.filter(user=request.user).values_list('blocked_user_id', flat=True)
+    not_interested_users = NotInterested.objects.filter(user=request.user).values_list('not_interested_user_id', flat=True)
+
+    excluded_users = list(blocked_users) + list(not_interested_users)
+
+    accepted_interests = Interest.objects.filter(
+        receiver=request.user,
+        status=Interest.ACCEPTED
+    ).exclude(
+        Q(sender_id__in=excluded_users) | Q(sender=request.user)
+    )
 
     return render(request, 'matint/accepted_interests.html', {
         'accepted_interests': accepted_interests,
