@@ -17,6 +17,8 @@ from django.db.models import Q
 
 
 
+from django.db.models import Count
+
 def mychats(request):
     blocked_users = BlockedUser.objects.filter(user=request.user).values_list('blocked_user_id', flat=True)
     not_interested_users = NotInterested.objects.filter(user=request.user).values_list('not_interested_user_id', flat=True)
@@ -30,9 +32,21 @@ def mychats(request):
         Q(sender_id__in=excluded_users) | Q(sender=request.user)
     )
 
+    # Retrieve the count of unseen messages for each user in accepted interests
+    unseen_messages_counts = {}
+    for interest in accepted_interests:
+        unseen_count = Message.objects.filter(
+            sender=interest.sender,
+            receiver=request.user,
+            is_seen=False
+        ).count()
+        unseen_messages_counts[interest.sender.id] = unseen_count
+
     return render(request, 'matchat/mychats.html', {
         'accepted_interests': accepted_interests,
+        'unseen_messages_counts': unseen_messages_counts,
     })
+
 
 
 

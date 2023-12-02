@@ -454,6 +454,7 @@ def user_detail(request, user_id):
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
+from matchat.models import *
 
 @login_required(login_url='accounts:login')
 def myprofileview(request):
@@ -477,7 +478,7 @@ def myprofileview(request):
         physical_details = None
 
 
-    
+    unread_message_count = Message.objects.filter(receiver=user, is_seen=False).count()
 
     context = {
         'user': user,
@@ -488,6 +489,7 @@ def myprofileview(request):
         'location_details': location_details,
         'user_images': user_images,
         'physical_details': physical_details,  # Include physical details in the context
+        'unread_message_count': unread_message_count,
     }
 
     return render(request, 'matrimony/my_profile.html', context)

@@ -9,69 +9,145 @@
     <!-- Your custom styles -->
     <style>
         /* Add your custom CSS styles here */
-        /* ... (same as previous HTML) ... */
+        /* ... (existing CSS remains unchanged) ... */
 
         /* Additional CSS styles */
-/* ... (existing CSS remains unchanged) ... */
+        /* ... (existing CSS remains unchanged) ... */
 
-/* Style for table headers */
-.table th {
-    text-align: center;
-}
+        /* Style for table headers */
+        .table th {
+            text-align: center;
+        }
 
-/* Hover effect for table rows */
-.table tbody tr:hover {
-    background-color: #f5f5f5; /* Light grey background on hover */
-}
+        /* Hover effect for table rows */
+        .table tbody tr:hover {
+            background-color: #f5f5f5; /* Light grey background on hover */
+        }
 
-/* Style for profile buttons */
-.profile-buttons {
-    margin-top: 10px;
-}
+        /* Style for profile buttons */
+        .profile-buttons {
+            margin-top: 10px;
+        }
 
-/* Reduce space between columns of buttons */
-.no-gutters {
-    margin-right: 0;
-    margin-left: 0;
-}
+        /* Reduce space between columns of buttons */
+        .no-gutters {
+            margin-right: 0;
+            margin-left: 0;
+        }
 
-.no-gutters [class^="col-"],
-.no-gutters [class*=" col-"] {
-    padding-right: 10px;
-    padding-left: 5px;
-}
+        .no-gutters [class^="col-"],
+        .no-gutters [class*=" col-"] {
+            padding-right: 10px;
+            padding-left: 5px;
+        }
 
-/* Center-align content */
-.center-button {
-    text-align: center;
-}
+        /* Center-align content */
+        .center-button {
+            text-align: center;
+        }
 
-/* Style for the "Go Back" button */
-.btn-back {
-    background-color: #333; /* Light black background color */
-    color: #fff; /* White text color */
-    border-color: #333; /* Matching border color */
-}
+        /* Style for the "Go Back" button */
+        .btn-back {
+            background-color: #333; /* Light black background color */
+            color: #fff; /* White text color */
+            border-color: #333; /* Matching border color */
+        }
 
-.btn-back:hover {
-    background-color: #555; /* Darker black on hover */
-    border-color: #555; /* Matching border color on hover */
-}
+        .btn-back:hover {
+            background-color: #555; /* Darker black on hover */
+            border-color: #555; /* Matching border color on hover */
+        }
 
-/* Styling for the "Chat" button */
-.btn-primary {
-    background-color: #007bff; /* Blue primary color for buttons */
-    border-color: #007bff; /* Matching border color */
-}
+        /* Styling for the "Chat" button */
+        .btn-primary {
+            background-color: #007bff; /* Blue primary color for buttons */
+            border-color: #007bff; /* Matching border color */
+        }
 
-.btn-primary:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-    border-color: #0056b3; /* Matching border color on hover */
-}
+        .btn-primary:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            border-color: #0056b3; /* Matching border color on hover */
+        }
 
+        /* Badge style for unseen message count */
+        .badge {
+            margin-left: 5px;
+        }
+
+        .badge-danger {
+            background-color: #dc3545; /* Red color for badge */
+        }
     </style>
 </head>
 <body>
+
+
+
+
+
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f0f0f0;">
+        <a class="navbar-brand" href="#">DreamWed</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'matrimony:home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matint:received_interests' %}">View Interests</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matint:accepted_interests' %}">View Accepted Profiles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matint:notinterested_list' %}">View Not interested profiles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matrimony:myprofile' %}">My Profile</a>
+                </li>
+
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'matchat:mychats' %}">
+                        Mychats{% if unread_message_count > 0 %} <span class="badge badge-danger">{{ unread_message_count }}</span>{% endif %}
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="updateDetailsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Update Details
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="updateDetailsDropdown">
+                        <a class="dropdown-item" href="{% url 'matrimony:upload_images' %}">Upload photo</a>
+                        <a class="dropdown-item" href="{% url 'matrimony:physicaldetails' %}">Add PhysicalDetails</a>
+                        <a class="dropdown-item" href="{% url 'matrimony:update_preference' %}">Add Preferences</a>
+                        <a class="dropdown-item" href="{% url 'matrimony:blocked_users_list' %}">See Blocked Users</a>
+                        <a class="dropdown-item" href="{% url 'matint:interested_profiles_list' %}">See Interested Profiles</a>
+                        <a class="dropdown-item" href="{% url 'matrimony:update_familydetails' %}">Update Family Details</a>
+                        <a class="dropdown-item" href="{% url 'matrimony:update_educationaldetails' %}">Update Educational Details</a>
+                        <a class="dropdown-item" href="{% url 'matrimony:update_employmentdetails' %}">Update Employment Details</a>
+                        <a class="dropdown-item" href="{% url 'matrimony:update_locationdetails' %}">Update Location Details</a>
+                    </div>
+                </li>
+            </ul>
+            <!-- Profile Picture and Username -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        
+
+                        {{ request.session.suser }} <!-- Display the username from the session -->
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                        <a class="dropdown-item" href="{% url 'matrimony:myprofile' %}">My Profile</a>
+                        <a class="dropdown-item" href="#">Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
 <div class="container">
     <h1 align="center">My Chats</h1>
@@ -102,6 +178,14 @@
                                 <div class="row no-gutters">
                                     <div class="col text-center">
                                         <a href="{% url 'matchat:chat' receiver_id=accepted_interest.sender.id %}" class="btn btn-primary">Chat</a>
+                                        <!-- Display the number of unseen messages -->
+                                        {% for user_id, unseen_count in unseen_messages_counts.items %}
+                                            {% if user_id == accepted_interest.sender.id %}
+                                                {% if unseen_count > 0 %}
+                                                    <span class="badge badge-danger">{{ unseen_count }}</span>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </td>
