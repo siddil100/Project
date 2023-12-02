@@ -1,0 +1,132 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Chats</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your custom styles -->
+    <style>
+        /* Add your custom CSS styles here */
+        /* ... (same as previous HTML) ... */
+
+        /* Additional CSS styles */
+/* ... (existing CSS remains unchanged) ... */
+
+/* Style for table headers */
+.table th {
+    text-align: center;
+}
+
+/* Hover effect for table rows */
+.table tbody tr:hover {
+    background-color: #f5f5f5; /* Light grey background on hover */
+}
+
+/* Style for profile buttons */
+.profile-buttons {
+    margin-top: 10px;
+}
+
+/* Reduce space between columns of buttons */
+.no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.no-gutters [class^="col-"],
+.no-gutters [class*=" col-"] {
+    padding-right: 10px;
+    padding-left: 5px;
+}
+
+/* Center-align content */
+.center-button {
+    text-align: center;
+}
+
+/* Style for the "Go Back" button */
+.btn-back {
+    background-color: #333; /* Light black background color */
+    color: #fff; /* White text color */
+    border-color: #333; /* Matching border color */
+}
+
+.btn-back:hover {
+    background-color: #555; /* Darker black on hover */
+    border-color: #555; /* Matching border color on hover */
+}
+
+/* Styling for the "Chat" button */
+.btn-primary {
+    background-color: #007bff; /* Blue primary color for buttons */
+    border-color: #007bff; /* Matching border color */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    border-color: #0056b3; /* Matching border color on hover */
+}
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 align="center">My Chats</h1>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered">
+                <!-- Table headers -->
+                <thead class="thead-dark">
+                    <tr>
+                        <th>User</th>
+                        <th>Profile Image</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for accepted_interest in accepted_interests %}
+                        <tr>
+                            <td>{{ accepted_interest.sender.personaldetails.first_name }} {{ accepted_interest.sender.personaldetails.last_name }}</td>
+                            <td>
+                                {% if accepted_interest.sender.personaldetails.profile_image %}
+                                    <img src="{{ accepted_interest.sender.personaldetails.profile_image.url }}" alt="Profile Image" style="max-width: 100px; max-height: 100px;">
+                                {% else %}
+                                    No Image
+                                {% endif %}
+                            </td>
+                            <td class="profile-buttons">
+                                <div class="row no-gutters">
+                                    <div class="col text-center">
+                                        <a href="{% url 'matchat:chat' receiver_id=accepted_interest.sender.id %}" class="btn btn-primary">Chat</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <!-- Display message if no accepted interests found -->
+                        <tr>
+                            <td colspan="3">No accepted interests to chat</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="center-button">
+                <a href="{% url 'matrimony:myprofile' %}" class="btn btn-primary btn-back">Go Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Your custom scripts -->
+<script>
+    // Add your custom JavaScript code here if needed
+</script>
+
+</body>
+</html>

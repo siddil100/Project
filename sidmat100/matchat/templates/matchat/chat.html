@@ -249,7 +249,14 @@ function loadMessages() {
             data.forEach(message => {
                 const formattedTimestamp = formatTimestamp(message.timestamp);
                 const messageAlignmentClass = message.is_incoming ? 'incoming-message' : 'outgoing-message';
-                const messageContent = `<div class="${messageAlignmentClass}"><div class="message-content"><p>${message.content}</p><span>${formattedTimestamp}</span></div></div>`;
+                const seenIcon = message.is_seen ? '✓' : ''; // Display a checkmark if the message is seen
+                
+                const messageContent = `<div class="${messageAlignmentClass}">
+                    <div class="message-content">
+                        <p>${message.content}</p>
+                        <span>${formattedTimestamp} ${seenIcon}</span> <!-- Display seen icon -->
+                    </div>
+                </div>`;
                 messageBox.innerHTML += messageContent;
             });
 

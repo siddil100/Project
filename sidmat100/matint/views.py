@@ -84,7 +84,12 @@ def accept_interest(request, interest_id):
     if interest.receiver == request.user and interest.status == Interest.PENDING:
         interest.status = Interest.ACCEPTED
         interest.save()
-        # You can redirect to a success page or another view
+
+        # Create a reciprocal interest for the sender with reversed sender and receiver
+        reciprocal_interest = Interest(sender=interest.receiver, receiver=interest.sender, status=Interest.ACCEPTED)
+        reciprocal_interest.save()
+
+        # Redirect to a success page or another view
         return redirect('matint:received_interests')
     # Handle cases where the interest is already accepted or the user doesn't have permission
 
@@ -124,6 +129,11 @@ def accepted_interests_view(request):
     return render(request, 'matint/accepted_interests.html', {
         'accepted_interests': accepted_interests,
     })
+
+
+
+
+
 
 
 

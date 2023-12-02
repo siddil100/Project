@@ -454,7 +454,7 @@ def user_detail(request, user_id):
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
-@never_cache
+
 @login_required(login_url='accounts:login')
 def myprofileview(request):
     user = request.user
@@ -465,6 +465,7 @@ def myprofileview(request):
     educational_details = EducationalDetails.objects.get(user=user)
     employment_details = EmploymentDetails.objects.get(user=user)
     location_details = LocationDetails.objects.get(user=user)
+    
 
     # Retrieve user images
     user_images = Image.objects.filter(image_upload__user=user)
@@ -474,6 +475,9 @@ def myprofileview(request):
         physical_details = PhysicalDetails.objects.get(user=user)
     except PhysicalDetails.DoesNotExist:
         physical_details = None
+
+
+    
 
     context = {
         'user': user,
