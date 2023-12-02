@@ -314,8 +314,18 @@ def global_search(request):
 
     # Exclude blocked users from the search results
     if logged_in_user:
+        # Fetching blocked users for the logged_in_user
         blocked_users = BlockedUser.objects.filter(user=logged_in_user).values_list('blocked_user', flat=True)
-        personal_details_qs = personal_details_qs.exclude(user__in=blocked_users)
+
+        # Fetching not interested users for the logged_in_user
+        not_interested_users = NotInterested.objects.filter(user=logged_in_user).values_list('not_interested_user', flat=True)
+
+        # Combining blocked users and not interested users
+        excluded_users = list(blocked_users) + list(not_interested_users)
+
+        # Exclude both blocked users and not interested users from personal_details_qs
+        personal_details_qs = personal_details_qs.exclude(user__in=excluded_users)
+
 
     context = {
         'query': query,

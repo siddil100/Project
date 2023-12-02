@@ -66,11 +66,19 @@ def chat(request, receiver_id):
     messages = messages_sent_by_request_user | messages_received_by_request_user
     messages = messages.order_by('timestamp')
     
-
+    # Determine whether each message is incoming or outgoing
     for message in messages:
         message.is_incoming = message.receiver == request.user
 
-    return render(request, 'matchat/chat.html', {'receiver': receiver, 'personal_details': personal_details, 'messages': messages})
+    # Pass receiver ID to the template context
+    context = {
+        'receiver': receiver,
+        'personal_details': personal_details,
+        'messages': messages,
+        'receiver_id': receiver_id,  # Include receiver_id in the context
+    }
+
+    return render(request, 'matchat/chat.html', context)
 
 
 
@@ -121,3 +129,20 @@ def send_message(request, receiver_id):
             message.save()
 
     return redirect('matchat:chat', receiver_id=receiver_id)
+
+
+
+
+
+def clear_chat(request, receiver_id):
+    receiver = get_object_or_404(User, pk=receiver_id)
+
+    # Fetch all messages between the current user and the receiver
+    messages_sent_by_request_user = Message.objects.filter(sender=request.user, receiver=receiver)
+    messages_received_by_request_user = Message.objects.filter(sender=receiver, receiver=request.user)
+
+    # Delete all messages (sent and received) between the users
+    messages_sent_by_request_user.delete()
+    messages_received_by_request_user.delete()
+
+    return redirect('matchat:mychats') 
