@@ -53,6 +53,18 @@
                         Mychats{% if unread_message_count > 0 %} <span class="badge badge-danger">{{ unread_message_count }}</span>{% endif %}
                     </a>
                 </li>
+
+                <li class="nav-item">
+    {% if request.user.premiummembership.is_premium %}
+        <!-- Display tick mark if the user is premium -->
+        <a class="nav-link" href="{% url 'matpayment:view_premium' %}">Premium &#10003;</a>
+    {% else %}
+        <!-- Show the regular link if the user is not premium -->
+        <a class="nav-link" href="{% url 'matpayment:upgrade_to_premium' %}">Upgrade Premium</a>
+    {% endif %}
+</li>
+
+
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="updateDetailsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Update Details
@@ -70,17 +82,18 @@
                     </div>
                 </li>
             </ul>
+            
             <!-- Profile Picture and Username -->
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        
-
-                        {{ request.session.suser }} <!-- Display the username from the session -->
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role a "button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ request.session.profile_image_url }}" alt="Profile Picture" width="40" height="40" class="rounded-circle">
+                        {{ request.session.suser }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="profileDropdown">
                         <a class="dropdown-item" href="{% url 'matrimony:myprofile' %}">My Profile</a>
-                        <a class="dropdown-item" href="#">Settings</a>
+                        
+                        <a class="dropdown-item" href="{% url 'accounts:password_change' %}">Change Password</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
                     </div>

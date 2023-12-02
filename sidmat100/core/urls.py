@@ -28,6 +28,8 @@ urlpatterns = [
     path("matrimony/", include('matrimony.urls')),
     path("matint/", include('matint.urls')),
     path("matchat/", include('matchat.urls')),
+    path("matpayment/", include('matpayment.urls')),
+
    
    
 

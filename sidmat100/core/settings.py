@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "myadmin",
     "matint",
     "matchat",
+    "matpayment",
     
 
 ]

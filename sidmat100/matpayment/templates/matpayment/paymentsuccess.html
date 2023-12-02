@@ -1,0 +1,60 @@
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .center {
+            position: absolute;
+            text-align: center;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .center h3 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .center h5 {
+            font-size: 18px;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        .center h5 a.back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4285f4;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .center h5 a.back-button:hover {
+            background-color: #2a5db0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="center">
+        <h3>
+            Thanks, You are awesome! <i class="fas fa-check-circle"></i>
+        </h3>
+        <p>Congratulations on purchasing our premium package! Unlock exclusive features now.</p>
+        <h5>
+            <a href="{% url 'matrimony:myprofile' %}" class="back-button">Back to My Profile</a>
+        </h5>
+    </div>
+</body>

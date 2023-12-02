@@ -455,6 +455,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
 from matchat.models import *
+from matpayment.models import *
 
 @login_required(login_url='accounts:login')
 def myprofileview(request):
@@ -478,6 +479,12 @@ def myprofileview(request):
         physical_details = None
 
 
+    try:
+        premium_membership = PremiumMembership.objects.get(user=user)
+    except PremiumMembership.DoesNotExist:
+        premium_membership = None
+
+
     unread_message_count = Message.objects.filter(receiver=user, is_seen=False).count()
 
     context = {
@@ -490,6 +497,7 @@ def myprofileview(request):
         'user_images': user_images,
         'physical_details': physical_details,  # Include physical details in the context
         'unread_message_count': unread_message_count,
+        'premium_membership': premium_membership,
     }
 
     return render(request, 'matrimony/my_profile.html', context)
