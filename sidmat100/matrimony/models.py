@@ -103,8 +103,8 @@ class EducationalDetails(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Create a foreign key relationship with the User model
     highest_qualification = models.CharField(max_length=100)
     ug_degree = models.CharField(max_length=100,blank=True)
-    pg_degree = models.CharField(max_length=100,blank=True)
-    doctorate_field = models.CharField(max_length=100,blank=True)
+    pg_degree = models.CharField(max_length=100,blank=True,null=True)
+    doctorate_field = models.CharField(max_length=100,blank=True,null=True)
     grad_year = models.DateField()
     college_institution = models.CharField(max_length=100)
     educ_fill = models.BooleanField(default=False)

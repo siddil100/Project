@@ -6,6 +6,8 @@
     <title>Dream Wed</title>
     <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="..." crossorigin="anonymous">
+
 
     
 
@@ -74,6 +76,16 @@
                             {% endif %}
                         </p>
 
+
+                    {% if interest_status == 'accepted' %}
+                    <p><strong>Phone:</strong> {{ personal_details.phone_number }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Address:</strong> {{ personal_details.address }}</p>
+                {% else %}
+                    <i class="fas fa-lock"></i>
+                    <p><em>Contact details available upon acceptance.</em></p>
+                {% endif %}
+
                         
 
                         <!-- Display educational details -->
@@ -115,32 +127,44 @@
                     <!-- Display user images -->
 <div class="card mt-3">
     <div class="card-body">
+        
         <h3 class="card-title">Uploaded Photos</h3>
-        <div class="row">
-            {% if user_images %}
-                {% for user_image in user_images %}
-                    <div class="col-md-4 mt-3">
-                        <div class="card">
-                            <img src="{{ user_image.image.url }}" alt="User Image" class="card-img-top img-fluid">
-                        </div>
+<div class="row">
+    {% if user_images %}
+        {% if is_premium %}
+            {% for user_image in user_images %}
+                <div class="col-md-4 mt-3">
+                    <div class="card">
+                        <img src="{{ user_image.image.url }}" alt="User Image" class="card-img-top img-fluid">
                     </div>
-                    
-                {% endfor %}
-                <a href="{% url 'matint:send_interest' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Sent Interest</a>
-                <a href="{% url 'matint:add_interested' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Add to Interested</a>
-                <a href="{% url 'matint:add_notinterested' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Mark as Not-Interested</a>
-                <a href="{% url 'matrimony:block_user' user_id=personal_details.user.id %}" class="btn btn-danger btn-block">Block User</a>
-
-            {% else %}
-                <div class="col-12">
-                    <p>No photos uploaded yet.</p>
                 </div>
-                <a href="{% url 'matint:send_interest' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Sent Interest</a>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <i class="fas fa-lock"></i>
+                <p><em>Photos available to premium members only.</em></p>
+                <!-- Add a button to upgrade membership if needed -->
+                <a href="{% url 'matpayment:upgrade_to_premium' %}" class="btn btn-primary btn-block">Upgrade Membership</a>
+            </div>
+        {% endif %}
+
+        <!-- Display other actions/buttons -->
+        <a href="{% url 'matint:send_interest' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Sent Interest</a>
                 <a href="{% url 'matint:add_interested' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Add to Interested</a>
                 <a href="{% url 'matint:add_notinterested' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Mark as Not-Interested</a>
                 <a href="{% url 'matrimony:block_user' user_id=personal_details.user.id %}" class="btn btn-danger btn-block">Block User</a>
-            {% endif %}
+        <!-- Add other action buttons here -->
+    {% else %}
+        <div class="col-12">
+            <p>No photos uploaded yet.</p>
+            <a href="{% url 'matint:send_interest' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Sent Interest</a>
+            <a href="{% url 'matint:add_interested' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Add to Interested</a>
+            <a href="{% url 'matint:add_notinterested' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Mark as Not-Interested</a>
+            <a href="{% url 'matrimony:block_user' user_id=personal_details.user.id %}" class="btn btn-danger btn-block">Block User</a>
         </div>
+    {% endif %}
+</div>
+
     </div>
 </div>
 

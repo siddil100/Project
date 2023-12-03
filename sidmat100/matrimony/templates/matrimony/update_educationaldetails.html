@@ -94,3 +94,58 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
+
+
+
+<script>
+    function validateAlphabeticInput(inputFieldId, errorDivId, maxLength, minLength) {
+        let inputField = document.getElementById(inputFieldId);
+        let errorDiv = document.getElementById(errorDivId);
+        let inputValue = inputField.value.trim();
+
+        if (/^[a-zA-Z\s]+$/.test(inputValue) && inputValue.length >= minLength && inputValue.length <= maxLength) {
+            errorDiv.textContent = '';
+        } else {
+            errorDiv.textContent = `Please enter alphabetic characters within ${minLength} to ${maxLength} characters without leading or trailing spaces.`;
+        }
+    }
+
+    function validateGraduationYear(inputFieldId, errorDivId) {
+        let inputField = document.getElementById(inputFieldId);
+        let errorDiv = document.getElementById(errorDivId);
+        let inputValue = new Date(inputField.value);
+        let today = new Date();
+
+        if (inputValue > today) {
+            errorDiv.textContent = 'Please select a date not beyond today.';
+        } else {
+            errorDiv.textContent = '';
+        }
+    }
+
+    document.getElementById('highestQualification').addEventListener('input', function() {
+        validateAlphabeticInput('highestQualification', 'highestQualificationError', 30, 2);
+    });
+
+    document.getElementById('ugDegree').addEventListener('input', function() {
+        validateAlphabeticInput('ugDegree', 'ugDegreeError', 30, 2);
+    });
+
+    document.getElementById('pgDegree').addEventListener('input', function() {
+        validateAlphabeticInput('pgDegree', 'pgDegreeError', 30, 2);
+    });
+
+    document.getElementById('doctorateField').addEventListener('input', function() {
+        validateAlphabeticInput('doctorateField', 'doctorateFieldError', 30, 2);
+    });
+
+    document.getElementById('collegeInstitution').addEventListener('input', function() {
+        validateAlphabeticInput('collegeInstitution', 'collegeInstitutionError', 30, 2);
+    });
+
+    document.getElementById('gradYear').addEventListener('change', function() {
+        validateGraduationYear('gradYear', 'gradYearError');
+    });
+</script>
+

@@ -170,10 +170,82 @@
             
 
             <button type="submit" class="btn btn-primary">update</button>
-            <a href="javascript:history.back()" class="btn btn-secondary">Back</a>
+            <a href="{% url 'matrimony:myprofile' %}" class="btn btn-secondary">Back</a>
         </form>
     </div>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
+
+
+
+<script>
+    // Function to validate alphabetic input without leading or trailing spaces
+    function validateAlphabeticInput(inputFieldId, errorDivId) {
+        let inputField = document.getElementById(inputFieldId);
+        let errorDiv = document.getElementById(errorDivId);
+        let inputValue = inputField.value.trim();
+
+        if (/^[a-zA-Z]+$/.test(inputValue)) {
+            errorDiv.textContent = '';
+        } else {
+            errorDiv.textContent = 'Please enter only alphabetic characters without leading or trailing spaces.';
+        }
+    }
+
+    // Function to validate the phone number with 10 digits
+    function validatePhoneNumber(inputFieldId, errorDivId) {
+        let inputField = document.getElementById(inputFieldId);
+        let errorDiv = document.getElementById(errorDivId);
+        let inputValue = inputField.value.trim();
+
+        if (/^\d{10}$/.test(inputValue)) {
+            errorDiv.textContent = '';
+        } else {
+            errorDiv.textContent = 'Please enter a valid 10-digit phone number.';
+        }
+    }
+
+    // Attach event listeners to perform validations on input
+    document.getElementById('firstName').addEventListener('input', function() {
+        validateAlphabeticInput('firstName', 'firstNameError');
+    });
+
+    document.getElementById('middleName').addEventListener('input', function() {
+        validateAlphabeticInput('middleName', 'middleNameError');
+    });
+
+    document.getElementById('lastName').addEventListener('input', function() {
+        validateAlphabeticInput('lastName', 'lastNameError');
+    });
+
+    document.getElementById('religion').addEventListener('input', function() {
+        validateAlphabeticInput('religion', 'religionError');
+    });
+
+    document.getElementById('sector').addEventListener('input', function() {
+        validateAlphabeticInput('sector', 'sectorError');
+    });
+
+    document.getElementById('birthPlace').addEventListener('input', function() {
+        validateAlphabeticInput('birthPlace', 'birthPlaceError');
+    });
+
+    document.getElementById('address').addEventListener('input', function() {
+        validateAlphabeticInput('address', 'addressError');
+    });
+
+    document.getElementById('aboutyourself').addEventListener('input', function() {
+        validateAlphabeticInput('aboutyourself', 'aboutYourselfError');
+    });
+
+    document.getElementById('maritalstatus').addEventListener('input', function() {
+        validateAlphabeticInput('maritalstatus', 'maritalStatusError');
+    });
+
+    document.getElementById('phone').addEventListener('input', function() {
+        validatePhoneNumber('phone', 'phoneError');
+    });
+</script>

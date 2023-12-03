@@ -289,7 +289,7 @@
             var phoneInput = $("#phone");
             var errorContainer = phoneInput.parent().find('.error-messagephone');
 
-            phoneInput.on('input', function () {
+            phoneInput.on('blur', function () {
                 var phoneNumber = $(this).val();
                 if (phoneNumber) {
                     // Get the CSRF token
@@ -341,8 +341,7 @@
             });
         });
         </script>
-</body>
-</html>
+
 
     
                 
@@ -352,53 +351,7 @@
     <!-- Include Bootstrap JS (optional) -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        $(function () {
-            // Initialize the date picker
-            $("#birthdate").datepicker({
-                changeYear: true,
-                yearRange: "1970:2005", // Restrict year selection from 1905 to 2005
-                dateFormat: "yy-mm-dd",
-                maxDate: 0
-            });
-        
-           
-        
-            // Phone number input
-            var phoneInput = $("#phone");
-            var errorContainer = phoneInput.parent().find('.error-message');
-            
-            phoneInput.on('input', function () {
-                var phoneNumber = $(this).val();
-                if (phoneNumber) {
-                    // Get the CSRF token
-                    var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
-                    
-                    // Make an AJAX request to check phone number existence
-                    $.ajax({
-                        url: "{% url 'matrimony:checkphone' %}",
-                        type: "POST",
-                        data: {
-                            phone_number: phoneNumber
-                        },
-                        headers: {
-                            "X-CSRFToken": csrfToken  // Include the CSRF token in the headers
-                        },
-                        success: function (data) {
-                            if (data.exists) {
-                                errorContainer.text('Phone number already exists.');
-                            } else {
-                                errorContainer.text('');
-                            }
-                        },
-                        error: function () {
-                            // Handle the error
-                        }
-                    });
-                } else {
-                    errorContainer.text('Phone number is required.');
-                }
-            });
-        });
+       
 
 
 

@@ -110,3 +110,79 @@
     </div>
 </body>
 </html>
+
+
+
+<script>
+    function validateAlphabeticInput(inputFieldId, errorDivId, minLength, maxLength) {
+        let inputField = document.getElementById(inputFieldId);
+        let errorDiv = document.getElementById(errorDivId);
+        let inputValue = inputField.value.trim();
+
+        if (/^[a-zA-Z\s]+$/.test(inputValue) && inputValue.length >= minLength && inputValue.length <= maxLength) {
+            errorDiv.textContent = '';
+        } else {
+            errorDiv.textContent = `Please enter alphabetic characters within ${minLength} to ${maxLength} characters without leading or trailing spaces.`;
+        }
+    }
+
+    function validateAnnualIncome() {
+        let annualIncome = document.getElementById('annualIncome');
+        let annualIncomeError = document.getElementById('annualIncomeError');
+        let incomeValue = annualIncome.value.trim();
+
+        if (/^\d+$/.test(incomeValue)) {
+            annualIncomeError.textContent = '';
+        } else {
+            annualIncomeError.textContent = 'Please enter only numeric values for Annual Income.';
+        }
+    }
+
+    function validateSocialLink() {
+        let socialLink = document.getElementById('socialLink');
+        let socialLinkError = document.getElementById('socialLinkError');
+        let linkValue = socialLink.value.trim();
+
+        if (!/^\d+$/.test(linkValue) && linkValue !== '') {
+            socialLinkError.textContent = '';
+        } else {
+            socialLinkError.textContent = 'Social Link cannot be entirely numeric.';
+        }
+    }
+
+    document.getElementById('employmentStatus').addEventListener('input', function() {
+        validateAlphabeticInput('employmentStatus', 'employmentStatusError', 2, 30);
+    });
+
+    document.getElementById('occupation').addEventListener('input', function() {
+        validateAlphabeticInput('occupation', 'occupationError', 2, 30);
+    });
+
+    document.getElementById('employerOf').addEventListener('input', function() {
+        validateAlphabeticInput('employerOf', 'employerOfError', 2, 30);
+    });
+
+    document.getElementById('industry').addEventListener('input', function() {
+        validateAlphabeticInput('industry', 'industryError', 2, 30);
+    });
+
+    document.getElementById('jobLocation').addEventListener('input', function() {
+        validateAlphabeticInput('jobLocation', 'jobLocationError', 2, 30);
+    });
+
+    document.getElementById('aboutJob').addEventListener('input', function() {
+        validateAlphabeticInput('aboutJob', 'aboutJobError', 2, 30);
+    });
+
+    document.getElementById('workingHours').addEventListener('input', function() {
+        validateAlphabeticInput('workingHours', 'workingHoursError', 2, 30);
+    });
+
+    document.getElementById('annualIncome').addEventListener('input', function() {
+        validateAnnualIncome();
+    });
+
+    document.getElementById('socialLink').addEventListener('input', function() {
+        validateSocialLink();
+    });
+</script>

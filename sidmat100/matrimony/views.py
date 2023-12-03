@@ -109,9 +109,16 @@ def educationaldetailsview(request):
 
     if request.method == 'POST':
         educational_details_form = EducationalDetailsForm(request.POST)
+        highest_qualification = request.POST.get('highest_qualification')
+        ug_degree = request.POST.get('ug_degree')
         if educational_details_form.is_valid():
             educational_details = educational_details_form.save(commit=False)
             educational_details.user = user
+            if highest_qualification == 'undergraduate':
+            # Set pg_degree and doctorate_field as None for undergraduate
+                educational_details.pg_degree = None
+                educational_details.doctorate_field = None
+                educational_details.ug_degree = ug_degree
             educational_details.educ_fill = True
             educational_details.save()
             return redirect('matrimony:employmentdetails')  # Move to the next form
@@ -370,7 +377,7 @@ def homeview(request):
     
 
 
-
+from matpayment import *
 from django.shortcuts import render, get_object_or_404
 from .models import User, PersonalDetails, FamilyDetails, EducationalDetails, EmploymentDetails, LocationDetails
 from matint.models import Interest,UserActivity
@@ -416,6 +423,30 @@ def user_detail(request, user_id):
         Q(user=viewed_user, viewed_user=request.user)
     ).exists()
 
+
+    interest_status = None
+
+    # Check if the viewed user has sent an interest to the current user
+    sent_interest = Interest.objects.filter(sender=user, receiver=request.user, status='accepted').exists()
+
+    # Check if the viewed user has received an interest from the current user
+    received_interest = Interest.objects.filter(sender=request.user, receiver=user, status='accepted').exists()
+
+    if sent_interest or received_interest:
+        interest_status = 'accepted'
+
+
+    is_premium = False
+    
+    current_user = request.user
+    try:
+        premium_membership = PremiumMembership.objects.get(user=current_user)
+        is_premium = premium_membership.is_premium
+        print(is_premium)
+    except PremiumMembership.DoesNotExist:
+        pass
+        print("except aane")
+
     # Render the page with existing context data
     context = {
         'user': user,
@@ -427,6 +458,8 @@ def user_detail(request, user_id):
         'hobbies': personal_details.hobbies.all(),
         'user_images': user_images,
         'interests': interests,
+        'interest_status': interest_status,
+        'is_premium': is_premium,
     }
 
     # Create UserActivity entry when viewing another user's profile
@@ -774,7 +807,7 @@ def physicaldetailsview(request):
             physical_details.user = user
             physical_details.phys_fill = True
             physical_details.save()
-            return redirect('matrimony:some_next_step_view')  # Move to the next form or process
+            return redirect('matrimony:myprofile')  # Move to the next form or process
 
     return render(request, 'matrimony/physicaldetails.html', {'physical_details_form': form})
 

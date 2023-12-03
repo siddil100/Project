@@ -96,3 +96,56 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
+
+
+
+<script>
+    function validateAlphabeticInput(inputFieldId, errorDivId, maxLength) {
+        let inputField = document.getElementById(inputFieldId);
+        let errorDiv = document.getElementById(errorDivId);
+        let inputValue = inputField.value.trim();
+
+        if (/^[a-zA-Z\s]+$/.test(inputValue) && inputValue.length <= maxLength) {
+            errorDiv.textContent = '';
+        } else {
+            errorDiv.textContent = `Please enter alphabetic characters within ${maxLength} characters without leading or trailing spaces.`;
+        }
+    }
+
+    function validateNumericInput(inputFieldId, errorDivId, maxDigits) {
+        let inputField = document.getElementById(inputFieldId);
+        let errorDiv = document.getElementById(errorDivId);
+        let inputValue = inputField.value.trim();
+
+        if (/^\d{1,2}$/.test(inputValue)) {
+            errorDiv.textContent = '';
+        } else {
+            errorDiv.textContent = `Please enter a number with maximum ${maxDigits} digits.`;
+        }
+    }
+
+    document.getElementById('fatherOccupation').addEventListener('input', function() {
+        validateAlphabeticInput('fatherOccupation', 'fatherOccupationError', 20);
+    });
+
+    document.getElementById('motherOccupation').addEventListener('input', function() {
+        validateAlphabeticInput('motherOccupation', 'motherOccupationError', 20);
+    });
+
+    document.getElementById('familyType').addEventListener('input', function() {
+        validateAlphabeticInput('familyType', 'familyTypeError', 20);
+    });
+
+    document.getElementById('familyStatus').addEventListener('input', function() {
+        validateAlphabeticInput('familyStatus', 'familyStatusError', 20);
+    });
+
+    document.getElementById('numberOfSiblings').addEventListener('input', function() {
+        validateNumericInput('numberOfSiblings', 'numberOfSiblingsError', 2);
+    });
+
+    document.getElementById('numberOfFamilyMembers').addEventListener('input', function() {
+        validateNumericInput('numberOfFamilyMembers', 'numberOfFamilyMembersError', 2);
+    });
+</script>

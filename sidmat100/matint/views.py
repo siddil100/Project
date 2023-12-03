@@ -216,7 +216,7 @@ def search_view(request):
 # views.py
 
 from django.shortcuts import render
-from matrimony.models import PersonalDetails, LocationDetails, EducationalDetails, EmploymentDetails,BlockedUser
+from matrimony.models import *
 
 from django.contrib.auth.models import User
 
@@ -233,7 +233,12 @@ def global_search(request):
         'highest_qualification': request.GET.get('highest_qualification', ''),
         'occupation': request.GET.get('occupation', ''),
         'min_age': request.GET.get('min_age', ''),  # Add min_age field to query dictionary
-        'max_age': request.GET.get('max_age', ''),  # Add max_age field to query dictionary
+        'max_age': request.GET.get('max_age', ''),
+        'min_height': request.GET.get('min_height', ''),  
+        'max_height': request.GET.get('max_height', ''),
+        'min_weight': request.GET.get('min_weight', ''),  
+        'max_weight': request.GET.get('max_weight', ''),
+        
         
         
         # Add more fields from the form as needed
@@ -297,6 +302,37 @@ def global_search(request):
 
     # Additional conditions, exclusions, etc. (if needed)
 
+
+    physical_details_qs = PhysicalDetails.objects.all()
+
+    if query['min_height']:
+        min_height = float(query['min_height'])
+        physical_details_qs = physical_details_qs.filter(height__gte=min_height)
+        physical_users = physical_details_qs.values_list('user_id', flat=True)
+        personal_details_qs = personal_details_qs.filter(user_id__in=physical_users)
+
+    if query['max_height']:
+        max_height = float(query['max_height'])
+        physical_details_qs = physical_details_qs.filter(height__lte=max_height)
+        physical_users = physical_details_qs.values_list('user_id', flat=True)
+        personal_details_qs = personal_details_qs.filter(user_id__in=physical_users)
+
+    if query['min_weight']:
+        min_weight = float(query['min_weight'])
+        physical_details_qs = physical_details_qs.filter(weight__gte=min_weight)
+        physical_users = physical_details_qs.values_list('user_id', flat=True)
+        personal_details_qs = personal_details_qs.filter(user_id__in=physical_users)
+
+    if query['max_weight']:
+        max_weight = float(query['max_weight'])
+        physical_details_qs = physical_details_qs.filter(weight__lte=max_weight)
+        physical_users = physical_details_qs.values_list('user_id', flat=True)
+        personal_details_qs = personal_details_qs.filter(user_id__in=physical_users)
+
+
+
+
+
     user_gender = None
     if request.user.is_authenticated:
         user = request.user
@@ -333,6 +369,7 @@ def global_search(request):
         'location_details': location_details_qs,
         'educational_details': educational_details_qs,
         'employment_details': employment_details_qs,
+        'physical_details': physical_details_qs,
         # Add more querysets as needed for other models
     }
 

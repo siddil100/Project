@@ -95,3 +95,51 @@
     </div>
 </body>
 </html>
+
+
+
+<script>
+    function validateAlphanumericInput(inputFieldId, errorDivId, maxLength) {
+        let inputField = document.getElementById(inputFieldId);
+        let errorDiv = document.getElementById(errorDivId);
+        let inputValue = inputField.value.trim();
+
+        if (/^[a-zA-Z0-9\s]+$/.test(inputValue) && inputValue.length <= maxLength) {
+            errorDiv.textContent = '';
+        } else {
+            errorDiv.textContent = `Please enter alphanumeric characters with a maximum length of ${maxLength}.`;
+        }
+    }
+
+    function validatePinCode() {
+        let pinCode = document.getElementById('currentPinCode');
+        let pinCodeError = document.getElementById('currentPinCodeError');
+        let pinValue = pinCode.value.trim();
+
+        if (/^\d{6}$/.test(pinValue)) {
+            pinCodeError.textContent = '';
+        } else {
+            pinCodeError.textContent = 'Please enter exactly 6 digits for Pin Code.';
+        }
+    }
+
+    document.getElementById('currentCity').addEventListener('input', function() {
+        validateAlphabeticInput('currentCity', 'currentCityError', 30);
+    });
+
+    document.getElementById('currentState').addEventListener('input', function() {
+        validateAlphabeticInput('currentState', 'currentStateError', 30);
+    });
+
+    document.getElementById('willingToMove').addEventListener('input', function() {
+        validateAlphabeticInput('willingToMove', 'willingToMoveError', 30);
+    });
+
+    document.getElementById('additionalComments').addEventListener('input', function() {
+        validateAlphanumericInput('additionalComments', 'additionalCommentsError', 30);
+    });
+
+    document.getElementById('currentPinCode').addEventListener('input', function() {
+        validatePinCode();
+    });
+</script>

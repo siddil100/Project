@@ -53,7 +53,7 @@
     
         <h2>Physical Details</h2>
         <!-- Your form goes here -->
-        <form method="post" action="{% url 'matrimony:physicaldetails' %}" enctype="multipart/form-data">
+        <form method="post" action="{% url 'matrimony:physicaldetails' %}" enctype="multipart/form-data"  form id="physicalDetailsForm">
             {% csrf_token %}
             <div class="form-group">
                 <label for="bodyType">Body Type:</label>
@@ -64,6 +64,7 @@
                     <option value="athletic">Athletic</option>
                     <!-- Add more body type options here -->
                 </select>
+                <div class="error-message" id="bodyTypeError"></div>
             </div>
             
             <div class="form-group">
@@ -75,6 +76,7 @@
                     <option value="dark">Dark</option>
                     <!-- Add more complexion options here -->
                 </select>
+                <div class="error-message" id="complexionError"></div>
             </div>
             
             <div class="form-group">
@@ -86,6 +88,7 @@
                     <option value="black">Black</option>
                     <!-- Add more hair color options here -->
                 </select>
+                <div class="error-message" id="hairColorError"></div>
             </div>
             
             <div class="form-group">
@@ -97,16 +100,19 @@
                     <option value="green">Green</option>
                     <!-- Add more eye color options here -->
                 </select>
+                <div class="error-message" id="eyeColorError"></div>
             </div>
 
             <div class="form-group">
                 <label for="height">Height:</label>
                 <input type="text" class="form-control" id="height" name="height" placeholder="Enter height">
+                <div class="error-message" id="heightError"></div>
             </div>
             
             <div class="form-group">
                 <label for="weight">Weight:</label>
                 <input type="text" class="form-control" id="weight" name="weight" placeholder="Enter weight">
+                <div class="error-message" id="weightError"></div>
             </div>
 
             <div class="form-group">
@@ -115,6 +121,7 @@
                     <option value="false">No</option>
                     <option value="true">Yes</option>
                 </select>
+                <div class="error-message" id="tattoosError"></div>
             </div>
             
             <div class="form-group">
@@ -123,6 +130,7 @@
                     <option value="false">No</option>
                     <option value="true">Yes</option>
                 </select>
+                <div class="error-message" id="piercingsError"></div>
             </div>
 
             <!-- Add submit button and other fields if needed -->
@@ -135,3 +143,76 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
+
+
+<script>
+    document.getElementById('height').addEventListener('input', function() {
+        validateHeight();
+    });
+
+    document.getElementById('weight').addEventListener('input', function() {
+        validateWeight();
+    });
+
+    function validateHeight() {
+        let heightInput = document.getElementById('height');
+        let heightError = document.getElementById('heightError');
+        let heightValue = parseFloat(heightInput.value.trim());
+
+        if (isNaN(heightValue) || heightValue < 30 || heightValue > 500 || !validateDecimalPlaces(heightInput.value, 2)) {
+            heightError.textContent = 'Please enter a valid height greater than or equal to 30, less than or equal to 500, and with up to two decimal places.';
+        } else {
+            heightError.textContent = '';
+        }
+    }
+
+    function validateWeight() {
+        let weightInput = document.getElementById('weight');
+        let weightError = document.getElementById('weightError');
+        let weightValue = parseFloat(weightInput.value.trim());
+
+        if (isNaN(weightValue) || weightValue < 30 || weightValue > 500 || !validateDecimalPlaces(weightInput.value, 2)) {
+            weightError.textContent = 'Please enter a valid weight greater than or equal to 30, less than or equal to 500, and with up to two decimal places.';
+        } else {
+            weightError.textContent = '';
+        }
+    }
+
+    // Function to validate decimal places
+    function validateDecimalPlaces(value, decimalCount) {
+        let regex = new RegExp(`^\\d+(\\.\\d{1,${decimalCount}})?$`);
+        return regex.test(value);
+    }
+</script>
+
+
+<script>
+    document.getElementById('physicalDetailsForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        validateForm();
+    });
+
+    function validateForm() {
+        let form = document.getElementById('physicalDetailsForm');
+        let fields = form.querySelectorAll('.form-control');
+        let isValid = true;
+
+        fields.forEach(function(field) {
+            let errorDiv = field.nextElementSibling;
+            if (field.tagName === 'SELECT' && field.value === '') {
+                errorDiv.textContent = 'Please select a value.';
+                isValid = false;
+            } else if (field.tagName === 'INPUT' && field.value.trim() === '') {
+                errorDiv.textContent = 'This field is required.';
+                isValid = false;
+            } else {
+                errorDiv.textContent = '';
+            }
+        });
+
+        if (isValid) {
+            form.submit();
+        }
+    }
+</script>
