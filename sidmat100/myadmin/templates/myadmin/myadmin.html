@@ -190,47 +190,33 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{% url 'myadmin:myadmin' %}">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
                         </span>
                         <span class="title">Dashboard</span>
                     </a>
                 </li>
+                
                 <li>
-                    <a href="#">
+                    <a href="{% url 'myadmin:view_premium' %}">
                         <span class="icon">
-                            <ion-icon name="people-outline"></ion-icon>
+                            <ion-icon name="star"></ion-icon>
                         </span>
-                        <span class="title">Profiles</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="chatbubble-outline"></ion-icon>
-                        </span>
-                        <span class="title">Messages</span>
+                        <span class="title">View Premium Users</span>
                     </a>
                 </li>
                 <li>
                     <a href="{% url 'myadmin:aadharsus' %}">
                         <span class="icon">
-                            <ion-icon name="help-outline"></ion-icon>
+                            <ion-icon name="document"></ion-icon>
                         </span>
                         <span class="title">Aadhar Details</span>
                     </a>
                 </li>
+                
                 <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="settings-outline"></ion-icon>
-                        </span>
-                        <span class "title">Settings</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
+                    <a href="{% url 'myadmin:change_password_admin' %}">
                         <span class="icon">
                             <ion-icon name="lock-closed-outline"></ion-icon>
                         </span>
@@ -256,8 +242,7 @@
                 </div>
                 <div class="search">
                     <label>
-                        <input type="text" placeholder="Search here">
-                        <ion-icon name="search-outline"></ion-icon>
+                        <h1 style="font-size: 28px; margin-bottom: 5px; color: #0514f0; font-family: Arial, sans-serif;">DreamWed Admin Panel</h1>
                     </label>
                 </div>
                 <div class="user">
@@ -321,7 +306,7 @@
                                                 <img src="{{ user.personaldetails.profile_image.url }}" alt="{{ user.username }}" style="width: 100%; height: 100%; object-fit: cover;">
                                             </div>
                                         </td>
-                                        <td><a href="{% url 'matrimony:user_detail' user.id %}" class="view-more-link">View</a></td>
+                                        <td><a href="{% url 'myadmin:user_detail_admin' user.id %}" class="view-more-link">View</a></td>
 
                                         <td>{{ user.personaldetails.address }}</td>
                                         <td>{{ user.email }}</td>

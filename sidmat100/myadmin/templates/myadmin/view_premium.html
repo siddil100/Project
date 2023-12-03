@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aadhar Details</title>
+    <title>Premium Users</title>
     
     <!-- ======= Styles ====== -->
     <link rel="stylesheet" href="{% static 'css/styleadmin.css' %}">
@@ -242,12 +242,9 @@
                 </div>
                 <div class="search">
                     <label>
-                        <!-- Text "DreamWed Admin Panel" in large fonts -->
                         <h1 style="font-size: 28px; margin-bottom: 5px; color: #0514f0; font-family: Arial, sans-serif;">DreamWed Admin Panel</h1>
-                        
                     </label>
                 </div>
-                
                 <div class="user">
                     
                 </div>
@@ -259,13 +256,19 @@
             <div class="details">
                 <div class="recentOrders">
                     <div class="cardHeader">
-                        <h2>Aadhar Details of Profiles</h2>
+                        <h2>Premium Profiles</h2>
                     </div>
                     <div class="filter-form">
                         <form method="get">
                             <label for="name">Filter by Name (A-Z):</label>
                             <input type="text" name="name" id="name" value="{{ request.GET.name }}">
-                            
+                            <br>
+                            <label for="status">Filter by Account Status:</label>
+                            <select name="status" id="status">
+                                <option value="all" {% if request.GET.status == 'all' %}selected{% endif %}>All</option>
+                                <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>Active</option>
+                                <option value="inactive" {% if request.GET.status == 'inactive' %}selected{% endif %}>Inactive</option>
+                            </select>
                             <br>
                             <label for="gender">Filter by Gender:</label>
                             <select name="gender" id="gender">
@@ -274,16 +277,6 @@
                                 <option value="female" {% if request.GET.gender == 'female' %}selected{% endif %}>Female</option>
                             </select>
                             <br>
-
-                                <label for="aadhar_valid">Filter by Aadhar Valid:</label>
-                                <select name="aadhar_valid" id="aadhar_valid">
-                                    <option value="all" {% if request.GET.aadhar_valid == 'all' %}selected{% endif %}>All</option>
-                                    <option value="valid" {% if request.GET.aadhar_valid == 'valid' %}selected{% endif %}>Valid</option>
-                                    <option value="invalid" {% if request.GET.aadhar_valid == 'invalid' %}selected{% endif %}>Invalid</option>
-                                </select>
-                                <br>
-                                                            
-                            
                             <button type="submit">Apply Filters</button>
                         </form>
                     </div>
@@ -293,87 +286,38 @@
                             <thead>
                                 <tr>
                                     <td>Name</td>
-                                    <td>Profile_Image</td>
-                                    <td>view info</td>
-
-                                    <td>Address</td>
-                                    <td>Email</td>
-                                    <td>Adhaar</td>
-                                    <td>Account Status</td>
-                                    <td>Reason</td>
-                                    <td>Action</td>
+                                    <td>Profile Image</td>
+                                    <td>View</td>
+                                    <td>Subscription Date</td>
+                                    <td>Expiry Date</td>
+                                    <td>Payment ID</td>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for user in users %}
-                                    <tr>
-                                        <td>{{ user.username }}</td>
-                                        <td>
-                                            <div class="imgBx" style="border-radius: 50%; overflow: hidden; width: 40px; height: 40px;">
-                                                <img src="{{ user.personaldetails.profile_image.url }}" alt="{{ user.username }}" style="width: 100%; height: 100%; object-fit: cover;">
-                                            </div>
-                                        </td>
-                                        <td><a href="{% url 'myadmin:generate_pdf' user.id %}" class="view-more-link">View</a></td>
-
-
-                                        <td>{{ user.personaldetails.address }}</td>
-                                        <td>{{ user.email }}</td>
-                                        <td>
-                                            {% if user.personaldetails.aadhar_card %}
-                                            <a href="{{ user.personaldetails.aadhar_card.url }}" target="_blank" class="aadhar-button" style="text-decoration: none; padding: 5px 10px; background-color: #007bff; color: #fff; border: none; border-radius: 3px; cursor: pointer; display: inline-block;">View Aadhar</a>
-
-                                            {% else %}
-                                                Not Uploaded
-                                            {% endif %}
-                                        </td>
-                                        <td class="user-status">
-                                            {% if user.personaldetails.aadhar_valid %}
-                                                <span class="status delivered">Active</span>
-                                                {% else %}
-                                                <span class="status return">Suspended</span>
-                                                {% endif %}
-                                        </td>
-                                        <td>
-                                                <form method="post" style="display: inline-block;">
-                                                    {% csrf_token %}
-                                                    <!-- HTML -->
-                                                    <select class="custom-select" name="suspension_reason" id="suspensionReason">
-                                                        
-                                                        <option value="Adhaar mismatch" class="custom-option">Aadhar Mismatch</option>
-                                                    </select>
-
-                                                </td>
-                                                <td>
-                                                    {% if user.personaldetails.aadhar_valid %}
-                                                        <button type="submit" name="user_id" value="{{ user.id }}" class="suspend-button" style="background-color: #e74c3c; color: #fff;">Suspend Aadhar</button>
-                                                    {% else %}
-                                                        <span>{{ user.suspension_reason }}</span>
-                                                        <button type="submit" name="user_id" value="{{ user.id }}" class="unsuspend-button">Unsuspend Aadhar</button>
-                                                </form>
-                                                    {% endif %}
-                                                </td>
-                                                
-                                        
-                                    </tr>
-                                {% endfor %}
+                                {% for user_data in users_data %}
+        <tr>
+            <td>{{ user_data.username }}</td>
+            <td>
+                {% if user_data.profile_image %}
+                    <img src="{{ user_data.profile_image }}" alt="{{ user_data.username }}" style="width: 40px; height: 40px; border-radius: 50%;">
+                {% else %}
+                    No Image
+                {% endif %}
+            </td>
+            
+                <td><a href="{% url 'myadmin:user_detail_admin' user_data.user_id %}" class="view-more-link">View</a></td>
+            
+            <td>{{ user_data.subscription_date }}</td>
+            <td>{{ user_data.expiry_date }}</td>
+            <td>{{ user_data.payment_id }}</td>
+        </tr>
+    {% endfor %}
+</tbody>
                             </tbody>
                         </table>
                     </form>
-                    <div class="pagination">
-                        <span class="step-links">
-                            {% if users.has_previous %}
-                                <a href="?page=1">&laquo; first</a>
-                                <a href="?page={{ users.previous_page_number }}">previous</a>
-                            {% endif %}
-                            <span class="current-page">
-                                Page {{ users.number }} of {{ users.paginator.num_pages }}.
-                            </span>
-                            {% if users.has_next %}
-                                <a href="?page={{ users.next_page_number }}">next</a>
-                                <a href="?page={{ users.paginator.num_pages }}">last &raquo;</a>
-                            {% endif %}
-                        </span>
-                    </div>
+                    
+                
                 </div>
             </div>
         </div>

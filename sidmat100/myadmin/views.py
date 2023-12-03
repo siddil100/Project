@@ -1,4 +1,4 @@
-from django.shortcuts import render
+
 from django.contrib.auth.models import User
 
 from django.shortcuts import render, redirect
@@ -7,18 +7,18 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
 
-from django.core.mail import send_mail
+
 
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
-from django.shortcuts import render
+
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseBadRequest
 
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
-from django.shortcuts import render
-from django.core.mail import send_mail
+
+
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.core.exceptions import ObjectDoesNotExist
@@ -168,19 +168,9 @@ def aadharsusview(request):
 
 
 
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.utils import ImageReader
-from io import BytesIO
 
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.utils import ImageReader
-from io import BytesIO
+
+
 
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -188,15 +178,11 @@ from reportlab.lib.utils import ImageReader
 from django.http import HttpResponse
 from io import BytesIO
 from django.shortcuts import get_object_or_404
-from matrimony.models import  PersonalDetails, EducationalDetails, EmploymentDetails, LocationDetails
+from matrimony.models import*
 
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
-from reportlab.lib.utils import ImageReader
-from django.http import HttpResponse
-from io import BytesIO
-from django.shortcuts import get_object_or_404
-from matrimony.models import PersonalDetails, EducationalDetails, EmploymentDetails, LocationDetails
+
+
+
 from datetime import datetime
 
 def generate_pdf(request, user_id):
@@ -282,11 +268,149 @@ def generate_pdf(request, user_id):
 
 
 
+from matint.models import*
+from django.db.models import Q
 
 
 
 
 
 
+def user_detail_admin(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    viewed_user = user  # Store the user being viewed
+
+    personal_details = get_object_or_404(PersonalDetails, user=user)
+
+    try:
+        family_details = FamilyDetails.objects.get(user=user)
+    except FamilyDetails.DoesNotExist:
+        family_details = None
+
+    try:
+        educational_details = EducationalDetails.objects.get(user=user)
+    except EducationalDetails.DoesNotExist:
+        educational_details = None
+
+    try:
+        employment_details = EmploymentDetails.objects.get(user=user)
+    except EmploymentDetails.DoesNotExist:
+        employment_details = None
+
+    try:
+        location_details = LocationDetails.objects.get(user=user)
+    except LocationDetails.DoesNotExist:
+        location_details = None
+
+    try:
+        interests = Interest.objects.filter(receiver=user)
+    except Interest.DoesNotExist:
+        interests = None
+
+    # Retrieve images uploaded by the user
+    user_images = Image.objects.filter(image_upload__user=user)
+
+    activity_exists = UserActivity.objects.filter(
+        Q(user=request.user, viewed_user=viewed_user) |
+        Q(user=viewed_user, viewed_user=request.user)
+    ).exists()
+
+    # Render the page with existing context data
+    context = {
+        'user': user,
+        'personal_details': personal_details,
+        'family_details': family_details,
+        'educational_details': educational_details,
+        'employment_details': employment_details,
+        'location_details': location_details,
+        'hobbies': personal_details.hobbies.all(),
+        'user_images': user_images,
+        'interests': interests,
+    }
+
+    # Create UserActivity entry when viewing another user's profile
+    if request.user != viewed_user:
+    # Use update_or_create to either update existing or create a new UserActivity
+        activity, created = UserActivity.objects.update_or_create(
+            user=request.user,
+            viewed_user=viewed_user,
+            defaults={'viewed_details': True}
+        )
+
+    # If the activity already exists, update the viewed_details to True
+    if not created:
+        activity.viewed_details = True
+        activity.save()
 
 
+
+    return render(request, 'myadmin/user_detail_admin.html', context)
+
+
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib import messages
+from django.shortcuts import render, redirect
+
+@login_required
+def change_password_admin(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, 'Your password has been changed successfully!')
+            return redirect('home')  # Redirect to the desired page after password change
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'myadmin/change_password_admin.html', {'form': form})
+
+
+
+from django.shortcuts import render
+
+from matpayment.models import PremiumMembership
+
+def premium_users_view(request):
+    filter_name = request.GET.get('name', 'all')  # Default to 'all'
+    filter_gender = request.GET.get('gender', 'all')  # Default to 'all'
+    filter_status = request.GET.get('status', 'all') 
+
+    # Get all users with PremiumMembership
+    premium_users = User.objects.filter(premiummembership__isnull=False)
+
+    # Apply filters based on the criteria
+    if filter_name != 'all':
+        premium_users = premium_users.filter(username__istartswith=filter_name)  # Filter by name
+
+    if filter_gender == 'male':
+        premium_users = premium_users.filter(personaldetails__gender='male')  # Filter by male gender
+    elif filter_gender == 'female':
+        premium_users = premium_users.filter(personaldetails__gender='female')  # Filter by female gender
+
+    if filter_status == 'active':
+        premium_users = premium_users.filter(is_active=True)  # Filter by active status
+    elif filter_status == 'inactive':
+        premium_users = premium_users.filter(is_active=False)  
+
+    # Prepare data for PremiumMembership and PersonalDetails
+    user_data = []
+    for user in premium_users:
+        premium_membership = user.premiummembership
+        personal_details = user.personaldetails
+        user_data.append({
+            'username': user.username,
+            'profile_image': personal_details.profile_image.url if personal_details.profile_image else None,
+            'subscription_date': premium_membership.subscription_date,
+            'expiry_date': premium_membership.expiry_date,
+            'payment_id': premium_membership.payment_id,
+            'user_id': user.id,
+        })
+
+    # Pagination
+    per_page = 10
+    paginator = Paginator(user_data, per_page)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+
+    return render(request, 'myadmin/view_premium.html', {'users_data': page})
