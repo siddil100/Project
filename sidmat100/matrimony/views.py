@@ -719,18 +719,27 @@ from django.contrib.auth.decorators import login_required
 from .forms import ImageUploadForm, ImageFormSet
 from .models import ImageUpload,Image
 
+
+from django.shortcuts import render, redirect
+from .forms import ImageUploadForm
+from .models import ImageUpload, Image
 @login_required
 def upload_images(request):
     if request.method == 'POST':
         image_upload_form = ImageUploadForm(request.POST, request.FILES)
         if image_upload_form.is_valid():
-            image_upload = image_upload_form.save(commit=False)
-            image_upload.user = request.user
-            image_upload.save()
+            image = image_upload_form.save(commit=False)
+            image.user = request.user
+            image.save()
 
             # Process uploaded files
             for file in request.FILES.getlist('image'):
-                Image.objects.create(image_upload=image_upload, image=file)
+                # Check if the file is an image before saving
+                if file.content_type.startswith('image'):
+                    Image.objects.create(image_upload=image, image=file)
+                else:
+                    # Handle non-image files here (skip or raise an error)
+                    pass  # For example, you can skip or log non-image files
 
             return redirect('matrimony:upload_images')  # Redirect to a success page
     else:
@@ -739,6 +748,7 @@ def upload_images(request):
     user_images = ImageUpload.objects.filter(user=request.user)
 
     return render(request, 'matrimony/upload_images.html', {'image_upload_form': image_upload_form, 'user_images': user_images})
+
 
 
 
@@ -780,7 +790,7 @@ def edit_image(request, image_upload_id, image_id):
     else:
         form = ImageForm(instance=image)
 
-    return render(request, 'edit_image.html', {'form': form})
+    return redirect('matrimony:upload_images') 
 
 
 
