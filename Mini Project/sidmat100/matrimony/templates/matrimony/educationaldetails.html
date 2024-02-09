@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Details Form</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include jQuery UI CSS (for the date picker) -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <!-- Include jQuery UI JavaScript (for the date picker) -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+    <style>
+        /* Add CSS styles for the form indicator */
+        .form-indicator {
+            background-color: #007BFF; /* Background color */
+            color: #fff; /* Text color */
+            padding: 10px; /* Spacing around the text */
+            border-radius: 5px; /* Rounded corners */
+            margin-bottom: 20px; /* Spacing below the indicator */
+        }
+
+        /* Style the container */
+        .container {
+            margin-top: 30px;
+            border: 1px solid #333; /* Darker border color */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Style form fields and labels */
+        .form-group label {
+            font-weight: bold;
+        }
+
+        /* Style submit button */
+        .btn-primary {
+            background-color: #007BFF;
+            border: none;
+        }
+
+        /* Add custom styling to error message */
+        .error-messagephone {
+            color: #f00;
+        }
+
+        .error-message {
+            color: #f00; /* Red color for error messages */
+        }
+    </style>
+</head>
+<body style="background-color: #d4d4d4;">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">My Website</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                {% if request.session.suser %}
+                <li class="nav-item">
+                    <span class="navbar-text">Welcome, {{ request.session.suser }}</span>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
+                </li>
+            {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <div class="form-group">
+            <strong><em>Form 3 of 5</em></strong>
+        </div>
+
+
+
+    <h2>Educational Details</h2>
+    <form method="post" action="{% url 'matrimony:educationaldetails' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="highestQualification">Highest Qualification</label>
+            <select class="form-control" id="highestQualification" name="highest_qualification">
+                <option value="" disabled selected>Select Highest Qualification</option>
+                <option value="primary">Primary</option>
+                <option value="highersecondary">Higher Secondary</option>
+                <option value="undergraduate">Undergraduate</option>
+                <option value="postgraduate">Postgraduate</option>
+                <option value="doctorate">Doctorate</option>
+            </select>
+        </div>
+
+        <div class="form-group" id="ugCourses" style="display: none;">
+            <label for="ugDegree">Select Undergraduate Degree</label>
+            <select class="form-control" id="ugDegree" name="ug_degree">
+                <option value="" disabled selected>Select Undergraduate Degree</option>
+                <option value="BCA">BCA</option>
+                <option value="BCom">BCom</option>
+                <option value="BBA">BBA</option>
+                <!-- Add more undergraduate options here -->
+            </select>
+        </div>
+
+        <div class="form-group" id="pgCourses" style="display: none;">
+            <label for="pgDegree">Select Postgraduate Degree</label>
+            <select class="form-control" name="pg_degree">
+                <option value="" disabled selected>Select Postgraduate Degree</option>
+                <!-- Add more postgraduate options here -->
+            </select>
+        </div>
+
+        <div class="form-group" id="doctorateFields" style="display: none;">
+            <label for="doctorateField">Select Doctorate Field</label>
+            <select class="form-control" name="doctorate_field">
+                <option value="" disabled selected>Select Doctorate Field</option>
+                <option value="Management Studies">Management Studies</option>
+                <option value="Medicine">Medicine</option>
+                <option value="Chemistry">Chemistry</option>
+                <!-- Add more doctorate field options here -->
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="birthdate">Date Of Final Graduation</label>
+            <input type="text" class="form-control" id="grad_year" name="grad_year" placeholder="Select Your Last highest Graduation " required>
+        </div>
+
+        <!-- Add fields for college or institution here -->
+        <div class="form-group">
+            <label for="collegeInstitution">College/Institution/University</label>
+            <input type="text" class="form-control" name="college_institution" oninput="validateCollegeInstitution(this)">
+            <div class="error-message" id="collegeInstitutionError"></div>
+        </div>
+        
+
+        <button type="submit" class="btn btn-primary">Save Next</button>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Function to update postgraduate courses based on the selected undergraduate course
+        function updatePostgraduateCourses(selectedUgCourse) {
+            var $pgDegree = $("select[name='pg_degree']");
+            // Reset the pg degree options
+            $pgDegree.find('option').remove();
+
+            if (selectedUgCourse === "BCA")  {
+                $pgDegree.append("<option value='MCA'>MCA</option>");
+                $pgDegree.append("<option value='MSc in Computer Science'>M.Sc. in Computer Science</option>");
+                $pgDegree.append("<option value='MSc in Data Science and Analytics'>M.Sc. in Data Science and Analytics</option>");
+                $pgDegree.append("<option value='M.Tech in Computer Science and Engineering'>M.Tech in Computer Science and Engineering</option>");
+                $pgDegree.append("<option value='MSc in Artificial Intelligence'>M.Sc. in Artificial Intelligence (AI)</option>");
+                $pgDegree.append("<option value='MBA in Information Technology'>MBA in Information Technology</option>");
+                $pgDegree.append("<option value='MSc in Information Technology'>M.Sc. in Information Technology</option>");
+                $pgDegree.append("<option value='MSc in Information Systems'>M.Sc. in Information Systems</option>");
+                $pgDegree.append("<option value='MSc in Cybersecurity'>M.Sc. in Cybersecurity</option>");
+                $pgDegree.append("<option value='MSc in Software Engineering'>M.Sc. in Software Engineering</option>");
+            } else if (selectedUgCourse === "BCom")  {
+                $pgDegree.append("<option value='MCom'>MCom</option>");
+                $pgDegree.append("<option value='MBA'>MBA</option>");
+                $pgDegree.append("<option value='CA'>CA</option>");
+                $pgDegree.append("<option value='CS'>CS</option>");
+                $pgDegree.append("<option value='MFC'>MFC</option>");
+                $pgDegree.append("<option value='MIB'>MIB</option>");
+                $pgDegree.append("<option value='MHRM'>MHRM</option>");
+                $pgDegree.append("<option value='MFM'>MFM</option>");
+                $pgDegree.append("<option value='MA Economics'>MA Economics</option>");
+                $pgDegree.append("<option value='PGDM'>PGDM</option>");
+            }
+             else if (selectedUgCourse === "BBA") {
+                $pgDegree.append("<option value='MBA'>MBA</option>");
+                $pgDegree.append("<option value='MBA in Finance'>MBA in Finance</option>");
+                $pgDegree.append("<option value='MBA in Marketing'>MBA in Marketing</option>");
+                $pgDegree.append("<option value='MBA in Human Resource Management'>MBA in Human Resource Management</option>");
+                $pgDegree.append("<option value='MBA in International Business'>MBA in International Business</option>");
+                $pgDegree.append("<option value='MBA in Operations Management'>MBA in Operations Management</option>");
+                $pgDegree.append("<option value='MBA in Information Technology'>MBA in Information Technology</option>");
+                $pgDegree.append("<option value='MBA in Healthcare Management'>MBA in Healthcare Management</option>");
+                $pgDegree.append("<option value='MBA in Supply Chain Management'>MBA in Supply Chain Management</option>");
+                $pgDegree.append("<option value='MBA in Entrepreneurship'>MBA in Entrepreneurship</option>");
+            }
+        }
+
+        function showPostgraduateOptions() {
+            // Show the postgraduate options if the highest qualification is "postgraduate" or "doctorate"
+            const selectedQualification = $("#highestQualification").val();
+            if (selectedQualification === "postgraduate" || selectedQualification === "doctorate") {
+                $("#pgCourses").show();
+            } else {
+                $("#pgCourses").hide();
+            }
+        }
+        
+
+        $("#highestQualification").change(function () {
+            // Hide all course-related and doctorate fields by default
+            $("#ugCourses").hide();
+            $("#pgCourses").hide();
+            $("#doctorateFields").hide();
+
+            var selectedQualification = $(this).val();
+
+            if (selectedQualification === "undergraduate") {
+                $("#ugCourses").show();
+                showPostgraduateOptions();
+            } else if (selectedQualification === "postgraduate") {
+                $("#ugCourses").show();
+                showPostgraduateOptions();
+            } else if (selectedQualification === "doctorate") {
+                $("#ugCourses").show();
+                $("#doctorateFields").show();
+                showPostgraduateOptions();
+            }
+        });
+
+        $("#ugDegree").change(function () {
+            var selectedUgCourse = $(this).val();
+            // Update postgraduate options based on the selected undergraduate course
+            updatePostgraduateCourses(selectedUgCourse);
+        });
+
+        $("#highestQualification").trigger("change"); // Trigger the change event on page load
+    });
+
+    
+
+</script>
+
+<script>
+    $(function () {
+        // Initialize the date picker
+        $("#grad_year").datepicker({
+            changeYear: true,
+            yearRange: "-100:+0",
+            dateFormat: "yy-mm-dd",
+            maxDate: 0
+        });
+    });
+</script>
+
+
+<script>
+    function validateCollegeInstitution(input) {
+        const collegeInstitution = input.value;
+        const errorContainer = document.getElementById("collegeInstitutionError");
+        const validPattern = /^[A-Za-z\s]+$/; // Only characters and spaces allowed
+    
+        if (collegeInstitution.length === 0) {
+            errorContainer.textContent = "College/Institution/University cannot be empty.";
+        } else if (collegeInstitution.length > 25) {
+            errorContainer.textContent = "College/Institution/University should be less than 25 characters.";
+        } else if (!collegeInstitution.match(validPattern)) {
+            errorContainer.textContent = "Only characters and spaces are allowed.";
+        } else {
+            errorContainer.textContent = ""; // Clear any error message
+        }
+    }
+    
+
+
+
+
+
+
+
+    
+
+</script>
+
+
+
+
+    
+    
+
+

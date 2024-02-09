@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Family Details</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Add CSS styles for the form indicator */
+        .form-indicator {
+            background-color: #007BFF; /* Background color */
+            color: #fff; /* Text color */
+            padding: 10px; /* Spacing around the text */
+            border-radius: 5px; /* Rounded corners */
+            margin-bottom: 20px; /* Spacing below the indicator */
+        }
+
+        /* Style the container */
+        .container {
+            margin-top: 30px;
+            border: 1px solid #333; /* Darker border color */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style form fields and labels */
+        .form-group label {
+            font-weight: bold;
+        }
+
+        /* Style submit button */
+        .btn-primary {
+            background-color: #007BFF;
+            border: none;
+        }
+
+        /* Add custom styling to error message */
+        .error-message {
+            color: #f00; /* Red color for error messages */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Update Employment Details</h2>
+        <form method="post" action="{% url 'matrimony:update_employmentdetails' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div class="form-group">
+                <label for="employmentStatus">Employment Status</label>
+                <input type="text" class="form-control" id="employmentStatus" name="employment_status" placeholder="Enter your employment status" value="{{ form.employment_status.value }}">
+                <div class="error-message" id="employmentStatusError">{{ form.employment_status.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="occupation">Occupation</label>
+                <input type="text" class="form-control" id="occupation" name="occupation" placeholder="Enter your occupation" value="{{ form.occupation.value }}">
+                <div class="error-message" id="occupationError">{{ form.occupation.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="employerOf">Employer Of</label>
+                <input type="text" class="form-control" id="employerOf" name="employerof" placeholder="Enter your employer" value="{{ form.employerof.value }}">
+                <div class="error-message" id="employerOfError">{{ form.employerof.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="annualIncome">Annual Income</label>
+                <input type="text" class="form-control" id="annualIncome" name="annual_income" placeholder="Enter your annual income" value="{{ form.annual_income.value }}">
+                <div class="error-message" id="annualIncomeError">{{ form.annual_income.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="industry">Industry</label>
+                <input type="text" class="form-control" id="industry" name="industry" placeholder="Enter your industry" value="{{ form.industry.value }}">
+                <div class="error-message" id="industryError">{{ form.industry.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="jobLocation">Job Location</label>
+                <input type="text" class="form-control" id="jobLocation" name="job_location" placeholder="Enter your job location" value="{{ form.job_location.value }}">
+                <div class="error-message" id="jobLocationError">{{ form.job_location.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="aboutJob">About Job</label>
+                <textarea class="form-control" id="aboutJob" name="about_job" rows="3">{{ form.about_job.value }}</textarea>
+                <div class="error-message" id="aboutJobError">{{ form.about_job.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="workingHours">Working Hours</label>
+                <input type="text" class="form-control" id="workingHours" name="working_hours" placeholder="Enter your working hours" value="{{ form.working_hours.value }}">
+                <div class="error-message" id="workingHoursError">{{ form.working_hours.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="socialLink">Social Link</label>
+                <input type="url" class="form-control" id="socialLink" name="social_link" placeholder="Enter your social link" value="{{ form.social_link.value }}">
+                <div class="error-message" id="socialLinkError">{{ form.social_link.errors }}</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a href="javascript:history.back()" class="btn btn-secondary">Back</a>
+        </form>
+    </div>
+</body>
+</html>
+
+
+
+<script>
+    function validateAlphabeticInput(inputFieldId, errorDivId, minLength, maxLength) {
+        let inputField = document.getElementById(inputFieldId);
+        let errorDiv = document.getElementById(errorDivId);
+        let inputValue = inputField.value.trim();
+
+        if (/^[a-zA-Z\s]+$/.test(inputValue) && inputValue.length >= minLength && inputValue.length <= maxLength) {
+            errorDiv.textContent = '';
+        } else {
+            errorDiv.textContent = `Please enter alphabetic characters within ${minLength} to ${maxLength} characters without leading or trailing spaces.`;
+        }
+    }
+
+    function validateAnnualIncome() {
+        let annualIncome = document.getElementById('annualIncome');
+        let annualIncomeError = document.getElementById('annualIncomeError');
+        let incomeValue = annualIncome.value.trim();
+
+        if (/^\d+$/.test(incomeValue)) {
+            annualIncomeError.textContent = '';
+        } else {
+            annualIncomeError.textContent = 'Please enter only numeric values for Annual Income.';
+        }
+    }
+
+    function validateSocialLink() {
+        let socialLink = document.getElementById('socialLink');
+        let socialLinkError = document.getElementById('socialLinkError');
+        let linkValue = socialLink.value.trim();
+
+        if (!/^\d+$/.test(linkValue) && linkValue !== '') {
+            socialLinkError.textContent = '';
+        } else {
+            socialLinkError.textContent = 'Social Link cannot be entirely numeric.';
+        }
+    }
+
+    document.getElementById('employmentStatus').addEventListener('input', function() {
+        validateAlphabeticInput('employmentStatus', 'employmentStatusError', 2, 30);
+    });
+
+    document.getElementById('occupation').addEventListener('input', function() {
+        validateAlphabeticInput('occupation', 'occupationError', 2, 30);
+    });
+
+    document.getElementById('employerOf').addEventListener('input', function() {
+        validateAlphabeticInput('employerOf', 'employerOfError', 2, 30);
+    });
+
+    document.getElementById('industry').addEventListener('input', function() {
+        validateAlphabeticInput('industry', 'industryError', 2, 30);
+    });
+
+    document.getElementById('jobLocation').addEventListener('input', function() {
+        validateAlphabeticInput('jobLocation', 'jobLocationError', 2, 30);
+    });
+
+    document.getElementById('aboutJob').addEventListener('input', function() {
+        validateAlphabeticInput('aboutJob', 'aboutJobError', 2, 30);
+    });
+
+    document.getElementById('workingHours').addEventListener('input', function() {
+        validateAlphabeticInput('workingHours', 'workingHoursError', 2, 30);
+    });
+
+    document.getElementById('annualIncome').addEventListener('input', function() {
+        validateAnnualIncome();
+    });
+
+    document.getElementById('socialLink').addEventListener('input', function() {
+        validateSocialLink();
+    });
+</script>

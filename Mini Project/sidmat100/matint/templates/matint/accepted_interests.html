@@ -1,0 +1,125 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Accepted Interests</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your custom styles -->
+    <style>
+        /* Add your custom CSS styles here */
+        body {
+            background-color: #f8f9fa; /* Set a light background color */
+        }
+        .container {
+            margin-top: 50px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333; /* Adjust title color */
+        }
+        table {
+            background-color: #fff; /* Set table background color */
+        }
+        th, td {
+            text-align: center;
+        }
+        tbody tr:hover {
+            background-color: #f5f5f5; /* Change the background color on hover */
+        }
+        .center-button {
+            text-align: center; /* Center-align content */
+        }
+        .btn-back {
+            background-color: #333; /* Light black background color */
+            color: #fff; /* White text color */
+            border-color: #333; /* Matching border color */
+        }
+        .btn-back:hover {
+            background-color: #555; /* Darker black on hover */
+            border-color: #555; /* Matching border color on hover */
+        }
+        .profile-buttons {
+            margin-top: 10px;
+        }
+
+        /* Custom styles to reduce space between columns of buttons  */
+        .no-gutters {
+            margin-right: 0;
+            margin-left: 0;
+        }
+    
+        .no-gutters [class^="col-"],
+        .no-gutters [class*=" col-"] {
+            padding-right: 10px;
+            padding-left: 5px;
+        }
+
+        /* Add more custom CSS styles below */
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Accepted Interests</h1>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered">
+                <!-- Table headers -->
+                <thead class="thead-dark">
+                    <tr>
+                        <th>User</th>
+                        <th>Profile Image</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for accepted_interest in accepted_interests %}
+                        <tr>
+                            <td>{{ accepted_interest.sender.personaldetails.first_name }} {{ accepted_interest.sender.personaldetails.last_name }}</td>
+                            <td>
+                                {% if accepted_interest.sender.personaldetails.profile_image %}
+                                    <img src="{{ accepted_interest.sender.personaldetails.profile_image.url }}" alt="Profile Image" style="max-width: 100px; max-height: 100px;">
+                                {% else %}
+                                    No Image
+                                {% endif %}
+                            </td>
+                            <td class="profile-buttons">
+                                <div class="row no-gutters">
+                                    <div class="col text-center">
+                                        <a href="{% url 'matrimony:user_detail' user_id=accepted_interest.sender.id %}" class="btn btn-primary">View Details</a>
+                                        <a href="{% url 'matchat:chat' receiver_id=accepted_interest.sender.id %}" class="btn btn-primary">Chat</a>
+
+                                    </div>
+                                </div>
+                                <!-- Add more actions if needed -->
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <!-- Display message if no accepted interests found -->
+                        <tr>
+                            <td colspan="3">No accepted interests</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="center-button">
+                <a href="{% url 'matrimony:myprofile' %}" class="btn btn-primary btn-back">Go Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Your custom scripts -->
+<script>
+    // Add your custom JavaScript code here if needed
+</script>
+
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Family Details</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Add CSS styles for the form indicator */
+        .form-indicator {
+            background-color: #007BFF; /* Background color */
+            color: #fff; /* Text color */
+            padding: 10px; /* Spacing around the text */
+            border-radius: 5px; /* Rounded corners */
+            margin-bottom: 20px; /* Spacing below the indicator */
+        }
+
+        /* Style the container */
+        .container {
+            margin-top: 30px;
+            border: 1px solid #333; /* Darker border color */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style form fields and labels */
+        .form-group label {
+            font-weight: bold;
+        }
+
+        /* Style submit button */
+        .btn-primary {
+            background-color: #007BFF;
+            border: none;
+        }
+
+        /* Add custom styling to error message */
+        .error-message {
+            color: #f00; /* Red color for error messages */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Update Location Details</h2>
+        <form method="post" action="{% url 'matrimony:update_locationdetails' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div class="form-group">
+                <label for="currentCity">Current City</label>
+                <input type="text" class="form-control" id="currentCity" name="current_city" placeholder="Enter your current city" value="{{ form.current_city.value }}">
+                <div class="error-message" id="currentCityError">{{ form.current_city.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="currentState">Current State</label>
+                <input type="text" class="form-control" id="currentState" name="current_state" placeholder="Enter your current state" value="{{ form.current_state.value }}">
+                <div class="error-message" id="currentStateError">{{ form.current_state.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="currentPinCode">Current Pin Code</label>
+                <input type="text" class="form-control" id="currentPinCode" name="current_pin_code" placeholder="Enter your current pin code" value="{{ form.current_pin_code.value }}">
+                <div class="error-message" id="currentPinCodeError">{{ form.current_pin_code.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="willingToMove">Willing to Move</label>
+                <input type="text" class="form-control" id="willingToMove" name="willing_to_move" placeholder="Enter 'yes' or 'no'" value="{{ form.willing_to_move.value }}">
+                <div class="error-message" id="willingToMoveError">{{ form.willing_to_move.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="additionalComments">Additional Comments</label>
+                <textarea class="form-control" id="additionalComments" name="additional_comments" rows="3">{{ form.additional_comments.value }}</textarea>
+                <div class="error-message" id="additionalCommentsError">{{ form.additional_comments.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="locationPhotos">Location Photos</label>
+                {% if form.instance.location_photos %}
+                    <img src="{{ form.instance.location_photos.url }}" alt="Location Photos" style="max-width: 100px; max-height: 100px;">
+                {% endif %}
+                <input type="file" class="form-control" id="locationPhotos" name="location_photos" accept="image/*">
+                <div class="error-message" id="locationPhotosError">{{ form.location_photos.errors }}</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a href="javascript:history.back()" class="btn btn-secondary">Back</a>
+        </form>
+    </div>
+</body>
+</html>
+
+
+
+<script>
+    function validateAlphanumericInput(inputFieldId, errorDivId, maxLength) {
+        let inputField = document.getElementById(inputFieldId);
+        let errorDiv = document.getElementById(errorDivId);
+        let inputValue = inputField.value.trim();
+
+        if (/^[a-zA-Z0-9\s]+$/.test(inputValue) && inputValue.length <= maxLength) {
+            errorDiv.textContent = '';
+        } else {
+            errorDiv.textContent = `Please enter alphanumeric characters with a maximum length of ${maxLength}.`;
+        }
+    }
+
+    function validatePinCode() {
+        let pinCode = document.getElementById('currentPinCode');
+        let pinCodeError = document.getElementById('currentPinCodeError');
+        let pinValue = pinCode.value.trim();
+
+        if (/^\d{6}$/.test(pinValue)) {
+            pinCodeError.textContent = '';
+        } else {
+            pinCodeError.textContent = 'Please enter exactly 6 digits for Pin Code.';
+        }
+    }
+
+    document.getElementById('currentCity').addEventListener('input', function() {
+        validateAlphabeticInput('currentCity', 'currentCityError', 30);
+    });
+
+    document.getElementById('currentState').addEventListener('input', function() {
+        validateAlphabeticInput('currentState', 'currentStateError', 30);
+    });
+
+    document.getElementById('willingToMove').addEventListener('input', function() {
+        validateAlphabeticInput('willingToMove', 'willingToMoveError', 30);
+    });
+
+    document.getElementById('additionalComments').addEventListener('input', function() {
+        validateAlphanumericInput('additionalComments', 'additionalCommentsError', 30);
+    });
+
+    document.getElementById('currentPinCode').addEventListener('input', function() {
+        validatePinCode();
+    });
+</script>

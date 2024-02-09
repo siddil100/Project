@@ -1,0 +1,7 @@
+body {
+    background-image: url('{% static "/images/pic1.jpg" %}');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /* You can also set other background properties here */
+}

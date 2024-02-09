@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Images</title>
+    <style>
+        /* Add your CSS styles for image cards */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        form {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            max-width: 400px;
+        }
+        form input[type="file"] {
+            margin-bottom: 10px;
+        }
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .image-card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+            background-color: #fff;
+            text-align: center;
+        }
+        .image-card img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .image-card form {
+            margin-top: 5px;
+        }
+        .error-message {
+            color: red;
+            margin-top: 5px;
+        }
+        .upload-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .upload-link a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            border: 2px solid #333;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .upload-link a:hover {
+            background-color: #333;
+            color: #fff;
+        }
+        form[name="imageUploadForm"] {
+            display: none;
+        }
+
+
+        .btn.btn-secondary {
+            display: inline-block;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            background-color: #6c757d;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+          }
+        
+          /* Hover effect */
+          .btn.btn-secondary:hover {
+            background-color: #495057;
+          }
+
+        
+    </style>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Include jQuery UI CSS (for the date picker) -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- Include jQuery UI JavaScript (for the date picker) -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+
+    
+  <form method="post" enctype="multipart/form-data" name="imageUploadForm" onsubmit="return validateForm()" name="imageUploadForm">
+    {% csrf_token %}
+    {{ image_upload_form.as_p }}
+    <input type="file" name="image" multiple>
+    <input type="submit" value="Upload">
+    <div id="errorDiv" class="error-message"></div>
+  </form>
+
+  <!-- Display uploaded images in cards -->
+  <div class="image-gallery">
+    {% for image_upload in user_images %}
+        <div class="image-card">
+            {% if image_upload.image_set.exists %}
+                <img src="{{ image_upload.image_set.first.image.url }}" alt="User Image">
+                <p>Image ID: {{ image_upload.image_set.first.id }}</p>
+                <form method="post" action="{% url 'matrimony:edit_image' image_upload_id=image_upload.id image_id=image_upload.image_set.first.id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="image">
+                    <input type="submit" value="Edit">
+                </form>
+                <form method="post" action="{% url 'matrimony:delete_image' image_upload_id=image_upload.id image_id=image_upload.image_set.first.id %}">
+                    {% csrf_token %}
+                    <input type="submit" value="Delete">
+                </form>
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+  </div>
+
+  <!-- Upload new images link -->
+  <div class="upload-link">
+    <a href="#" onclick="triggerFormSubmission();">Click here to upload new images</a>
+    <br>
+    <a href="{% url 'matrimony:myprofile' %}" class="btn btn-secondary mt-3">Back</a>
+
+  </div>
+
+  <script>
+    function validateForm() {
+        var fileInput = document.querySelector('form[name="imageUploadForm"] input[type="file"]');
+        var files = fileInput.files;
+        var errorDiv = document.getElementById('errorDiv');
+
+        // Check if at least one file is selected
+        if (files.length === 0) {
+            errorDiv.innerHTML = "Please select an image.";
+            return false; // Prevent form submission
+        }
+        errorDiv.innerHTML = ""; // Clear error message
+        return true; // Allow form submission
+    }
+
+    // Function to trigger form submission after selecting a file
+    function triggerFormSubmission() {
+        document.querySelector('input[name=\'image\']').click(); // Open file dialog
+        // Add an event listener for the change event of the file input
+        document.querySelector('input[name=\'image\']').addEventListener('change', function() {
+            // Validate the form
+            if (validateForm()) {
+                document.querySelector('form[name="imageUploadForm"]').submit(); // Submit the form
+            }
+        });
+    }
+</script>
+
+
+</body>
+</html>

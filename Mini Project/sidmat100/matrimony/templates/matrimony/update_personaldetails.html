@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Details Form</title>
+    <!DOCTYPE html>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Details Form</title>
+    <!-- Include Bootstrap CSS -->
+    
+    <style>
+        /* Add CSS styles for the form indicator */
+        .form-indicator {
+            background-color: #007BFF; /* Background color */
+            color: #fff; /* Text color */
+            padding: 10px; /* Spacing around the text */
+            border-radius: 5px; /* Rounded corners */
+            margin-bottom: 20px; /* Spacing below the indicator */
+        }
+
+        /* Style the container */
+        .container {
+            margin-top: 30px;
+            border: 1px solid #333; /* Darker border color */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Style form fields and labels */
+        .form-group label {
+            font-weight: bold;
+        }
+
+        /* Style submit button */
+        .btn-primary {
+            background-color: #007BFF;
+            border: none;
+        }
+
+        /* Add custom styling to error message */
+        .error-messagephone {
+            color: #f00;
+        }
+
+        .error-message {
+            color: #f00; /* Red color for error messages */
+        }
+    </style>
+   
+</head>
+    
+<body>
+    <!-- Your form and content here... -->
+</body>
+</html>
+
+<body>
+    <div class="container">
+        <h2> Update Personal Details</h2>
+        <form method="post" action="{% url 'matrimony:update_personaldetails' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" id="firstName" name="first_name" placeholder="Enter your first name" required value="{{ form.first_name.value }}">
+                <div class="error-message" id="firstNameError">{{ form.first_name.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="middleName">Middle Name</label>
+                <input type="text" class="form-control" id="middleName" name="middle_name" placeholder="Enter your middle name" value="{{ form.middle_name.value }}">
+                <div class="error-message" id="middleNameError">{{ form.middle_name.errors }}</div>
+            </div>
+            
+
+            
+
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Enter your last name" value="{{ form.last_name.value }}">
+                <div class "error-message" id="lastNameError">{{ form.last_name.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="religion">Religion:</label>
+                <input type="text" class="form-control" id="religion" name="religion" placeholder="Enter your religion" value="{{ form.religion.value }}">
+                <div class="error-message" id="religionError">{{ form.religion.errors }}</div>
+            </div>
+            
+
+            <div class="form-group">
+                <label for="sector">Sector:</label>
+                <input type="text" class="form-control" id="sector" name="sector" placeholder="Enter your sector" value="{{ form.sector.value }}">
+                <div class="error-message" id="sectorError">{{ form.sector.errors }}</div>
+            </div>
+            
+
+            <div class="form-group">
+                <label for="birthPlace">Birth-Place</label>
+                <input type="text" class="form-control" id="birthPlace" name="birth_place" placeholder="Enter your birth place" value="{{ form.birth_place.value }}">
+                <div class="error-message" id="birthPlaceError">{{ form.birth_place.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" class="form-control" id="phone" name="phone_number" placeholder="Enter your phone number" value="{{ form.phone_number.value }}">
+                <div class="error-message" id="phoneError">{{ form.phone_number.errors }}</div>
+            </div>
+            
+            
+
+            
+            <div class="form-group">
+                <label for="Address">Address:</label>
+                <textarea class="form-control" id="address" name="address" placeholder="Enter your address">{{ form.address.value }}</textarea>
+                <div class="error-message" id="addressError">{{ form.address.errors }}</div>
+            </div>
+            
+
+            
+            
+
+            <div class="form-group">
+                <label for="maritalstatus">Marital Status:</label>
+                <input type="text" class="form-control" id="maritalstatus" name="marital_status" value="{{ form.marital_status.value }}">
+                <div class="error-message" id="maritalStatusError">{{ form.marital_status.errors }}</div>
+            </div>
+            
+
+            <div class="form-group">
+                <label for="aboutyourself">About Yourself:</label>
+                <textarea class="form-control" id="aboutyourself" name="about_you" rows="3">{{ form.about_you.value }}</textarea>
+                <div class="error-message" id="aboutYourselfError">{{ form.about_you.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label>Hobbies:</label>
+                {% for hobby in hobbies %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="hobby_{{ hobby.id }}" name="hobbies" value="{{ hobby.id }}"
+                               {% if hobby in form.hobbies.all or hobby in personal_details.hobbies.all %}checked{% endif %}>
+                        <label class="form-check-label" for="hobby_{{ hobby.id }}">
+                            {{ hobby.name }}
+                        </label>
+                    </div>
+                {% endfor %}
+                <div class="error-message" id="hobbiesError">{{ form.hobbies.errors }}</div>
+            </div>
+            
+            
+            
+
+            <div class="form-group">
+                <label for="profileImage">Profile Image</label>
+                {% if form.instance.profile_image %}
+                    <img src="{{ form.instance.profile_image.url }}" alt="Profile Image" style="max-width: 100px; max-height: 100px;">
+                {% endif %}
+                <input type="file" class="form-control" id="profileImage" name="profile_image" accept="image/*">
+                <div class="error-message" id="profileImageError">{{ form.profile_image.errors }}</div>
+            </div>
+            
+            
+            
+
+            <button type="submit" class="btn btn-primary">update</button>
+            <a href="{% url 'matrimony:myprofile' %}" class="btn btn-secondary">Back</a>
+        </form>
+    </div>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+
+
+<script>
+    // Function to validate alphabetic input without leading or trailing spaces
+    function validateAlphabeticInput(inputFieldId, errorDivId) {
+        let inputField = document.getElementById(inputFieldId);
+        let errorDiv = document.getElementById(errorDivId);
+        let inputValue = inputField.value.trim();
+
+        if (/^[a-zA-Z]+$/.test(inputValue)) {
+            errorDiv.textContent = '';
+        } else {
+            errorDiv.textContent = 'Please enter only alphabetic characters without leading or trailing spaces.';
+        }
+    }
+
+    // Function to validate the phone number with 10 digits
+    function validatePhoneNumber(inputFieldId, errorDivId) {
+        let inputField = document.getElementById(inputFieldId);
+        let errorDiv = document.getElementById(errorDivId);
+        let inputValue = inputField.value.trim();
+
+        if (/^\d{10}$/.test(inputValue)) {
+            errorDiv.textContent = '';
+        } else {
+            errorDiv.textContent = 'Please enter a valid 10-digit phone number.';
+        }
+    }
+
+    // Attach event listeners to perform validations on input
+    document.getElementById('firstName').addEventListener('input', function() {
+        validateAlphabeticInput('firstName', 'firstNameError');
+    });
+
+    document.getElementById('middleName').addEventListener('input', function() {
+        validateAlphabeticInput('middleName', 'middleNameError');
+    });
+
+    document.getElementById('lastName').addEventListener('input', function() {
+        validateAlphabeticInput('lastName', 'lastNameError');
+    });
+
+    document.getElementById('religion').addEventListener('input', function() {
+        validateAlphabeticInput('religion', 'religionError');
+    });
+
+    document.getElementById('sector').addEventListener('input', function() {
+        validateAlphabeticInput('sector', 'sectorError');
+    });
+
+    document.getElementById('birthPlace').addEventListener('input', function() {
+        validateAlphabeticInput('birthPlace', 'birthPlaceError');
+    });
+
+    document.getElementById('address').addEventListener('input', function() {
+        validateAlphabeticInput('address', 'addressError');
+    });
+
+    document.getElementById('aboutyourself').addEventListener('input', function() {
+        validateAlphabeticInput('aboutyourself', 'aboutYourselfError');
+    });
+
+    document.getElementById('maritalstatus').addEventListener('input', function() {
+        validateAlphabeticInput('maritalstatus', 'maritalStatusError');
+    });
+
+    document.getElementById('phone').addEventListener('input', function() {
+        validatePhoneNumber('phone', 'phoneError');
+    });
+</script>

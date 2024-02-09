@@ -1,0 +1,120 @@
+{% load static %}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blocked Users List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your custom styles -->
+    <style>
+        /* Add your custom CSS styles here */
+        body {
+            background-color: #f8f9fa; /* Set a light background color */
+        }
+        .container {
+            margin-top: 50px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333; /* Adjust title color */
+        }
+        table {
+            background-color: #fff; /* Set table background color */
+        }
+        th, td {
+            text-align: center;
+        }
+        .btn-back {
+            margin-bottom: 20px;
+        }
+        .btn-danger {
+            background-color: #dc3545; /* Change danger button color */
+            border-color: #dc3545; /* Change danger button border color */
+        }
+        .btn-danger:hover {
+            background-color: #c82333; /* Change danger button hover color */
+            border-color: #bd2130; /* Change danger button hover border color */
+        }
+        tbody tr:hover {
+            background-color: #f5f5f5; /* Change the background color on hover */
+        }
+        .center-button {
+            text-align: center; /* Center-align content */
+        }
+        .btn-back {
+            background-color: #333; /* Light black background color */
+            color: #fff; /* White text color */
+            border-color: #333; /* Matching border color */
+        }
+        .btn-back:hover {
+            background-color: #555; /* Darker black on hover */
+            border-color: #555; /* Matching border color on hover */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Blocked Users List</h1>
+     <!-- Back button -->
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>User</th>
+                        <th>Profile Picture</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                
+                                    {% for blocked_user in blocked_users %}
+                                        <tr>
+                                            <td>{{ blocked_user.blocked_user_details.first_name }} {{ blocked_user.blocked_user_details.last_name }}</td>
+                                            <td>
+                                                {% if blocked_user.blocked_user_details.profile_image %}
+                                                    <img src="{{ blocked_user.blocked_user_details.profile_image.url }}" alt="Profile Picture" width="50" height="50">
+                                                {% else %}
+                                                    <img src="{% static '/nodp/no.jpg' %}" alt="Default Profile Picture" width="50" height="50">
+                                                {% endif %}
+                                            </td>
+                                            <!-- Add other columns with user details -->
+                                            <td>
+                                                <a href="{% url 'matrimony:unblock_user' blocked_user.blocked_user_details.user.id %}" class="btn btn-danger">Unblock</a>
+                                                <a href="{% url 'matrimony:user_detail' blocked_user.blocked_user_details.user.id %}" class="btn btn-info">View Details</a>
+                                                <!-- Optionally add other actions or details -->
+                                            </td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="4">No users are currently blocked.</td>
+                                        </tr>
+                                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="center-button">
+                <a href="{% url 'matrimony:myprofile' %}" class="btn btn-primary btn-back">Go Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Your custom scripts -->
+<script>
+    // Add your custom JavaScript code here if needed
+</script>
+
+</body>
+</html>

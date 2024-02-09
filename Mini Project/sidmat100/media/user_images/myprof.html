@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Add your HTML head content here -->
+
+    <!-- Load Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f0f0f0;">
+        <a class="navbar-brand" href="#">DreamWed</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">My Profile</a>
+                </li>
+            </ul>
+            <!-- Profile Picture and Username -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ request.session.profile_image_url }}" alt="Profile Picture" width="40" height="40" class="rounded-circle">
+                        {{ request.user.username }} <!-- Display the username from the session -->
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                        <a class="dropdown-item" href="#">My Profile</a>
+                        <a class="dropdown-item" href="#">Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-3">
+                <!-- Sidebar with links to different sections -->
+                <div class="list-group">
+                    <a href="#personal" class="list-group-item list-group-item-action">Personal Details</a>
+                    <a href="#family" class="list-group-item list-group-item-action">Family Details</a>
+                    <a href="#educational" class="list-group-item list-group-item-action">Educational Details</a>
+                    <a href="#employment" class="list-group-item list-group-item-action">Employment Details</a>
+                    <a href="#location" class="list-group-item list-group-item-action">Location Details</a>
+                    <a href="#preferences" class="list-group-item list-group-item-action">Add Preferences</a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <!-- Content for different sections will go here -->
+                <div id="personal">
+                    <h1>Personal Details</h1>
+                    <!-- Display personal details here -->
+                </div>
+                <div id="family">
+                    <h1>Family Details</h1>
+                    <!-- Display family details here -->
+                </div>
+                <div id="educational">
+                    <h1>Educational Details</h1>
+                    <!-- Display educational details here -->
+                </div>
+                <div id="employment">
+                    <h1>Employment Details</h1>
+                    <!-- Display employment details here -->
+                </div>
+                <div id="location">
+                    <h1>Location Details</h1>
+                    <!-- Display location details here -->
+                </div>
+                <div id="preferences">
+                    <h1>Add Preferences</h1>
+                    <!-- Add preferences here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Bootstrap JS (Optional, if needed) -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</body>
+</html>

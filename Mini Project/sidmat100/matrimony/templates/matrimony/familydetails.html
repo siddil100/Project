@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Details Form</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include jQuery UI CSS (for the date picker) -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <!-- Include jQuery UI JavaScript (for the date picker) -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    
+        <style>
+            /* Add CSS styles for the form indicator */
+            .form-indicator {
+                background-color: #007BFF; /* Background color */
+                color: #fff; /* Text color */
+                padding: 10px; /* Spacing around the text */
+                border-radius: 5px; /* Rounded corners */
+                margin-bottom: 20px; /* Spacing below the indicator */
+            }
+    
+            /* Style the container */
+            .container {
+                margin-top: 30px;
+                border: 1px solid #333; /* Darker border color */
+                border-radius: 10px;
+                padding: 20px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            /* Style form fields and labels */
+            .form-group label {
+                font-weight: bold;
+            }
+    
+            /* Style submit button */
+            .btn-primary {
+                background-color: #007BFF;
+                border: none;
+            }
+    
+            /* Add custom styling to error message */
+            .error-messagephone {
+                color: #f00;
+            }
+    
+            .error-message {
+                color: #f00; /* Red color for error messages */
+            }
+        </style>
+
+</head>
+<body style="background-color: #d4d4d4;">
+    
+
+    <div class="container">
+        
+        <div class="form-group">
+            <strong><em>Form 2 of 5</em></strong>
+        </div>
+
+
+    
+        <h2>Family Details</h2>
+        <!-- Family details form goes here -->
+        <form method="post" action="{% url 'matrimony:familydetails' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="fatherName">Father's Name</label>
+                <input type="text" class="form-control" id="fatherName" name="father_name" placeholder="Enter your father's name" required oninput="validateFatherName(this)">
+                <div class="error-message" id="fatherNameError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="motherName">Mother's Name</label>
+                <input type="text" class="form-control" id="motherName" name="mother_name" placeholder="Enter your mother's name" required oninput="validateMotherName(this)">
+                <div class="error-message" id="motherNameError"></div>
+            </div>
+            
+            
+
+            <div class="form-group">
+                <label for="siblings">Number of Siblings</label>
+                <input type="number" class="form-control" id="siblings" name="number_of_siblings" required oninput="validateNumberOfSiblings(this)">
+                <div class="error-message" id="siblingsError"></div>
+            </div>
+            
+
+            <div class="form-group">
+                <label for="fatherOccupation">Father's Occupation</label>
+                <select class="form-control occupation-select" id="fatherOccupation" name="father_occupation">
+                    <option value="" disabled selected>Select Father's Occupation</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="engineer">Engineer</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="lawyer">Lawyer</option>
+                    <option value="farmer">Farmer</option>
+                    <option value="businessman">Businessman</option>
+                    <option value="software_professional">Software Professional</option>
+                    <option value="government_employee">Government Employee</option>
+                    <option value="artist">Artist</option>
+                    <option value="engineer">Engineer</option>
+                    <option value="entrepreneur">Entrepreneur</option>
+                    <option value="other">Other</option>
+                </select>
+                {% if family_details_form.father_occupation.errors %}
+                <div class="text-danger">
+                    {{ family_details_form.father_occupation.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+           
+
+            <div class="form-group">
+                <label for="motherOccupation">Mother's Occupation</label>
+                <select class="form-control occupation-select" id="motherOccupation" name="mother_occupation">
+                    <option value="" disabled selected>Select Mother's Occupation</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="housewife">Housewife</option>
+                    <option value="nurse">Nurse</option>
+                    <option value="software_professional">Software Professional</option>
+                    <option value="government_employee">Government Employee</option>
+                    <option value="artist">Artist</option>
+                    <option value="engineer">Engineer</option>
+                    <option value="entrepreneur">Entrepreneur</option>
+                    <option value="other">Other</option>
+                </select>
+                {% if family_details_form.mother_occupation.errors %}
+                <div class="text-danger">
+                    {{ family_details_form.mother_occupation.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+
+            
+
+            <div class="form-group">
+                <label for="familyType">Family Type</label>
+                <select class="form-control" id="familyType" name="family_type">
+                    <option value="" disabled selected>Select Family Type</option>
+                    <option value="nuclear">Nuclear</option>
+                    <option value="joint">Joint</option>
+                    <option value="extended">Extended</option>
+                </select>
+                {% if family_details_form.family_type.errors %}
+                <div class="text-danger">
+                    {{ family_details_form.family_type.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+            <div class="form-group">
+                <label for="familyStatus">Family Status</label>
+                <select class="form-control" id="familyStatus" name="family_status">
+                    <option value="" disabled selected>Select Family Status</option>
+                    <option value="lower">Lower</option>
+                    <option value="middle">Middle</option>
+                    <option value="upper">Upper</option>
+                </select>
+                {% if family_details_form.family_status.errors %}
+                <div class="text-danger">
+                    {{ family_details_form.family_status.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+
+        <div class="form-group">
+            <label for="familyMembers">Number of Family Members</label>
+            <input type="number" class="form-control" id="familyMembers" name="number_of_family_members" required oninput="validateNumberOfFamilyMembers(this)">
+            <div class="error-message" id="familyMembersError"></div>
+        </div>
+        
+
+            <button type="submit" class="btn btn-primary">Save Next</button>
+        </form>
+    </div>
+
+    <script>
+        function validateFatherName(input) {
+            const fatherName = input.value;
+            const errorContainer = document.getElementById("fatherNameError");
+            const lettersOnly = /^[A-Za-z]+$/;
+    
+            if (fatherName.length < 3) {
+                errorContainer.textContent = "Father's Name should be at least 3 characters.";
+            } else if (fatherName.length > 15) {
+                errorContainer.textContent = "Father's Name should be at most 15 characters.";
+            } else if (!fatherName.match(lettersOnly)) {
+                errorContainer.textContent = "Father's Name should contain only letters.";
+            } else {
+                errorContainer.textContent = ""; // Clear any error message
+            }
+        }
+
+
+        function validateMotherName(input) {
+            const motherName = input.value;
+            const errorContainer = document.getElementById("motherNameError");
+            const lettersOnly = /^[A-Za-z]+$/;
+        
+            if (motherName.length < 3) {
+                errorContainer.textContent = "Mother's Name should be at least 3 characters.";
+            } else if (motherName.length > 15) {
+                errorContainer.textContent = "Mother's Name should be at most 15 characters.";
+            } else if (!motherName.match(lettersOnly)) {
+                errorContainer.textContent = "Mother's Name should contain only letters.";
+            } else {
+                errorContainer.textContent = ""; // Clear any error message
+            }
+        }
+
+        function validateNumberOfSiblings(input) {
+            const numberOfSiblings = input.value;
+            const errorContainer = document.getElementById("siblingsError");
+        
+            if (numberOfSiblings <= 0) {
+                errorContainer.textContent = "Number of Siblings cannot be zero or negative.";
+            } else if (numberOfSiblings >= 20) {
+                errorContainer.textContent = "Number of Siblings cannot be 20 or more.";
+            } else {
+                errorContainer.textContent = ""; // Clear any error message
+            }
+        }
+
+        function validateNumberOfFamilyMembers(input) {
+            const numberOfFamilyMembers = input.value;
+            const errorContainer = document.getElementById("familyMembersError");
+        
+            if (numberOfFamilyMembers <= 0) {
+                errorContainer.textContent = "Number of Family Members cannot be zero or negative.";
+            } else if (numberOfFamilyMembers >= 20) {
+                errorContainer.textContent = "Number of Family Members cannot be 20 or more.";
+            } else {
+                errorContainer.textContent = ""; // Clear any error message
+            }
+        }
+        
+        
+        
+    </script>
+    
+    
+</body>
+</html>

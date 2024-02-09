@@ -1,0 +1,312 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Marriage</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/global.css' %}" rel="stylesheet">
+    <link href="{% static 'css/index.css' %}" rel="stylesheet">
+    <link href="{% static 'css/about.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}" />
+    <link href="{% static 'css/element.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
+    <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #7abecc !important;
+    }
+    
+    .user_card {
+      width: 500px; /* Increased width */
+      height: 700px; /* Increased height */
+      margin: auto; /* Center horizontally and vertically */
+      background: #2f3635;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center; /* Center vertically */
+      flex-direction: column;
+      padding: 60px; /* Increased padding */
+      box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2), 0 12px 40px 0 rgba(0, 0, 0, 0.19); /* Increased shadow */
+      -webkit-box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2), 0 12px 40px 0 rgba(0, 0, 0, 0.19);
+      -moz-box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2), 0 12px 40px 0 rgba(0, 0, 0, 0.19);
+      border-radius: 20px; /* Increased border radius */
+      font-size: 18px; /* Increase the font size inside the card */
+    }
+    
+    .form_container {
+      margin-top: 20px;
+    }
+    
+    #form-title {
+      color: #fff;
+      font-size: 28px; /* Increased font size */
+    }
+    
+    .login_btn {
+      width: 100%;
+      background: #33ccff !important;
+      color: white !important;
+      font-size: 20px; /* Increased font size */
+    }
+    
+    .login_btn:focus {
+      box-shadow: none !important;
+      outline: 0px !important;
+    }
+    
+    .login_container {
+      padding: 0 2rem;
+    }
+    
+    .input-group-text {
+      background: #f7ba5b !important;
+      color: white !important;
+      border: 0 !important;
+      border-radius: 20px 0 0 20px !important; /* Adjusted border radius */
+    }
+    
+    .input_user,
+    .input_pass:focus {
+      box-shadow: none !important;
+      outline: 0px !important;
+      font-size: 24px; /* Increased font size inside the text fields */
+    }
+    
+    .input-group {
+      margin-bottom: 30px; /* Increased vertical spacing between fields */
+    }
+    
+    
+  </style>
+  
+      
+  
+
+</head>
+
+	
+<section id="about" class="clearfix">
+    <div class="about_main clearfix">
+      <div class="container">
+     <div class="row">
+      <div class="about clearfix">
+      <div class="col-sm-7 about_left clearfix">
+       <div class="about_left_inner clearfix">
+        <h1>REGISTER NOW</h1>
+        <h5>Profiles  /  Love  /  Marriage  /  Commitment</h5>
+       </div>
+      </div>	 
+      </div>
+     </div>
+    </div>
+    </div>
+   </section>
+   
+
+   
+ 
+   
+   <section id="center_7" class="clearfix">
+    <body>
+      <div class="container h-100">
+        <div class="d-flex justify-content-center h-100">
+          <div class="user_card">
+            <div class="d-flex justify-content-center">
+              <h3 id="form-title">REGISTER ACCOUNT</h3>
+            </div>
+            <div class="d-flex justify-content-center form_container">
+    
+              <form method="POST" action="">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                  </div>
+                  {{form.username}}
+                </div>
+                <div id="username-error" style="color: red;"></div>
+                <div class="input-group mb-2">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-envelope-square"></i></span>
+                  </div>
+                  {{form.email}}
+                </div>
+                <div id="email-error" style="color: red;"></div>
+                <div class="input-group mb-2">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                  </div>
+                  {{form.password1}}
+                </div>
+                <div id="password1-error" style="color: red;"></div>
+                <div class="input-group mb-2">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                  </div>
+                  {{form.password2}}
+                </div>
+                <div id="password2-error" style="color: red;"></div>
+    
+                   <div class="d-flex justify-content-center mt-3 login_container">
+                   <input class="btn login_btn" type="submit" value="Register Account">
+                   </div>
+              </form>
+            </div>
+            <div class="mt-4">
+              <div class="d-flex justify-content-center links" style="color: white;">
+                {{form.errors}}
+                <div style="color: white;">Already have an account? <a href="{% url 'accounts:login' %}" class="ml-2">Login</a>
+              </div>
+            </div>
+            
+            
+            </div>
+          </div>
+        </div>
+      </div>
+   </section>
+   
+   
+   <script src="{% static 'js/classie.js' %}"></script>
+   <script src="{% static 'js/cbpAnimatedHeader.js' %}"></script>   
+   <script>
+    
+//Query All input fields
+var form_fields = document.getElementsByTagName('input')
+form_fields[1].placeholder='Username';
+form_fields[2].placeholder='Email..';
+form_fields[3].placeholder='Enter password...';
+form_fields[4].placeholder='Re-enter Password...';
+
+
+for (var field in form_fields){	
+form_fields[field].className += ' form-control'
+}
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const form = document.querySelector("form");
+      const usernameField = document.querySelector("#id_username");
+      const emailField = document.querySelector("#id_email");
+      const password1Field = document.querySelector("#id_password1");
+      const password2Field = document.querySelector("#id_password2");
+
+      const errorContainer = document.querySelector("#username-error");
+      const emailErrorContainer = document.querySelector("#email-error");
+      const password1ErrorContainer = document.querySelector("#password1-error");
+      const password2ErrorContainer = document.querySelector("#password2-error");
+
+      usernameField.addEventListener("input", function () {
+          validateUsername();
+      });
+
+      emailField.addEventListener("input", function () {
+          validateEmail();
+      });
+
+      password1Field.addEventListener("input", function () {
+          validatePassword1();
+      });
+
+      password2Field.addEventListener("input", function () {
+          validatePassword2();
+      });
+
+      form.addEventListener("submit", function (event) {
+          if (!validateUsername() || !validateEmail() || !validatePassword1() || !validatePassword2()) {
+              event.preventDefault(); // Prevent form submission
+          }
+      });
+
+      function validateUsername() {
+        const usernameValue = usernameField.value.trim();
+        const usernameRegex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]*$/;
+    
+        if (
+            usernameValue.length < 5 ||
+            !usernameRegex.test(usernameValue) ||
+            usernameField.value[0] === " " || // Check for space at the beginning
+            usernameField.value[usernameField.value.length - 1] === " " // Check for space at the end
+        ) {
+            errorContainer.textContent = "Username must be at least 5 characters long,\n contain both numbers and alphabets, \n and not have any spaces at the beginning or end";
+            return false;
+        } else {
+            errorContainer.textContent = "";
+            return true;
+        }
+    }
+    
+    
+    
+    
+      function validateEmail() {
+          const emailValue = emailField.value.trim();
+          if (!isValidEmail(emailValue)) {
+              emailErrorContainer.textContent = "Invalid email address";
+              return false;
+          } else {
+              emailErrorContainer.textContent = "";
+              return true;
+          }
+      }
+
+      function validatePassword1() {
+        const password1Value = password1Field.value;
+        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
+      
+        if (
+          password1Value.charAt(0) === " " || // Check for space at the beginning
+          password1Value.charAt(password1Value.length - 1) === " " || // Check for space at the end
+          /\s/.test(password1Value) || // Check for any spaces in between
+          !passwordRegex.test(password1Value) // Check against your password regex
+        ) {
+          password1ErrorContainer.textContent = "Password must be at least 8 characters long, contain at least one character, one number, one special symbol, and not have any spaces at the beginning or end or in between";
+          return false;
+        } else {
+          password1ErrorContainer.textContent = "";
+          return true;
+        }
+      }
+      
+      
+      
+
+      function validatePassword2() {
+          const password1Value = password1Field.value.trim();
+          const password2Value = password2Field.value.trim();
+          if (password1Value !== password2Value) {
+              password2ErrorContainer.textContent = "Passwords do not match";
+              return false;
+          } else {
+              password2ErrorContainer.textContent = "";
+              return true;
+          }
+      }
+
+      function isValidEmail(email) {
+        // A modified email validation regex
+        const emailRegex = /^[a-zA-Z][a-zA-Z0-9._-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email) && !email.match(/@[0-9]/);
+    }
+  });
+</script>
+
+
+
+{% endblock %}

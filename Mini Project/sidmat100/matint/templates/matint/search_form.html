@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+    <title>Search Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        form {
+            max-width: 800px; /* Adjust the total width of the form */
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Four items in a row */
+            grid-gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: calc(100% - 22px);
+            padding: 8px;
+            font-size: 14px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+            margin-right: 5px;
+        }
+
+        select {
+            width: 100%;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            grid-column: span 4; /* Span the full width of four columns */
+        }
+
+        .center-button {
+            text-align: center; /* Center-align content */
+        }
+
+        /* Additional styles can be added as needed */
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f0f0f0;">
+        <a class="navbar-brand" href="#">DreamWed</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'matrimony:home' %}">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'matint:search_page' %}">Search</a>
+    
+    
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matrimony:myprofile' %}">My Profile</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role a "button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ request.session.profile_image_url }}" alt="Profile Picture" width="40" height="40" class="rounded-circle">
+                        {{ request.session.suser }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                        <a class="dropdown-item" href="{% url 'matrimony:myprofile' %}">My Profile</a>
+                        <a class="dropdown-item" href="#">Settings</a>
+                        <a class="dropdown-item" href="{% url 'accounts:password_change' %}">Change Password</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <form action="{% url 'matint:global_search' %}" method="GET" id="searchForm">
+        <label for="first_name">First Name:</label>
+        <input type="text" name="first_name">
+
+        <label for="last_name">Last Name:</label>
+        <input type="text" name="last_name">
+
+        <label for="religion">Religion:</label>
+        <input type="text" name="religion">
+
+        <label for="current_city">Current City:</label>
+        <input type="text" name="current_city">
+
+        <label for="min_age">Minimum Age:</label>
+        <input type="number" name="min_age">
+
+
+        <label for="max_age">Maximum Age:</label>
+        <input type="number" name="max_age">
+
+
+        <label for="min_height">Minimum Height:</label>
+        <input type="number" name="min_height">
+
+        <label for="max_height">Maximum Height:</label>
+        <input type="number" name="max_height">
+
+        <label for="min_weight">Minimum Weight:</label>
+        <input type="number" name="min_weight">
+
+        <label for="max_weight">Maximum Weight:</label>
+        <input type="number" name="max_weight">
+
+
+        
+        
+        <label for="current_state">Current State:</label>
+        <input type="text" name="current_state">
+
+        <label for="highest_qualification">Highest Qualification:</label>
+        <input type="text" name="highest_qualification">
+
+        <label for="occupation">Occupation:</label>
+        <input type="text" name="occupation">
+
+        <button type="submit">Search</button>
+        <p id="errorMessage" style="color: red; display: none;">Please fill in at least one field.</p>
+    </form>
+
+    <div class="center-button">
+        <a href="{% url 'matrimony:home' %}" class="btn btn-primary btn-back">Go Back</a>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+<script>
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+        const inputs = document.querySelectorAll('input[type="text"], input[type="number"], select');
+        let isValid = false;
+
+        inputs.forEach(function(input) {
+            if (input.value.trim() !== '') {
+                isValid = true;
+            }
+        });
+
+        if (!isValid) {
+            event.preventDefault(); // Prevent form submission
+            document.getElementById('errorMessage').style.display = 'block';
+        } else {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+    });
+</script>
+</html>

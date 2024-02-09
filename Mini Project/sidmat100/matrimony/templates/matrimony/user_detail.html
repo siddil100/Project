@@ -1,0 +1,186 @@
+{% load static %}
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream Wed</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="..." crossorigin="anonymous">
+
+
+    
+
+    
+</head>
+<body style="background-color: #d4d4d4;">
+
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f0f0f0;">
+        <a class="navbar-brand" href="#">DreamWed</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'matrimony:home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matint:search_page' %}">Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matrimony:myprofile' %}">My Profile</a>
+                </li>
+            </ul>
+            <!-- Profile Picture and Username -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                       
+                        {{ request.user.username }} <!-- Display the username from the session -->
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                        <a class="dropdown-item" href="#">My Profile</a>
+                        <a class="dropdown-item" href="#">Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <a href="{% url 'matrimony:home' %}" class="btn btn-secondary mt-3">Back</a>
+                        <h1 class="card-title">{{ personal_details.first_name |title }}'s Details</h1>
+                        <h2 class="card-subtitle mb-4"></h2>
+
+                        <!-- Display personal details -->
+                        <h3 class="card-title">Personal Details</h3>
+                        <p><strong>First Name:</strong> {{ personal_details.first_name }}</p>
+                        <p><strong>Middle Name:</strong> {{ personal_details.middle_name }}</p>
+                        <p><strong>Last Name:</strong> {{ personal_details.last_name }}</p>
+                        <p><strong>Gender:</strong> {{ personal_details.gender }}</p>
+                        <p><strong>Birth Place:</strong> {{ personal_details.birth_place }}</p>
+
+                        <p><strong>Hobbies:</strong>
+                            {% if personal_details.hobbies.all %}
+                                {% for hobby in personal_details.hobbies.all %}
+                                    {{ hobby.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                Not available
+                            {% endif %}
+                        </p>
+
+
+                    {% if interest_status == 'accepted' %}
+                    <p><strong>Phone:</strong> {{ personal_details.phone_number }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Address:</strong> {{ personal_details.address }}</p>
+                {% else %}
+                    <i class="fas fa-lock"></i>
+                    <p><em>Contact details available upon acceptance.</em></p>
+                {% endif %}
+
+                        
+
+                        <!-- Display educational details -->
+                        <h3 class="card-title">Educational Details</h3>
+                        {% if educational_details %}
+                            <p><strong>Highest Qualification:</strong> {{ educational_details.highest_qualification }}</p>
+                            <p><strong>UG Degree:</strong> {{ educational_details.ug_degree }}</p>
+                            <p><strong>PG Degree:</strong> {{ educational_details.pg_degree }}</p>
+                            <!-- Add other educational details here -->
+                        {% else %}
+                            <p>No educational details available.</p>
+                        {% endif %}
+                        
+
+                        <!-- Display employment details -->
+                        <h3 class="card-title">Employment Details</h3>
+                        {% if employment_details %}
+                            <p><strong>Employment Status:</strong> {{ employment_details.employment_status }}</p>
+                            <p><strong>Occupation:</strong> {{ employment_details.occupation }}</p>
+                            <p><strong>Employer of:</strong> {{ employment_details.employerof }}</p>
+                            <!-- Add other employment details here -->
+                        {% else %}
+                            <p>No employment details available.</p>
+                        {% endif %}
+                                                <!-- Add other employment details here -->
+
+                        <!-- Display location details -->
+                        <h3 class="card-title">Location Details</h3>
+                        {% if location_details %}
+                            <p><strong>Current City:</strong> {{ location_details.current_city }}</p>
+                            <p><strong>Current State:</strong> {{ location_details.current_state }}</p>
+                            <p><strong>Current Pin Code:</strong> {{ location_details.current_pin_code }}</p>
+                            <!-- Add other location details here -->
+                        {% else %}
+                            <p>No location details available.</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Display user images -->
+<div class="card mt-3">
+    <div class="card-body">
+        
+        <h3 class="card-title">Uploaded Photos</h3>
+<div class="row">
+    {% if user_images %}
+        {% if is_premium %}
+            {% for user_image in user_images %}
+                <div class="col-md-4 mt-3">
+                    <div class="card">
+                        <img src="{{ user_image.image.url }}" alt="User Image" class="card-img-top img-fluid">
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <i class="fas fa-lock"></i>
+                <p><em>Photos available to premium members only.</em></p>
+                <!-- Add a button to upgrade membership if needed -->
+                <a href="{% url 'matpayment:upgrade_to_premium' %}" class="btn btn-primary btn-block">Upgrade Membership</a>
+            </div>
+        {% endif %}
+
+        <!-- Display other actions/buttons -->
+        <a href="{% url 'matint:send_interest' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Sent Interest</a>
+                <a href="{% url 'matint:add_interested' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Add to Interested</a>
+                <a href="{% url 'matint:add_notinterested' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Mark as Not-Interested</a>
+                <a href="{% url 'matrimony:block_user' user_id=personal_details.user.id %}" class="btn btn-danger btn-block">Block User</a>
+        <!-- Add other action buttons here -->
+    {% else %}
+        <div class="col-12">
+            <p>No photos uploaded yet.</p>
+            <a href="{% url 'matint:send_interest' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Sent Interest</a>
+            <a href="{% url 'matint:add_interested' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Add to Interested</a>
+            <a href="{% url 'matint:add_notinterested' user_id=personal_details.user.id %}" class="btn btn-success btn-block">Mark as Not-Interested</a>
+            <a href="{% url 'matrimony:block_user' user_id=personal_details.user.id %}" class="btn btn-danger btn-block">Block User</a>
+        </div>
+    {% endif %}
+</div>
+
+    </div>
+</div>
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <!-- Display the profile image on the right side -->
+                <img src="{{ personal_details.profile_image.url }}" class="img-fluid rounded" alt="Profile Picture">
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Load Bootstrap JS (Optional, if needed) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

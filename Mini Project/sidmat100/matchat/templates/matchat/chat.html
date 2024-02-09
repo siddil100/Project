@@ -1,0 +1,341 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Include jQuery UI CSS (for the date picker) -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- Include jQuery UI JavaScript (for the date picker) -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+
+    <title>Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .chat-container {
+            position: relative; /* Set chat container to relative position */
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+        }
+
+        #message-box {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .incoming-message {
+            text-align: left;
+            margin-bottom:7px;
+        }
+
+        .outgoing-message {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        .message-content {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 20px;
+            max-width: 70%;
+        }
+
+        .message-content p {
+            background-color: #e6f2ff;
+        }
+
+        .message-content span {
+            font-size: 12px;
+            color: #888;
+            margin-left: 10px;
+        }
+
+        #message-form {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        #message-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        #message-form button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #message-form button:hover {
+            background-color: #45a049;
+        }
+
+
+
+
+        .dropdown {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin-right: 20px;
+        }
+
+        .dropbtn {
+            background-color: #fff;
+            color: #333;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 120px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            right: 0;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .show {
+            display: block;
+        }
+
+
+        .profile-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 410px;
+            margin-top: -60px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f0f0f0;">
+        <a class="navbar-brand" href="#">DreamWed</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'matrimony:home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matint:received_interests' %}">View Interests</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matint:accepted_interests' %}">View Accepted Profiles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matint:notinterested_list' %}">View Not interested profiles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matrimony:myprofile' %}">My Profile</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matchat:mychats' %}">
+                        Mychats{% if unread_message_count > 0 %} <span class="badge badge-danger">{{ unread_message_count }}</span>{% endif %}
+                    </a>
+                </li>
+                
+            </ul>
+            <!-- Profile Picture and Username -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role a "button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ request.session.profile_image_url }}" alt="Profile Picture" width="40" height="40" class="rounded-circle">
+                        {{ request.session.suser }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                        <a class="dropdown-item" href="{% url 'matrimony:myprofile' %}">My Profile</a>
+                        
+                        <a class="dropdown-item" href="{% url 'accounts:password_change' %}">Change Password</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+
+
+
+    <div class="chat-container">
+        <h1>Chat with {{ personal_details.first_name }} {{ personal_details.last_name }}</h1>
+<img src="{{ personal_details.profile_image.url }}" alt="Profile Picture" class="profile-image">
+
+
+        <div class="dropdown">
+            <button class="dropbtn" onclick="toggleDropdown()">...</button>
+            <div class="dropdown-content" id="dropdownContent">
+                <a href="{% url 'matchat:clear_chat' receiver_id=receiver_id %}">Clear Chat</a>
+                <a href="{% url 'matrimony:block_user' user_id=receiver_id %}">Block User</a>
+                
+            </div>
+        </div>
+
+
+        <div id="message-box">
+            <!-- Messages will be loaded here -->
+        </div>
+
+        <form id="message-form">
+            {% csrf_token %}
+            <input type="text" id="message-input" placeholder="Type your message">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Function to load messages via AJAX
+        // Function to load messages via AJAX
+function formatTimestamp(timestamp) {
+    const options = { day: 'numeric', month: 'short', hour: 'numeric', minute: 'numeric', hour12: true };
+    return new Date(timestamp).toLocaleString('en-US', options);
+}
+
+function loadMessages() {
+    fetch("{% url 'matchat:get_messages' receiver_id=receiver.id %}")
+        .then(response => response.json())
+        .then(data => {
+            const messageBox = document.getElementById('message-box');
+            messageBox.innerHTML = '';
+
+            data.forEach(message => {
+                const formattedTimestamp = formatTimestamp(message.timestamp);
+                const messageAlignmentClass = message.is_incoming ? 'incoming-message' : 'outgoing-message';
+                const seenIcon = message.is_seen ? '✓' : ''; // Display a checkmark if the message is seen
+                
+                const messageContent = `<div class="${messageAlignmentClass}">
+                    <div class="message-content">
+                        <p>${message.content}</p>
+                        <span>${formattedTimestamp} ${seenIcon}</span> <!-- Display seen icon -->
+                    </div>
+                </div>`;
+                messageBox.innerHTML += messageContent;
+            });
+
+            messageBox.scrollTop = messageBox.scrollHeight; // Scroll to bottom to show latest messages
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+
+
+        
+        
+        
+        
+        
+        document.getElementById('message-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const content = document.getElementById('message-input').value.trim();
+
+            if (content !== '') {
+                fetch("{% url 'matchat:send_message' receiver_id=receiver.id %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: 'content=' + encodeURIComponent(content)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('message-input').value = '';
+                        loadMessages();
+                    } else {
+                        console.error('Error:', response.statusText);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMessages();
+            setInterval(loadMessages, 5000);
+        });
+
+
+
+
+
+
+
+
+        function toggleDropdown() {
+            const dropdownContent = document.getElementById("dropdownContent");
+            dropdownContent.classList.toggle("show");
+        }
+
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                const dropdowns = document.getElementsByClassName("dropdown-content");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    const openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>

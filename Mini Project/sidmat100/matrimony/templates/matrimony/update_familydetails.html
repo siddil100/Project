@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Family Details</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Add CSS styles for the form indicator */
+        .form-indicator {
+            background-color: #007BFF; /* Background color */
+            color: #fff; /* Text color */
+            padding: 10px; /* Spacing around the text */
+            border-radius: 5px; /* Rounded corners */
+            margin-bottom: 20px; /* Spacing below the indicator */
+        }
+
+        /* Style the container */
+        .container {
+            margin-top: 30px;
+            border: 1px solid #333; /* Darker border color */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style form fields and labels */
+        .form-group label {
+            font-weight: bold;
+        }
+
+        /* Style submit button */
+        .btn-primary {
+            background-color: #007BFF;
+            border: none;
+        }
+
+        /* Add custom styling to error message */
+        .error-message {
+            color: #f00; /* Red color for error messages */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Update Family Details</h2>
+        <form method="post" action="{% url 'matrimony:update_familydetails' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            
+
+            <div class="form-group">
+                <label for="numberOfSiblings">Number of Siblings</label>
+                <input type="number" class="form-control" id="numberOfSiblings" name="number_of_siblings" placeholder="Enter the number of siblings" value="{{ form.number_of_siblings.value }}">
+                <div class="error-message" id="numberOfSiblingsError">{{ form.number_of_siblings.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="fatherOccupation">Father's Occupation</label>
+                <input type="text" class="form-control" id="fatherOccupation" name="father_occupation" placeholder="Enter your father's occupation" value="{{ form.father_occupation.value }}">
+                <div class="error-message" id="fatherOccupationError">{{ form.father_occupation.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="motherOccupation">Mother's Occupation</label>
+                <input type="text" class="form-control" id="motherOccupation" name="mother_occupation" placeholder="Enter your mother's occupation" value="{{ form.mother_occupation.value }}">
+                <div class="error-message" id="motherOccupationError">{{ form.mother_occupation.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="familyType">Family Type</label>
+                <input type="text" class="form-control" id="familyType" name="family_type" placeholder="Enter your family type" value="{{ form.family_type.value }}">
+                <div class="error-message" id="familyTypeError">{{ form.family_type.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="familyStatus">Family Status</label>
+                <input type="text" class="form-control" id="familyStatus" name="family_status" placeholder="Enter your family status" value="{{ form.family_status.value }}">
+                <div class="error-message" id="familyStatusError">{{ form.family_status.errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="numberOfFamilyMembers">Number of Family Members</label>
+                <input type="number" class="form-control" id="numberOfFamilyMembers" name="number_of_family_members" placeholder="Enter the number of family members" value="{{ form.number_of_family_members.value }}">
+                <div class="error-message" id="numberOfFamilyMembersError">{{ form.number_of_family_members.errors }}</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a href="javascript:history.back()" class="btn btn-secondary">Back</a>
+        </form>
+    </div>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+
+
+<script>
+    function validateAlphabeticInput(inputFieldId, errorDivId, maxLength) {
+        let inputField = document.getElementById(inputFieldId);
+        let errorDiv = document.getElementById(errorDivId);
+        let inputValue = inputField.value.trim();
+
+        if (/^[a-zA-Z\s]+$/.test(inputValue) && inputValue.length <= maxLength) {
+            errorDiv.textContent = '';
+        } else {
+            errorDiv.textContent = `Please enter alphabetic characters within ${maxLength} characters without leading or trailing spaces.`;
+        }
+    }
+
+    function validateNumericInput(inputFieldId, errorDivId, maxDigits) {
+        let inputField = document.getElementById(inputFieldId);
+        let errorDiv = document.getElementById(errorDivId);
+        let inputValue = inputField.value.trim();
+
+        if (/^\d{1,2}$/.test(inputValue)) {
+            errorDiv.textContent = '';
+        } else {
+            errorDiv.textContent = `Please enter a number with maximum ${maxDigits} digits.`;
+        }
+    }
+
+    document.getElementById('fatherOccupation').addEventListener('input', function() {
+        validateAlphabeticInput('fatherOccupation', 'fatherOccupationError', 20);
+    });
+
+    document.getElementById('motherOccupation').addEventListener('input', function() {
+        validateAlphabeticInput('motherOccupation', 'motherOccupationError', 20);
+    });
+
+    document.getElementById('familyType').addEventListener('input', function() {
+        validateAlphabeticInput('familyType', 'familyTypeError', 20);
+    });
+
+    document.getElementById('familyStatus').addEventListener('input', function() {
+        validateAlphabeticInput('familyStatus', 'familyStatusError', 20);
+    });
+
+    document.getElementById('numberOfSiblings').addEventListener('input', function() {
+        validateNumericInput('numberOfSiblings', 'numberOfSiblingsError', 2);
+    });
+
+    document.getElementById('numberOfFamilyMembers').addEventListener('input', function() {
+        validateNumericInput('numberOfFamilyMembers', 'numberOfFamilyMembersError', 2);
+    });
+</script>

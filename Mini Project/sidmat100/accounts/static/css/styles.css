@@ -1,0 +1,18 @@
+<style>
+    /* Style the navigation bar */
+    .navbar {
+        background-color: #007BFF; /* Set the default background color */
+    }
+
+    /* Style the navigation links */
+    .navbar-nav .nav-link {
+        color: #fff; /* Set the default text color */
+        transition: background-color 0.3s, color 0.3s; /* Add a smooth transition effect */
+    }
+
+    /* Change styles on hover */
+    .navbar-nav .nav-link:hover {
+        background-color: #0056b3; /* Change background color on hover */
+        color: #fff; /* Change text color on hover */
+    }
+</style>
