@@ -437,7 +437,14 @@ def addpackage(request):
         form = PackageForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('package_list')  # Assuming you have a URL named 'package_list' for listing packages
+            return redirect('myadmin:destadmin')  
     else:
         form = PackageForm()
-    return render(request, 'add_package.html', {'form': form})
+    return render(request, 'myadmin/addpackage.html', {'form': form})
+
+
+
+
+
+
+

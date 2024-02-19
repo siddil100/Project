@@ -1,55 +1,11 @@
-{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
-    <title>Destination Weddings</title>
+    <title>View Packages</title>
+    <!-- Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-        }
-        .main-content {
-            padding: 40px;
-            text-align: center;
-        }
-        h1 {
-            font-size: 36px;
-            color: #333;
-        }
-        p {
-            font-size: 18px;
-            color: #666;
-        }
-        .wedding-image {
-            max-width: 100%;
-            height: auto;
-            margin-top: 20px;
-        }
-        footer {
-            background-color: #333;
-            color: #ffffff;
-            text-align: center;
-            padding: 20px;
-        }
-        .chat-icon {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #ff6600;
-            color: #ffffff;
-            border-radius: 50%;
-            padding: 10px;
-            font-size: 24px;
-        }
+        /* Add custom CSS if needed */
 
         .custom-navbar {
             background-color: #e72e77; /* Change the background color */
@@ -94,6 +50,8 @@
             color: #fff; /* Change dropdown item hover text color */
         }
     </style>
+
+    
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
@@ -107,7 +65,7 @@
                     <a class="nav-link" href="#">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'matint:search_page' %}">Venues</a>
+                    <a class="nav-link" href="{% url 'matdest:desthome' %}">Venues</a>
     
     
                 </li>
@@ -137,16 +95,30 @@
             </ul>
         </div>
     </nav>
-    <div class="main-content">
-        <h1>Destination Weddings</h1>
-        <p>Your Day. Your Way.</p>
-        <img src="{% static '/images/wed.jpg' %}" alt="Beach Wedding Setup" class="wedding-image">
+    <div class="container">
+        <h2 align="center">Packages</h2>
+        <div class="row">
+            {% for package in packages %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <!-- Package Image -->
+                        <img src="{{ package.image.url }}" class="card-img-top" alt="{{ package.package_name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ package.package_name }}</h5>
+                            <p class="card-text">Star Rating: {{ package.star_rating }}</p>
+                            <p class="card-text">Meal Preference: {{ package.meal_preference }}</p>
+                            <p class="card-text">Attendees: {{ package.attendees }}</p>
+                            <p class="card-text">Days Count: {{ package.days_count }}</p>
+                            <p class="card-text">Program Count: {{ package.program_count }}</p>
+                            <p class="card-text">Price: ${{ package.price }}</p>
+                            <!-- Add other package details as needed -->
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
-    <footer>
-        Which Are The Best Destination Wedding Locations In India?
-    </footer>
-    <div class="chat-icon">Chat with us</div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Bootstrap JS script if needed -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
