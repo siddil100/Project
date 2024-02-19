@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matrimonial DashBoard</title>
+    <title>Add Package</title>
     
     <!-- ======= Styles ====== -->
     <link rel="stylesheet" href="{% static 'css/styleadmin.css' %}">
@@ -92,6 +92,13 @@
     button[type="submit"]:hover {
         background-color: #0056b3;
     }
+
+    
+        .error-message {
+            color: red;
+        }
+    
+    
 </style>
 </head>
 
@@ -135,7 +142,7 @@
                 <li>
                     <a href="{% url 'myadmin:destadmin' %}">
                         <span class="icon">
-                            <ion-icon name="document"></ion-icon>
+                            <ion-icon name="heart"></ion-icon>
                         </span>
                         <span class="title">Destination Wedding</span>
                     </a>
@@ -186,19 +193,27 @@
                     </div>
                     
                     
-                    <h2>Add Package</h2>
-                    <form method="post" enctype="multipart/form-data">
+                    <div class="cardHeader">
+                        <h2>Add a Package</h2>
+                    </div>
+                    <form id="packageForm" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
+                        {{ form.non_field_errors }}
                         <label for="id_package_name">Package Name:</label>
-                        <input type="text" id="id_package_name" name="package_name">
+                        {{ form.package_name }}
+                        <span id="packageNameError" class="error-message"></span>
                         <label for="id_days_count">Days Count:</label>
-                        <input type="number" id="id_days_count" name="days_count">
+                        {{ form.days_count }}
+                        <span id="daysCountError" class="error-message"></span>
                         <label for="id_program_count">Program Count:</label>
-                        <input type="number" id="id_program_count" name="program_count">
+                        {{ form.program_count }}
+                        <span id="programCountError" class="error-message"></span>
                         <label for="id_price">Price:</label>
-                        <input type="number" id="id_price" name="price">
+                        {{ form.price }}
+                        <span id="priceError" class="error-message"></span>
                         <label for="id_image">Image:</label>
-                        <input type="file" id="id_image" name="image">
+                        {{ form.image }}
+                        <span id="imageError" class="error-message"></span>
                         <label for="id_star_rating">Star Rating:</label>
                         <select id="id_star_rating" name="star_rating">
                             <option value="1">1</option>
@@ -217,6 +232,68 @@
                         </select>
                         <button type="submit">Submit</button>
                     </form>
+                    
+                    <script>
+                        const packageForm = document.getElementById('packageForm');
+                    
+                        const packageNameInput = document.getElementById('id_package_name');
+                        const daysCountInput = document.getElementById('id_days_count');
+                        const programCountInput = document.getElementById('id_program_count');
+                        const priceInput = document.getElementById('id_price');
+                    
+                        packageNameInput.addEventListener('input', function() {
+                            const value = this.value.trim();
+                            const packageNameError = document.getElementById('packageNameError');
+                            if (!/^[a-zA-Z\s]{4,30}$/.test(value)) {
+                                packageNameError.textContent = "Package name must be alphabetic and between 4 and 30 characters long.";
+                            } else {
+                                packageNameError.textContent = "";
+                            }
+                        });
+                        
+                    
+                        daysCountInput.addEventListener('input', function() {
+                            const value = parseInt(this.value, 10);
+                            const daysCountError = document.getElementById('daysCountError');
+                            if (isNaN(value) || value <= 0 || value > 100) {
+                                daysCountError.textContent = "Days count must be a positive number between 1 and 100.";
+                            } else {
+                                daysCountError.textContent = "";
+                            }
+                        });
+                    
+                        programCountInput.addEventListener('input', function() {
+                            const value = parseInt(this.value, 10);
+                            const programCountError = document.getElementById('programCountError');
+                            if (isNaN(value) || value <= 0 || value > 100) {
+                                programCountError.textContent = "Program count must be a positive number between 1 and 100.";
+                            } else {
+                                programCountError.textContent = "";
+                            }
+                        });
+                    
+                        priceInput.addEventListener('input', function() {
+                            const value = parseFloat(this.value);
+                            const priceError = document.getElementById('priceError');
+                            if (isNaN(value) || value <= 0) {
+                                priceError.textContent = "Price must be a positive number.";
+                            } else {
+                                priceError.textContent = "";
+                            }
+                        });
+                    
+                        packageForm.addEventListener('submit', function(event) {
+                            const errorMessages = document.querySelectorAll('.error-message');
+                            for (let errorMessage of errorMessages) {
+                                if (errorMessage.textContent !== "") {
+                                    event.preventDefault();
+                                    return;
+                                }
+                            }
+                        });
+                    </script>
+                    
+                    
                         
                 </div>
             </div>
@@ -224,8 +301,13 @@
         <!-- ================= New Customers ================ -->
     </div>
 
+    
+
     <!-- =========== Scripts =========  -->
     <script src="{% static 'js/mainadmin.js' %}"></script>
+
+
+    
 
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>

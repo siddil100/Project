@@ -443,6 +443,45 @@ def addpackage(request):
     return render(request, 'myadmin/addpackage.html', {'form': form})
 
 
+def adview_packages(request):
+    packages = Package.objects.all()
+    return render(request, 'myadmin/adview_packages.html', {'packages': packages})
+
+
+
+# views.py
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Package
+from .forms import PackageForm
+
+def edit_package(request, pk):
+    package = get_object_or_404(Package, pk=pk)
+    if request.method == 'POST':
+        form = PackageForm(request.POST, request.FILES, instance=package)
+        if form.is_valid():
+            form.save()
+            return redirect('myadmin:adview_packages')  # Redirect to package detail page after editing
+    else:
+        form = PackageForm(instance=package)
+    return render(request, 'myadmin/edit_package.html', {'form': form})
+
+
+
+# views.py
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Package
+
+def delete_package(request, pk):
+    package = get_object_or_404(Package, pk=pk)
+    if request.method == 'POST':
+        package.delete()
+        return redirect('myadmin:adview_packages')  # Redirect to package list page after deletion
+    return render(request, 'myadmin/delete_package_confirm.html', {'package': package})
+
+
+
 
 
 

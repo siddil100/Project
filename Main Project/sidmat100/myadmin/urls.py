@@ -15,6 +15,9 @@ urlpatterns = [
     path('view_premium/', views.premium_users_view, name='view_premium'),
     path('destadmin/', views.destadmin, name='destadmin'),
     path('add/', views.addpackage, name='add_package'),
+    path('adview_packages/', views.adview_packages, name='adview_packages'),
+    path('package/<int:pk>/edit/', views.edit_package, name='edit_package'),
+    path('package/<int:pk>/delete/',views.delete_package, name='delete_package'),
 
     
 ]

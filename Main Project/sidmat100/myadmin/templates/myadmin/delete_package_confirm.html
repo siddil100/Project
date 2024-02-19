@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Destination wed Admin Panel</title>
+    <title>Matrimonial DashBoard</title>
     
     <!-- ======= Styles ====== -->
     <link rel="stylesheet" href="{% static 'css/styleadmin.css' %}">
@@ -52,6 +52,36 @@
     .view-more-link:hover {
         background-color: #FFD700; /* Change background color on hover to a slightly darker yellow */
     }
+
+
+
+
+
+
+    /* delete_package.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.confirmation-message {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+
+
+button[type="submit"]:hover {
+    background-color: #c82333;
+}
+
     
 </style>
 </head>
@@ -147,11 +177,12 @@
                     </div>
                     
                     
-                    <a href="{% url 'myadmin:add_package' %}" class="view-more-link">Add Package </a
-                        <br>
-
-                        <a href="{% url 'myadmin:adview_packages' %}" class="view-more-link">View Packages </a
-                            <br>
+                    <h2>Remove Package</h2>
+    <p>Are you sure you want to Remove the package "{{ package.package_name }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" style="background-color: #dc3545; color: #fff; border: none; border-radius: 5px; padding: 10px 20px; cursor: pointer; font-size: 16px;">Remove</button>
+    </form>
                         
                 </div>
             </div>

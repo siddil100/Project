@@ -1,0 +1,312 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Package</title>
+    
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="{% static 'css/styleadmin.css' %}">
+    
+    
+    
+
+    <style>
+        h2 {
+            color: #333;
+        }
+        
+        form {
+            margin-top: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        
+
+        .error-message {
+            color: red;
+        }
+
+    
+</style>
+</head>
+
+<body>
+    <!-- =============== Navigation ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon"></span>
+                        <span class="title">DreamWed</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'myadmin:myadmin' %}">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="{% url 'myadmin:view_premium' %}">
+                        <span class="icon">
+                            <ion-icon name="star"></ion-icon>
+                        </span>
+                        <span class="title">View Premium Users</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'myadmin:aadharsus' %}">
+                        <span class="icon">
+                            <ion-icon name="document"></ion-icon>
+                        </span>
+                        <span class="title">Aadhar Details</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="{% url 'myadmin:destadmin' %}">
+                        <span class="icon">
+                            <ion-icon name="heart"></ion-icon>
+                        </span>
+                        <span class="title">Destination Wedding</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'myadmin:change_password_admin' %}">
+                        <span class="icon">
+                            <ion-icon name="lock-closed-outline"></ion-icon>
+                        </span>
+                        <span class="title">Password</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:logout' %}">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title">Sign Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+        <div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+                <div class="search">
+                    <label>
+                        <h1 style="font-size: 28px; margin-bottom: 5px; color: #0514f0; font-family: Arial, sans-serif;">DreamWed Admin Panel</h1>
+                    </label>
+                </div>
+                <div class="user">
+                    
+                </div>
+            </div>
+
+            <!-- ======================= Cards ================== -->
+            
+            <!-- ================ Order Details List ================= -->
+            <div class="details">
+                <div class="recentOrders">
+                    <div class="cardHeader">
+                        <h2>Destination Wedding</h2>
+                    </div>
+                    
+                    
+                    <h2>Edit Package</h2>
+                    <form id="secondPackageForm" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_package_name">Package Name:</label>
+                            {{ form.package_name }}
+                            <span id="secondPackageNameError" class="error-message"></span>
+                        </div>
+                        <label for="id_star_rating">Star Rating:</label>
+                        <select id="id_star_rating" name="star_rating">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                        
+                            <label for="id_meal_preference">Meal Preference:</label>
+                            <select id="id_meal_preference" name="meal_preference">
+                                <option value="veg">Veg</option>
+                                <option value="non-veg">Non-Veg</option>
+                                
+                            </select>
+                        
+                        <div class="form-group">
+                            <label for="id_attendees">Attendees:</label>
+                            {{ form.attendees }}
+                            <span id="secondAttendeesError" class="error-message"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_days_count">Days Count:</label>
+                            {{ form.days_count }}
+                            <span id="secondDaysCountError" class="error-message"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_program_count">Program Count:</label>
+                            {{ form.program_count }}
+                            <span id="secondProgramCountError" class="error-message"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_price">Price:</label>
+                            {{ form.price }}
+                            <span id="secondPriceError" class="error-message"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_image">Image:</label>
+                            {{ form.image }}
+                            <span id="secondImageError" class="error-message"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                    
+                    <script>
+                        const secondPackageForm = document.getElementById('secondPackageForm');
+                    
+                        const secondPackageNameInput = document.getElementById('id_package_name');
+                        const secondStarRatingInput = document.getElementById('id_star_rating');
+                        const secondMealPreferenceInput = document.getElementById('id_meal_preference');
+                        const secondAttendeesInput = document.getElementById('id_attendees');
+                        const secondDaysCountInput = document.getElementById('id_days_count');
+                        const secondProgramCountInput = document.getElementById('id_program_count');
+                        const secondPriceInput = document.getElementById('id_price');
+                        const secondImageInput = document.getElementById('id_image');
+                    
+                        secondPackageNameInput.addEventListener('input', function() {
+                            const value = this.value.trim();
+                            const secondPackageNameError = document.getElementById('secondPackageNameError');
+                            if (!/^[a-zA-Z\s]{4,30}$/.test(value)) {
+                                secondPackageNameError.textContent = "Package name must be alphabetic and between 4 and 30 characters long.";
+                            } else {
+                                secondPackageNameError.textContent = "";
+                            }
+                        });
+                    
+                        secondStarRatingInput.addEventListener('input', function() {
+                            const value = parseInt(this.value, 10);
+                            const secondStarRatingError = document.getElementById('secondStarRatingError');
+                            if (isNaN(value) || value < 1 || value > 5) {
+                                secondStarRatingError.textContent = "Star rating must be a number between 1 and 5.";
+                            } else {
+                                secondStarRatingError.textContent = "";
+                            }
+                        });
+                    
+                        secondMealPreferenceInput.addEventListener('input', function() {
+                            const value = this.value.trim();
+                            const secondMealPreferenceError = document.getElementById('secondMealPreferenceError');
+                            if (value !== "Veg" && value !== "Non-Veg") {
+                                secondMealPreferenceError.textContent = "Please select a valid meal preference.";
+                            } else {
+                                secondMealPreferenceError.textContent = "";
+                            }
+                        });
+                    
+                        secondAttendeesInput.addEventListener('input', function() {
+                            const value = parseInt(this.value, 10);
+                            const secondAttendeesError = document.getElementById('secondAttendeesError');
+                            if (isNaN(value) || value <= 0) {
+                                secondAttendeesError.textContent = "Attendees must be a positive number.";
+                            } else {
+                                secondAttendeesError.textContent = "";
+                            }
+                        });
+                    
+                        secondDaysCountInput.addEventListener('input', function() {
+                            const value = parseInt(this.value, 10);
+                            const secondDaysCountError = document.getElementById('secondDaysCountError');
+                            if (isNaN(value) || value <= 0 || value > 100) {
+                                secondDaysCountError.textContent = "Days count must be a positive number between 1 and 100.";
+                            } else {
+                                secondDaysCountError.textContent = "";
+                            }
+                        });
+                    
+                        secondProgramCountInput.addEventListener('input', function() {
+                            const value = parseInt(this.value, 10);
+                            const secondProgramCountError = document.getElementById('secondProgramCountError');
+                            if (isNaN(value) || value <= 0 || value > 100) {
+                                secondProgramCountError.textContent = "Program count must be a positive number between 1 and 100.";
+                            } else {
+                                secondProgramCountError.textContent = "";
+                            }
+                        });
+                    
+                        secondPriceInput.addEventListener('input', function() {
+                            const value = parseFloat(this.value);
+                            const secondPriceError = document.getElementById('secondPriceError');
+                            if (isNaN(value) || value <= 0) {
+                                secondPriceError.textContent = "Price must be a positive number.";
+                            } else {
+                                secondPriceError.textContent = "";
+                            }
+                        });
+                    
+                        secondPackageForm.addEventListener('submit', function(event) {
+                            const errorMessages = document.querySelectorAll('.error-message');
+                            for (let errorMessage of errorMessages) {
+                                if (errorMessage.textContent !== "") {
+                                    event.preventDefault();
+                                    return;
+                                }
+                            }
+                        });
+                    </script>
+                    
+                </div>
+            </div>
+        </div>
+        <!-- ================= New Customers ================ -->
+    </div>
+
+    <!-- =========== Scripts =========  -->
+    <script src="{% static 'js/mainadmin.js' %}"></script>
+
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

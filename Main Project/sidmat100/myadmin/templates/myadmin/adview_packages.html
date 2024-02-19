@@ -5,14 +5,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Destination wed Admin Panel</title>
+    <title>Matrimonial DashBoard</title>
     
     <!-- ======= Styles ====== -->
     <link rel="stylesheet" href="{% static 'css/styleadmin.css' %}">
     
     
+    
 
-   
+    
 <style>
     /* CSS */
 .custom-select {
@@ -51,6 +52,86 @@
     
     .view-more-link:hover {
         background-color: #FFD700; /* Change background color on hover to a slightly darker yellow */
+    }
+    
+
+
+
+
+
+
+   
+    
+    h2 {
+        color: #333;
+    }
+    form {
+        margin-top: 20px;
+    }
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+    input[type="text"],
+    input[type="number"],
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+    button[type="submit"] {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+
+
+
+    .custom-card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .custom-card .card {
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+    
+    .custom-card .card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .custom-card .card-img-top {
+        width: 100%;
+        height: auto;
+    }
+    
+    .custom-card .card-body {
+        padding: 20px;
+    }
+    
+    .custom-card .card-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    
+    .custom-card .card-text {
+        margin-bottom: 5px;
     }
     
 </style>
@@ -147,11 +228,37 @@
                     </div>
                     
                     
-                    <a href="{% url 'myadmin:add_package' %}" class="view-more-link">Add Package </a
-                        <br>
+                    
+                    
+                    <div class="container">
+                        <h2 align="center" style="color: #2a2185;">Packages</h2>
 
-                        <a href="{% url 'myadmin:adview_packages' %}" class="view-more-link">View Packages </a
-                            <br>
+                        <div class="row">
+                            {% for package in packages %}
+                            <div class="custom-card col-md-4 mb-4">
+                                <div class="card">
+                                    <!-- Package Image -->
+                                    <img src="{{ package.image.url }}" class="card-img-top" alt="{{ package.package_name }}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ package.package_name }}</h5>
+                                        <p class="card-text">Star Rating: {{ package.star_rating }}</p>
+                                        <p class="card-text">Meal Preference: {{ package.meal_preference }}</p>
+                                        <p class="card-text">Attendees: {{ package.attendees }}</p>
+                                        <p class="card-text">Days Count: {{ package.days_count }}</p>
+                                        <p class="card-text">Program Count: {{ package.program_count }}</p>
+                                        <p class="card-text">Price:INR ₹{{ package.price }}</p>
+                                        <a href="{% url 'myadmin:edit_package' package.id %}" class="btn btn-primary">Edit</a>
+                                        <a href="{% url 'myadmin:delete_package' package.id %}" class="btn btn-danger">Remove</a>
+
+                                        <!-- Add other package details as needed -->
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    
                         
                 </div>
             </div>
