@@ -4,6 +4,7 @@ from .models import Interest
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.views.decorators.cache import never_cache
 
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -14,8 +15,10 @@ from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Interest
+from django.views.decorators.cache import never_cache
 from .forms import InterestForm
-
+@never_cache
+@login_required(login_url='accounts:login')
 def send_interest(request, user_id):
     recipient = get_object_or_404(User, id=user_id)
     already_sent = False
@@ -61,7 +64,8 @@ from django.shortcuts import render, get_object_or_404
 from .models import Interest
 from matrimony.models import BlockedUser
 
-@login_required
+@never_cache
+@login_required(login_url='accounts:login')
 def received_interests(request):
     # Get received interests for the user with a pending status
     received_interests = Interest.objects.filter(receiver=request.user, status=Interest.PENDING)
@@ -78,7 +82,8 @@ def received_interests(request):
     return render(request, 'matint/received_interests.html', context)
 
 
-@login_required
+@never_cache
+@login_required(login_url='accounts:login')
 def accept_interest(request, interest_id):
     interest = get_object_or_404(Interest, id=interest_id)
     if interest.receiver == request.user and interest.status == Interest.PENDING:
@@ -93,7 +98,8 @@ def accept_interest(request, interest_id):
         return redirect('matint:received_interests')
     # Handle cases where the interest is already accepted or the user doesn't have permission
 
-@login_required
+@never_cache
+@login_required(login_url='accounts:login')
 def reject_interest(request, interest_id):
     interest = get_object_or_404(Interest, id=interest_id)
     if interest.receiver == request.user and interest.status == Interest.PENDING:
@@ -112,7 +118,8 @@ def reject_interest(request, interest_id):
 
 from django.shortcuts import render
 from .models import Interest
-
+@never_cache
+@login_required(login_url='accounts:login')
 def accepted_interests_view(request):
     blocked_users = BlockedUser.objects.filter(user=request.user).values_list('blocked_user_id', flat=True)
     not_interested_users = NotInterested.objects.filter(user=request.user).values_list('not_interested_user_id', flat=True)
@@ -144,7 +151,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import InterestedProfile  # Import your InterestedProfile model
 
-@login_required
+@never_cache
+@login_required(login_url='accounts:login')
 def add_interested(request, user_id):
     user_to_show_interest = get_object_or_404(User, id=user_id)
     
@@ -167,7 +175,8 @@ def add_interested(request, user_id):
 
 
 from .models import Interest
-
+@never_cache
+@login_required(login_url='accounts:login')
 def interested_profiles_list(request):
     current_user = request.user
 
@@ -188,7 +197,8 @@ from django.shortcuts import get_object_or_404
 
 from .models import InterestedProfile
 
-
+@never_cache
+@login_required(login_url='accounts:login')
 def remove_interest_profiles(request, user_id):
     interested_profile = get_object_or_404(InterestedProfile, user=request.user, interested_user_id=user_id)
     interested_profile.delete()
@@ -207,7 +217,8 @@ def remove_interest_profiles(request, user_id):
 # views.py
 
 from django.shortcuts import render
-@login_required
+@never_cache
+@login_required(login_url='accounts:login')
 def search_view(request):
     return render(request, 'matint/search_form.html')
 
@@ -222,7 +233,8 @@ from django.contrib.auth.models import User
 
 from django.db.models import Q
 from datetime import timedelta,date
-
+@never_cache
+@login_required(login_url='accounts:login')
 def global_search(request):
     query = {
         'first_name': request.GET.get('first_name', ''),
@@ -382,7 +394,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import NotInterested
 from matrimony.models import PersonalDetails
-
+from django.views.decorators.cache import never_cache
+@never_cache
+@login_required(login_url='accounts:login')
 def add_notinterested(request, user_id):
     user_not_interested = get_object_or_404(User, id=user_id)
     
@@ -399,7 +413,8 @@ def add_notinterested(request, user_id):
 
 
 
-
+@never_cache
+@login_required(login_url='accounts:login')
 def notinterested_list(request):
     current_user = request.user
     
@@ -410,7 +425,8 @@ def notinterested_list(request):
 
 
 
-
+@never_cache
+@login_required(login_url='accounts:login')
 def remove_notinterested(request, user_id):
     user_to_remove = get_object_or_404(User, id=user_id)
     not_interested_user = get_object_or_404(NotInterested, user=request.user, not_interested_user_details__user=user_to_remove)

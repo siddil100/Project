@@ -90,5 +90,5 @@ from django.contrib.auth.views import PasswordChangeView
 from accounts.forms import ChangePasswordForm
 class MyPasswordChangeView(PasswordChangeView):
     form_class = ChangePasswordForm
-    template_name = 'accounts/change_password.html'  # Replace with your desired template name
-    success_url = reverse_lazy('matrimony:home')  # Replace with your desired success URL
+    template_name = 'accounts/change_password.html'  
+    success_url = reverse_lazy('matrimony:home')  

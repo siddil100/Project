@@ -2,21 +2,20 @@
 from django.contrib.auth.models import User
 
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
+
 
 from django.core.mail import send_mail
-from django.contrib.auth.models import User
+
 
 
 
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
 
-from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseBadRequest
 
 from django.core.paginator import Paginator
-from django.contrib.auth.models import User
+
 
 
 from django.contrib.auth.decorators import login_required
@@ -94,6 +93,8 @@ def myadminview(request):
 from matrimony.models import*
 from django.shortcuts import render, get_object_or_404
 
+@never_cache
+@login_required(login_url='accounts:login')
 def aadharsusview(request):
     # Get the filter criteria
     filter_name = request.GET.get('name', 'all')  # Default to 'all'
@@ -184,7 +185,8 @@ from matrimony.models import*
 
 
 from datetime import datetime
-
+@never_cache
+@login_required(login_url='accounts:login')
 def generate_pdf(request, user_id):
     user = get_object_or_404(User, id=user_id)
     personal_details = get_object_or_404(PersonalDetails, user=user)
@@ -274,7 +276,8 @@ from django.db.models import Q
 
 
 
-
+@never_cache
+@login_required(login_url='accounts:login')
 
 def user_detail_admin(request, user_id):
     user = get_object_or_404(User, id=user_id)

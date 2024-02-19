@@ -25,6 +25,7 @@ def check_phone_number(request):
 
 
 
+@never_cache
 @login_required(login_url='accounts:login')
 def personaldetailsview(request):
     user = request.user
@@ -72,6 +73,7 @@ def personaldetailsview(request):
 
 
 
+@never_cache
 @login_required(login_url='accounts:login')
 def familydetailsview(request):
     user = request.user
@@ -98,6 +100,7 @@ def familydetailsview(request):
 
 
 
+@never_cache
 @login_required(login_url='accounts:login')
 def educationaldetailsview(request):
     user = request.user
@@ -131,6 +134,7 @@ def educationaldetailsview(request):
 
 
 
+@never_cache
 @login_required(login_url='accounts:login')
 def employmentdetailsview(request):
     user = request.user
@@ -156,6 +160,7 @@ def employmentdetailsview(request):
 
 
 
+@never_cache
 @login_required(login_url='accounts:login')
 def locationdetailsview(request):
     user = request.user
@@ -196,7 +201,8 @@ def locationdetailsview(request):
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from .models import LocationDetails
-
+@never_cache
+@login_required(login_url='accounts:login')
 def verify_email_view(request, token):
     try:
         user_details = LocationDetails.objects.get(email_verification_token=token)
@@ -232,6 +238,7 @@ from .models import PersonalDetails, FamilyDetails, EducationalDetails, Employme
 from matint.models import NotInterested
 from matint.models import UserActivity
 
+@never_cache
 @login_required(login_url='accounts:login')
 def homeview(request):
     user = request.user
@@ -490,6 +497,7 @@ from .models import PersonalDetails, FamilyDetails, EducationalDetails, Employme
 from matchat.models import *
 from matpayment.models import *
 
+@never_cache
 @login_required(login_url='accounts:login')
 def myprofileview(request):
     user = request.user
@@ -683,6 +691,7 @@ from django.shortcuts import render, redirect
 from .forms import PersonalDetailsAadharForm
 from .models import PersonalDetails
 from django.conf import settings
+@login_required(login_url='accounts:login')
 def update_aadhar(request):
     personal_details = PersonalDetails.objects.get(user=request.user)
 
@@ -723,7 +732,7 @@ from .models import ImageUpload,Image
 from django.shortcuts import render, redirect
 from .forms import ImageUploadForm
 from .models import ImageUpload, Image
-@login_required
+@login_required(login_url='accounts:login')
 def upload_images(request):
     if request.method == 'POST':
         image_upload_form = ImageUploadForm(request.POST, request.FILES)
@@ -759,7 +768,8 @@ from .forms import ImageForm
 
 
 from django.shortcuts import get_object_or_404
-
+@never_cache
+@login_required(login_url='accounts:login')
 def delete_image(request, image_upload_id, image_id):
     image_upload = get_object_or_404(ImageUpload, pk=image_upload_id, user=request.user)
 
@@ -777,7 +787,8 @@ def delete_image(request, image_upload_id, image_id):
     return redirect('matrimony:upload_images')  # Redirect to a success page or any other appropriate URL
 
 
-
+@never_cache
+@login_required(login_url='accounts:login')
 def edit_image(request, image_upload_id, image_id):
     image_upload = get_object_or_404(ImageUpload, pk=image_upload_id, user=request.user)
     image = get_object_or_404(Image, pk=image_id, image_upload=image_upload)
@@ -798,7 +809,8 @@ def edit_image(request, image_upload_id, image_id):
 from django.shortcuts import render, redirect
 from .models import PhysicalDetails
 from .forms import PhysicalDetailsForm
-
+@never_cache
+@login_required(login_url='accounts:login')
 def physicaldetailsview(request):
     user = request.user
     physical_details_instance = None  # Initialize the variable outside the try block
@@ -829,7 +841,8 @@ from django.contrib import messages
 from django.db import IntegrityError
 from .models import PhysicalDetails
 from .forms import PhysicalDetailsUpdateForm
-
+@never_cache
+@login_required(login_url='accounts:login')
 def update_physicaldetails(request):
     try:
         physical_details = PhysicalDetails.objects.get(user=request.user)
@@ -870,7 +883,8 @@ from .forms import PreferenceForm
 from django.contrib.auth.decorators import login_required
 from .models import Preference
 
-@login_required
+@never_cache
+@login_required(login_url='accounts:login')
 def update_preference(request):
     user = request.user
     try:
@@ -893,7 +907,8 @@ def update_preference(request):
 from .models import BlockedUser
 
 from django.contrib import messages
-
+@never_cache
+@login_required(login_url='accounts:login')
 def block_user(request, user_id):
     user_to_block = get_object_or_404(User, id=user_id)
     
@@ -909,7 +924,8 @@ def block_user(request, user_id):
     return redirect('matrimony:blocked_users_list')
 
 
-
+@never_cache
+@login_required(login_url='accounts:login')
 def blocked_users_list(request):
     current_user = request.user
     
@@ -919,7 +935,8 @@ def blocked_users_list(request):
     return render(request, 'matrimony/blocked_users_list.html', {'blocked_users': blocked_users})
 
 
-
+@never_cache
+@login_required(login_url='accounts:login')
 def unblock_user(request, user_id):
     user_to_unblock = get_object_or_404(User, id=user_id)
     blocked_user = get_object_or_404(BlockedUser, user=request.user, blocked_user_details__user=user_to_unblock)

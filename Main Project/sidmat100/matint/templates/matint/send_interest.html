@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <title>Send Interest</title>
     <style>
@@ -75,9 +76,21 @@
         .back-button a:hover {
             background-color: #bbb;
         }
+        .button-link {
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+          }
+          
     </style>
 </head>
 <body>
+
+    
     <div>
         <h1>Send Interest</h1>
         
@@ -92,15 +105,19 @@
         {% elif pending %}
             <p>You already have a pending interest request with this user.</p>
             <div class="pending-button">
-                <a href="{% url 'matrimony:home' %}">View Pending Request</a>
+                <a href="{% url 'matrimony:home' %}">Back</a>
             </div>
         {% else %}
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit">Send Interest</button>
+                <a href="{% url 'matrimony:home' %}" class="button-link">Back</a>
+                
+
             </form>
         {% endif %}
+        
         
     </div>
 </body>

@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
 from .models import PremiumMembership
 from datetime import datetime, timedelta
 import razorpay
 from django.views.decorators.csrf import csrf_exempt
 
-@login_required
+@never_cache
+@login_required(login_url='accounts:login')
 def upgrade_to_premium(request):
     if request.method == "POST":
         name = request.POST.get('name')
@@ -30,7 +32,8 @@ from .models import PremiumMembership
 from datetime import datetime, timedelta
 from django.shortcuts import render
 from .models import PremiumMembership
-
+@never_cache
+@login_required(login_url='accounts:login')
 def paymentsuccess(request):
     if request.method == 'POST':
         current_user = request.user
@@ -67,7 +70,8 @@ from datetime import datetime, timedelta
 from django.http import JsonResponse
 from .models import PremiumMembership
 import razorpay
-
+@never_cache
+@login_required(login_url='accounts:login')
 def process_payment(request):
     if request.method == 'POST':
         payment_id = request.POST.get('payment_id')
@@ -106,7 +110,8 @@ def process_payment(request):
 
 
 
-
+@never_cache
+@login_required(login_url='accounts:login')
 def view_premium(request):
     try:
         # Retrieve the PremiumMembership instance for the current user

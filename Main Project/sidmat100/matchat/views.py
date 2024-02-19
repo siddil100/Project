@@ -6,6 +6,7 @@ from django.shortcuts import render
 # views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
 from django.http import JsonResponse
 from .models import Message
 from django.contrib.auth.models import User
@@ -18,7 +19,8 @@ from django.db.models import Q
 
 
 from django.db.models import Count
-
+@never_cache
+@login_required(login_url='accounts:login')
 def mychats(request):
     blocked_users = BlockedUser.objects.filter(user=request.user).values_list('blocked_user_id', flat=True)
     not_interested_users = NotInterested.objects.filter(user=request.user).values_list('not_interested_user_id', flat=True)
@@ -55,7 +57,8 @@ def mychats(request):
 
 
 
-@login_required
+@never_cache
+@login_required(login_url='accounts:login')
 def chat(request, receiver_id):
     receiver = User.objects.get(pk=receiver_id)
     personal_details = PersonalDetails.objects.get(user=receiver)
@@ -84,10 +87,10 @@ def chat(request, receiver_id):
 
 from django.db.models import BooleanField, Value
 from django.shortcuts import get_object_or_404
+from django.views.decorators.cache import never_cache
 
-@login_required
-@login_required
-
+@never_cache
+@login_required(login_url='accounts:login')
 def get_messages(request, receiver_id):
     receiver = get_object_or_404(User, pk=receiver_id)
     
@@ -118,7 +121,8 @@ def get_messages(request, receiver_id):
     return JsonResponse(formatted_messages, safe=False)
 
 
-@login_required
+@never_cache
+@login_required(login_url='accounts:login')
 def send_message(request, receiver_id):
     if request.method == 'POST':
         receiver = User.objects.get(pk=receiver_id)
@@ -133,7 +137,8 @@ def send_message(request, receiver_id):
 
 
 
-
+@never_cache
+@login_required(login_url='accounts:login')
 def clear_chat(request, receiver_id):
     receiver = get_object_or_404(User, pk=receiver_id)
 

@@ -15,6 +15,7 @@
     <link href="{% static 'css/element.css' %}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
+    
     <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
@@ -135,28 +136,28 @@
                 {% csrf_token %}
                 <div class="input-group mb-3">
                   <div class="input-group-append">
-                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    <span class="input-group-text"></i></span>
                   </div>
                   {{form.username}}
                 </div>
                 <div id="username-error" style="color: red;"></div>
                 <div class="input-group mb-2">
                   <div class="input-group-append">
-                    <span class="input-group-text"><i class="fas fa-envelope-square"></i></span>
+                    <span class="input-group-text"></i></span>
                   </div>
                   {{form.email}}
                 </div>
                 <div id="email-error" style="color: red;"></div>
                 <div class="input-group mb-2">
                   <div class="input-group-append">
-                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                    <span class="input-group-text"></i></span>
                   </div>
                   {{form.password1}}
                 </div>
                 <div id="password1-error" style="color: red;"></div>
                 <div class="input-group mb-2">
                   <div class="input-group-append">
-                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                    <span class="input-group-text"></i></span>
                   </div>
                   {{form.password2}}
                 </div>

@@ -29,6 +29,7 @@ urlpatterns = [
     path("matint/", include('matint.urls')),
     path("matchat/", include('matchat.urls')),
     path("matpayment/", include('matpayment.urls')),
+    path("matdest/", include('matdest.urls')),
 
    
    

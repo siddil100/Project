@@ -153,11 +153,53 @@
             margin-top: -60px;
             object-fit: cover;
         }
+
+
+        .custom-navbar {
+            background-color: #3498db; /* Change the background color */
+        }
+        
+        .custom-navbar .navbar-brand {
+            color: #fff; /* Change brand text color */
+            font-weight: bold;
+        }
+        
+        .custom-navbar .navbar-nav .nav-link {
+            color: #fff; /* Change nav link text color */
+            margin-right: 15px; /* Adjust spacing between links */
+        }
+        
+        .custom-navbar .navbar-toggler {
+            border-color: #fff; /* Change toggler button color */
+        }
+        
+        .custom-navbar .navbar-toggler-icon {
+            background-color: #fff; /* Change toggler icon color */
+        }
+        
+        .custom-navbar .nav-item.active .nav-link {
+            color: #f39c12; /* Change active link color */
+            font-weight: bold; /* Make active link bold */
+        }
+        
+        
+        .custom-navbar .dropdown-menu {
+            background-color: #2980b9; /* Change dropdown menu background color */
+        }
+        
+        .custom-navbar .dropdown-item {
+            color: #fff; /* Change dropdown item text color */
+        }
+        
+        .custom-navbar .dropdown-item:hover {
+            background-color: #1abc9c; /* Change dropdown item hover color */
+            color: #fff; /* Change dropdown item hover text color */
+        }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f0f0f0;">
+    <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
         <a class="navbar-brand" href="#">DreamWed</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -233,8 +275,11 @@
             {% csrf_token %}
             <input type="text" id="message-input" placeholder="Type your message">
             <button type="submit">Send</button>
+            <a href="{% url 'matchat:mychats' %}" class="button-link"><button type="button">Back</button></a>
+
         </form>
     </div>
+    
 
     <!-- JavaScript -->
     <script>
