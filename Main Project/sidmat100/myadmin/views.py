@@ -417,3 +417,27 @@ def premium_users_view(request):
     page = paginator.get_page(page_number)
 
     return render(request, 'myadmin/view_premium.html', {'users_data': page})
+
+
+
+
+#DESTINATION WEDD
+
+def destadmin(request):
+    return render(request, 'myadmin/destadmin.html')
+
+
+
+from django.shortcuts import render, redirect
+from .models import Package
+from .forms import PackageForm
+
+def addpackage(request):
+    if request.method == 'POST':
+        form = PackageForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('package_list')  # Assuming you have a URL named 'package_list' for listing packages
+    else:
+        form = PackageForm()
+    return render(request, 'add_package.html', {'form': form})

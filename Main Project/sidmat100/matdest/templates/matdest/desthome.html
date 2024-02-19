@@ -1,8 +1,14 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
     <title>Destination Weddings</title>
     <style>
         body {
@@ -10,24 +16,6 @@
             margin: 0;
             padding: 0;
             background-color: #f9f9f9;
-        }
-        header {
-            background-color: #ffffff;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        nav ul {
-            list-style: none;
-            display: flex;
-        }
-        nav li {
-            margin-right: 20px;
         }
         .main-content {
             padding: 40px;
@@ -62,28 +50,103 @@
             padding: 10px;
             font-size: 24px;
         }
+
+        .custom-navbar {
+            background-color: #e72e77; /* Change the background color */
+        }
+        
+        .custom-navbar .navbar-brand {
+            color: #fff; /* Change brand text color */
+            font-weight: bold;
+        }
+        
+        .custom-navbar .navbar-nav .nav-link {
+            color: #fff; /* Change nav link text color */
+            margin-right: 15px; /* Adjust spacing between links */
+        }
+        
+        .custom-navbar .navbar-toggler {
+            border-color: #fff; /* Change toggler button color */
+        }
+        
+        .custom-navbar .navbar-toggler-icon {
+            background-color: #fff; /* Change toggler icon color */
+        }
+        
+        .custom-navbar .nav-item.active .nav-link {
+            color: #f39c12; /* Change active link color */
+            font-weight: bold; /* Make active link bold */
+            text-shadow: 0 0 2px #000; /* Small text stroke effect */
+        }
+        
+        
+        
+        .custom-navbar .dropdown-menu {
+            background-color: #2980b9; /* Change dropdown menu background color */
+        }
+        
+        .custom-navbar .dropdown-item {
+            color: #fff; /* Change dropdown item text color */
+        }
+        
+        .custom-navbar .dropdown-item:hover {
+            background-color: #1abc9c; /* Change dropdown item hover color */
+            color: #fff; /* Change dropdown item hover text color */
+        }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">WedMeGood</div>
-        <nav>
-            <ul>
-                <li>Venues</li>
-                <li>Vendors</li>
-                <li>Photos</li>
-                <!-- Add other menu items here -->
+    <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
+        <a class="navbar-brand" href="{% url 'matrimony:home' %}">DreamWed</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matint:search_page' %}">Venues</a>
+    
+    
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matrimony:myprofile' %}">Packages</a>
+                </li>
+    
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'matdest:desthome' %}">Start Planning</a>
+            </li>
             </ul>
-        </nav>
-    </header>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role a "button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ request.session.profile_image_url }}" alt="Profile Picture" width="40" height="40" class="rounded-circle">
+                        {{ request.user.username }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                        <a class="dropdown-item" href="{% url 'matrimony:myprofile' %}">My Profile</a>
+                        <a class="dropdown-item" href="#">Settings</a>
+                        <a class="dropdown-item" href="{% url 'accounts:password_change' %}">Change Password</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
     <div class="main-content">
         <h1>Destination Weddings</h1>
         <p>Your Day. Your Way.</p>
-        <img src="wed.jpg" alt="Beach Wedding Setup" class="wedding-image">
+        <img src="{% static '/images/wed.jpg' %}" alt="Beach Wedding Setup" class="wedding-image">
     </div>
     <footer>
         Which Are The Best Destination Wedding Locations In India?
     </footer>
     <div class="chat-icon">Chat with us</div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
