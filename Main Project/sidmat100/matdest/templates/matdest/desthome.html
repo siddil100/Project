@@ -40,16 +40,7 @@
             text-align: center;
             padding: 20px;
         }
-        .chat-icon {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #ff6600;
-            color: #ffffff;
-            border-radius: 50%;
-            padding: 10px;
-            font-size: 24px;
-        }
+        
 
         .custom-navbar {
             background-color: #e72e77; /* Change the background color */
@@ -92,6 +83,97 @@
         .custom-navbar .dropdown-item:hover {
             background-color: #1abc9c; /* Change dropdown item hover color */
             color: #fff; /* Change dropdown item hover text color */
+        }
+
+
+
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .main-content {
+            padding: 40px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 36px;
+            color: #333;
+        }
+        p {
+            font-size: 18px;
+            color: #666;
+        }
+        .wedding-image {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+        footer {
+            background-color: #333;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
+        /* End of existing styles */
+
+        /* Chat icon styles */
+        .chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ff6600;
+            color: #ffffff;
+            border-radius: 50%;
+            padding: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Chat window styles */
+        .chat-window {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            display: none;
+            z-index: 9999; /* Ensure it appears above other elements */
+        }
+        .chat-header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .close-btn {
+            cursor: pointer;
+        }
+        .chat-body {
+            height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .chat-footer {
+            display: flex;
+            padding: 10px;
+        }
+        .chat-footer input[type="text"] {
+            flex: 1;
+            margin-right: 10px;
+        }
+        .chat-footer button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -143,9 +225,70 @@
         <img src="{% static '/images/wed.jpg' %}" alt="Beach Wedding Setup" class="wedding-image">
     </div>
     <footer>
-        Which Are The Best Destination Wedding Locations In India?
+        We Provide The Best Destination Wedding Locations In India
     </footer>
-    <div class="chat-icon">Chat with us</div>
+    
+    <div class="chat-icon" onclick="toggleChat()">Chat with us</div>
+    <div id="chat-window" class="chat-window">
+        <div class="chat-header">
+            <span class="close-btn" onclick="toggleChat()">&times;</span>
+            <h2>Chat Window</h2>
+        </div>
+        <div class="chat-body">
+            <!-- Chat messages will be displayed here -->
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function toggleChat() {
+            var chatWindow = document.getElementById('chat-window');
+            chatWindow.style.display = chatWindow.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function sendMessage() {
+            var messageInput = document.getElementById('message-input');
+            var message = messageInput.value;
+        
+            // Append the sent message to the chat body
+            var chatBody = document.querySelector('.chat-body');
+            chatBody.innerHTML += '<div class="message sent">' + message + '</div>';
+        
+            // Send message via AJAX POST request
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'matdest:chatbot_redirect' %}',
+                data: {
+                    'message': message,
+                    csrfmiddlewaretoken: '{{ csrf_token }}' // Ensure CSRF token is included
+                },
+                success: function(response) {
+                    // Handle success response
+                    console.log('Message sent successfully');
+                    if (response.response_message) {
+                        // If the response contains a message, display it in the chat window
+                        chatBody.innerHTML += '<div class="message received">' + response.response_message + '</div>';
+                    } else if (response.redirect_url) {
+                        // If the response contains a redirect URL, redirect to that URL
+                        window.location.href = response.redirect_url;
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response if needed
+                    console.error('Error sending message:', error);
+                }
+            });
+        
+            // Clear the input field after sending the message
+            messageInput.value = '';
+        }
+        
+        
+    </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>

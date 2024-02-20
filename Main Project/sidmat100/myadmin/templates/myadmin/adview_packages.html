@@ -249,7 +249,7 @@
                                         <p class="card-text">Program Count: {{ package.program_count }}</p>
                                         <p class="card-text">Price:INR ₹{{ package.price }}</p>
                                         <a href="{% url 'myadmin:edit_package' package.id %}" class="btn btn-primary">Edit</a>
-                                        <a href="{% url 'myadmin:delete_package' package.id %}" class="btn btn-danger">Remove</a>
+                                        <a href="{% url 'myadmin:delete_package' package.id %}" class="btn btn-danger">Disable</a>
 
                                         <!-- Add other package details as needed -->
                                     </div>
