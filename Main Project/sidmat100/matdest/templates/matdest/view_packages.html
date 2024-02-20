@@ -112,6 +112,7 @@
                             <p class="card-text">Days Count: {{ package.days_count }}</p>
                             <p class="card-text">Program Count: {{ package.program_count }}</p>
                             <p class="card-text">Price:INR ₹{{ package.price }}</p>
+                            <a href="{% url 'destpayment:book_package' package.id %}" class="btn btn-primary">Book Package</a>
                             <!-- Add other package details as needed -->
                         </div>
                     </div>

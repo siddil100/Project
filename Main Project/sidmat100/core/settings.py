@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "matchat",
     "matpayment",
     "matdest",
+    "destpayment",
     
 
 ]
