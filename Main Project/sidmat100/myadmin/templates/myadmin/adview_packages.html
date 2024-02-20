@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matrimonial DashBoard</title>
+    <title>Packages</title>
     
     <!-- ======= Styles ====== -->
     <link rel="stylesheet" href="{% static 'css/styleadmin.css' %}">
@@ -241,6 +241,7 @@
                                     <img src="{{ package.image.url }}" class="card-img-top" alt="{{ package.package_name }}">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ package.package_name }}</h5>
+                                        <p class="card-text">Location: {{ package.location }}</p>
                                         <p class="card-text">Star Rating: {{ package.star_rating }}</p>
                                         <p class="card-text">Meal Preference: {{ package.meal_preference }}</p>
                                         <p class="card-text">Attendees: {{ package.attendees }}</p>

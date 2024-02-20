@@ -374,6 +374,8 @@ from django.shortcuts import render
 
 from matpayment.models import PremiumMembership
 
+@never_cache
+@login_required(login_url='accounts:login')
 def premium_users_view(request):
     filter_name = request.GET.get('name', 'all')  # Default to 'all'
     filter_gender = request.GET.get('gender', 'all')  # Default to 'all'
@@ -423,6 +425,9 @@ def premium_users_view(request):
 
 #DESTINATION WEDD
 
+
+@never_cache
+@login_required(login_url='accounts:login')
 def destadmin(request):
     return render(request, 'myadmin/destadmin.html')
 
@@ -432,6 +437,9 @@ from django.shortcuts import render, redirect
 from .models import Package
 from .forms import PackageForm
 
+
+@never_cache
+@login_required(login_url='accounts:login')
 def addpackage(request):
     if request.method == 'POST':
         form = PackageForm(request.POST, request.FILES)
@@ -443,6 +451,9 @@ def addpackage(request):
     return render(request, 'myadmin/addpackage.html', {'form': form})
 
 
+
+@never_cache
+@login_required(login_url='accounts:login')
 def adview_packages(request):
     packages = Package.objects.all()
     return render(request, 'myadmin/adview_packages.html', {'packages': packages})
@@ -455,6 +466,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Package
 from .forms import PackageForm
 
+
+
+@never_cache
+@login_required(login_url='accounts:login')
 def edit_package(request, pk):
     package = get_object_or_404(Package, pk=pk)
     if request.method == 'POST':
@@ -473,6 +488,10 @@ def edit_package(request, pk):
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Package
 
+
+
+@never_cache
+@login_required(login_url='accounts:login')
 def delete_package(request, pk):
     package = get_object_or_404(Package, pk=pk)
     if request.method == 'POST':

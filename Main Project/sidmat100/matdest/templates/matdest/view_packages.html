@@ -105,12 +105,13 @@
                         <img src="{{ package.image.url }}" class="card-img-top" alt="{{ package.package_name }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ package.package_name }}</h5>
+                            <p class="card-text">Location: {{ package.location }}</p>
                             <p class="card-text">Star Rating: {{ package.star_rating }}</p>
                             <p class="card-text">Meal Preference: {{ package.meal_preference }}</p>
                             <p class="card-text">Attendees: {{ package.attendees }}</p>
                             <p class="card-text">Days Count: {{ package.days_count }}</p>
                             <p class="card-text">Program Count: {{ package.program_count }}</p>
-                            <p class="card-text">Price: ${{ package.price }}</p>
+                            <p class="card-text">Price:INR ₹{{ package.price }}</p>
                             <!-- Add other package details as needed -->
                         </div>
                     </div>

@@ -201,6 +201,9 @@
                         {{ form.non_field_errors }}
                         <label for="id_package_name">Package Name:</label>
                         {{ form.package_name }}
+                        <label for="id_location">Location:</label>
+                            {{ form.location }}
+                            <span id="locationError" class="error-message"></span>
                         <span id="packageNameError" class="error-message"></span>
                         <label for="id_days_count">Days Count:</label>
                         {{ form.days_count }}
@@ -223,19 +226,26 @@
                             <option value="5">5</option>
                         </select>
                         <label>Meal Preference:</label>
-                        <label><input type="radio" name="meal_preference" value="veg"> Veg</label>
-                        <label><input type="radio" name="meal_preference" value="non-veg"> Non-Veg</label>
+                        <label><input type="radio" name="meal_preference" value="veg" checked> Veg</label>
+<label><input type="radio" name="meal_preference" value="non-veg"> Non-Veg</label>
+<label><input type="radio" name="meal_preference" value="mixed"> Mixed</label>
+
                         <label for="id_attendees">Attendees:</label>
                         <select id="id_attendees" name="attendees">
                             <option value="25">25</option>
                             <option value="50">50</option>
                         </select>
+
+                        
+                            
+                        
                         <button type="submit">Submit</button>
                     </form>
                     
                     <script>
                         const packageForm = document.getElementById('packageForm');
-                    
+                        const locationInput = document.getElementById('id_location');
+const locationError = document.getElementById('locationError');
                         const packageNameInput = document.getElementById('id_package_name');
                         const daysCountInput = document.getElementById('id_days_count');
                         const programCountInput = document.getElementById('id_program_count');
@@ -251,6 +261,18 @@
                             }
                         });
                         
+
+                        locationInput.addEventListener('input', function() {
+                            const value = this.value.trim();
+                            
+                            if (!/^[a-zA-Z\s]+$/.test(value)) {
+                                locationError.textContent = "Location must contain alphabetic characters only.";
+                            } else if (value.length < 4 || value.length > 30) {
+                                locationError.textContent = "Location must be between 4 and 30 characters long.";
+                            } else {
+                                locationError.textContent = "";
+                            }
+                        });
                     
                         daysCountInput.addEventListener('input', function() {
                             const value = parseInt(this.value, 10);
