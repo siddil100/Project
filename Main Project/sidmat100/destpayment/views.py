@@ -107,15 +107,116 @@ def payment_success(request):
         payment_id = request.POST.get('payment_id')  # Retrieve the payment ID from the form
         package_id = request.POST.get('package_id')  # Retrieve the package ID from the form
         
-        # Creating a PackageBooking object for the current user and storing the payment ID
-        package_booking = PackageBooking.objects.create(
-            user=current_user,
-            package_id=package_id,
-            payment_id=payment_id,
-            subscription_date=timezone.now()
-        )
+        try:
+            # Check if a PackageBooking object already exists for the user and the same package ID
+            package_booking = PackageBooking.objects.get(user=current_user, package_id=package_id)
+            # Update the existing PackageBooking object with the new payment ID and package ID
+            package_booking.payment_id = payment_id
+            package_booking.subscription_date = timezone.now()
+            package_booking.save()
+        except PackageBooking.DoesNotExist:
+            # Create a new PackageBooking object if none exists for the user with the same package ID
+            package_booking = PackageBooking.objects.create(
+                user=current_user,
+                package_id=package_id,
+                payment_id=payment_id,
+                subscription_date=timezone.now()
+            )
 
-        return render(request, "destpayment/payment_success.html")
+        pdf_response = generate_pdf_receipt(package_booking)
+
+        # Redirect to another view after generating the PDF
+        return redirect('destpayment:render_payment_success')
     else:
         # Handle GET requests or other cases here
         pass
+
+
+
+
+
+
+
+
+
+    
+
+    from django.shortcuts import render
+
+def render_payment_success(request):
+    return render(request, "destpayment/payment_success.html")
+
+
+
+
+
+
+from django.http import HttpResponse
+from .models import PackageBooking
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import Paragraph
+
+
+def generate_pdf_receipt(package_booking):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="receipt.pdf"'
+
+    # Create PDF document
+    p = canvas.Canvas(response, pagesize=letter)
+
+    # Add bold heading at center on top of the PDF
+    heading_style = ParagraphStyle(name='Heading', fontSize=16, alignment=1, fontName='Helvetica-Bold')
+    heading = Paragraph("<br/><br/><br/><br/><b>DreamWed Receipt</b>", heading_style)
+    heading.wrapOn(p, 500, 100)
+    heading.drawOn(p, 50, 750)
+
+    # Draw a border around the content
+    p.rect(50, 590, 500, 150)  # Adjust coordinates and dimensions as needed
+
+    # Write package details to PDF
+    p.drawString(100, 700, f'Package Name: {package_booking.package.package_name}')
+    p.drawString(100, 680, f'Package Price: {package_booking.package.price}')  # Include package price
+    p.drawString(100, 660, f'Payment ID: {package_booking.payment_id}')
+    p.drawString(100, 640, f'Subscription Date: {package_booking.subscription_date}')
+
+    p.showPage()
+    p.save()
+
+    return response
+
+def download_pdf(request):
+    # Retrieve the last stored PackageBooking object associated with the current user
+    current_user = request.user
+    try:
+        package_booking = PackageBooking.objects.filter(user=current_user).latest('id')
+    except PackageBooking.DoesNotExist:
+        # Handle the case where no package booking exists for the user
+        return HttpResponse("No package booking found for this user.")
+
+    # Generate PDF content based on the package booking details
+    pdf_response = generate_pdf_receipt(package_booking)
+
+    return pdf_response
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

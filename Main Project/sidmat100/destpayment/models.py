@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 
 class PackageBooking(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     subscription_date = models.DateTimeField(null=True, blank=True)
     payment_id = models.CharField(max_length=100, null=True, blank=True)
     package = models.ForeignKey(Package, on_delete=models.CASCADE)
