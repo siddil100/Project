@@ -95,30 +95,27 @@
             </ul>
         </div>
     </nav>
-    <div class="container">
-        <h2 align="center">Packages</h2>
-        <div class="row">
-            {% for package in packages %}
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <!-- Package Image -->
-                        <img src="{{ package.image.url }}" class="card-img-top" alt="{{ package.package_name }}">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ package.package_name }}</h5>
-                            <p class="card-text">Location: {{ package.location }}</p>
-                            
-                            <p class="card-text">Price:INR ₹{{ package.price }}</p>
-                            <a href="{% url 'matdest:view_package_details' package.id %}" class="btn btn-secondary">View Details</a>
-                            <a href="{% url 'destpayment:book_package' package.id %}" class="btn btn-primary">Book Package</a>
-                            <!-- Add other package details as needed -->
-                        </div>
-                    </div>
+<body>
+    <body>
+        <div class="container">
+            <div class="card">
+                <img src="{{ package.image.url }}" alt="{{ package.package_name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ package.package_name }}</h5>
+                    <p class="card-text">Star Rating: {{ package.star_rating }}</p>
+                    <p class="card-text">Meal Preference: {{ package.meal_preference }}</p>
+                    <p class="card-text">Attendees: {{ package.attendees }}</p>
+                    <p class="card-text">Days Count: {{ package.days_count }}</p>
+                    <p class="card-text">Program Count: {{ package.program_count }}</p>
+                    <p class="card-text">Price: ${{ package.price }}</p>
+                    <p class="card-text">Location: {{ package.location }}</p>
+                    <a href="{% url 'destpayment:book_package' package.id %}" class="btn btn-primary">Book Package</a>
+                    <a href="{% url 'matdest:view_packages' %}" class="btn btn-secondary">Back</a>
                 </div>
-            {% endfor %}
+            </div>
         </div>
-    </div>
     <!-- Bootstrap JS script if needed -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

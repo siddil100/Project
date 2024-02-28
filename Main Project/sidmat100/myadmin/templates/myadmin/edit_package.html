@@ -159,6 +159,11 @@
                             {{ form.package_name }}
                             <span id="secondPackageNameError" class="error-message"></span>
                         </div>
+                        <div class="form-group">
+                            <label for="id_location">Location:</label>
+                            {{ form.location }}
+                            <span id="secondLocationError" class="error-message"></span>
+                        </div>
                         <label for="id_star_rating">Star Rating:</label>
                         <select id="id_star_rating" name="star_rating">
                             <option value="1">1</option>
@@ -198,7 +203,7 @@
                         </div>
                         <div class="form-group">
                             <label for="id_image">Image:</label>
-                            {{ form.image }}
+                            {{form.image}}
                             <span id="secondImageError" class="error-message"></span>
                         </div>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -297,6 +302,21 @@
                         });
                     </script>
                     
+
+                    <script>
+                        document.getElementById('secondPackageForm').addEventListener('submit', function(event) {
+                            var fileInput = document.getElementById('id_image');
+                            var filePath = fileInput.value;
+                            var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+                            if (!allowedExtensions.exec(filePath)) {
+                                document.getElementById('secondImageError').innerText = 'Please select a valid image file (JPEG, JPG, PNG, GIF)';
+                                event.preventDefault();
+                            } else {
+                                document.getElementById('secondImageError').innerText = ''; // Reset error message
+                            }
+                        });
+                        </script>
+                        
                 </div>
             </div>
         </div>

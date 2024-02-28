@@ -37,6 +37,9 @@ from django.utils import timezone
 from .models import PackageBooking
 import razorpay
 
+
+
+@login_required(login_url='accounts:login')
 def book_package(request, package_id):
     package = get_object_or_404(Package, id=package_id)
     amount = package.price
@@ -56,6 +59,7 @@ def book_package(request, package_id):
 
 
 
+@login_required(login_url='accounts:login')
 def process_booking_payment(request):
     if request.method == 'POST':
         payment_id = request.POST.get('payment_id')
@@ -101,6 +105,9 @@ from django.utils import timezone
 from .models import PackageBooking
 import datetime
 
+
+
+@login_required(login_url='accounts:login')
 def payment_success(request):
     if request.method == 'POST':
         current_user = request.user
@@ -143,6 +150,10 @@ def payment_success(request):
 
     from django.shortcuts import render
 
+
+
+
+@login_required(login_url='accounts:login')
 def render_payment_success(request):
     return render(request, "destpayment/payment_success.html")
 
@@ -160,6 +171,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import Paragraph
 
 
+@login_required(login_url='accounts:login')
 def generate_pdf_receipt(package_booking):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="receipt.pdf"'
@@ -187,6 +199,11 @@ def generate_pdf_receipt(package_booking):
 
     return response
 
+
+
+
+
+@login_required(login_url='accounts:login')
 def download_pdf(request):
     # Retrieve the last stored PackageBooking object associated with the current user
     current_user = request.user

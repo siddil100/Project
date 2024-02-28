@@ -196,15 +196,16 @@
                     <div class="cardHeader">
                         <h2>Add a Package</h2>
                     </div>
-                    <form id="packageForm" method="post" enctype="multipart/form-data">
+                    <form id="packageForm" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
                         {% csrf_token %}
                         {{ form.non_field_errors }}
                         <label for="id_package_name">Package Name:</label>
                         {{ form.package_name }}
+                        <span id="packageNameError" class="error-message"></span>
                         <label for="id_location">Location:</label>
                             {{ form.location }}
                             <span id="locationError" class="error-message"></span>
-                        <span id="packageNameError" class="error-message"></span>
+                       
                         <label for="id_days_count">Days Count:</label>
                         {{ form.days_count }}
                         <span id="daysCountError" class="error-message"></span>
@@ -315,7 +316,21 @@ const locationError = document.getElementById('locationError');
                         });
                     </script>
                     
-                    
+                    <script>
+                        function validateForm() {
+                            var fileInput = document.getElementById('id_image');
+                            var filePath = fileInput.value;
+                            var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+                            if (!allowedExtensions.exec(filePath)) {
+                                document.getElementById('imageError').innerText = 'Please select a valid image file (JPEG, JPG, PNG, GIF)';
+                                return false; // Prevent form submission
+                            } else {
+                                document.getElementById('imageError').innerText = ''; // Reset error message
+                                return true; // Allow form submission
+                            }
+                        }
+                        </script>
+                        
                         
                 </div>
             </div>

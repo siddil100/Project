@@ -40,6 +40,8 @@ from django.urls import reverse
 from django.http import JsonResponse
 from django.urls import reverse
 
+@never_cache
+@login_required(login_url='accounts:login')
 def chatbot_redirect(request):
     if request.method == 'POST':
         message = request.POST.get('message')
@@ -52,12 +54,21 @@ def chatbot_redirect(request):
         # Check if the message contains the word 'packages' or 'package'
         if 'packages' in message.lower() or 'package' in message.lower():
             # If 'packages' is found in the message, construct the response with a link to view packages
-            response_message = "Here is the link to view packages: <a href='{}'>View Packages</a>".format(reverse('matdest:view_packages'))
+            view_packages_link = reverse('matdest:view_packages')
+            booked_packages_link = reverse('matdest:my_packages')
+
+            response_message = "Here are some matching links:<br>"
+            response_message += f"<a href='{view_packages_link}'>View Packages</a><br>"
+            response_message += f"<a href='{booked_packages_link}'>Show Booked Packages</a>"
             return JsonResponse({'response_message': response_message})
 
         # Implement your logic here to determine the redirect URL based on the message
         if message.lower() == 'premium':
             response_message = "Click to get more details of premium: <a href='{}'>Premium</a>".format(reverse('matpayment:view_premium'))
+            return JsonResponse({'response_message': response_message})
+        
+        if message.lower() == 'booking':
+            response_message = "Click to get more details of booked packages: <a href='{}'>My Bookings</a>".format(reverse('matdest:my_packages'))
             return JsonResponse({'response_message': response_message})
         
         if 'chat' in message.lower() or 'chats' in message.lower() or 'message' in message.lower():
@@ -74,5 +85,29 @@ def chatbot_redirect(request):
         return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
+
+
+
+
+
+from django.shortcuts import render
+from destpayment.models import PackageBooking
+
+
+@never_cache
+@login_required(login_url='accounts:login')
+def view_my_packages(request):
+    user_packages = PackageBooking.objects.filter(user=request.user)
+    return render(request, 'matdest/my_packages.html', {'user_packages': user_packages})
+
+
+
+
+from django.shortcuts import render, get_object_or_404
+@never_cache
+@login_required(login_url='accounts:login')
+def view_package_details(request, package_id):
+    package = get_object_or_404(Package, pk=package_id)
+    return render(request, 'matdest/view_package_details.html', {'package': package})
 
 
