@@ -292,6 +292,7 @@
                     </div>
                     <form method="post">
                         {% csrf_token %}
+                        {% if users %}
                         <table>
                             <thead>
                                 <tr>
@@ -364,6 +365,11 @@
                                 {% endfor %}
                             </tbody>
                         </table>
+                        {% else %}
+                        <div class="no-records">
+                            <p>No records match your filter.</p>
+                        </div>
+                        {% endif %}
                     </form>
                     <div class="pagination">
                         <span class="step-links">
