@@ -18,6 +18,7 @@ urlpatterns = [
     path('adview_packages/', views.adview_packages, name='adview_packages'),
     path('package/<int:pk>/edit/', views.edit_package, name='edit_package'),
     path('package/<int:pk>/delete/',views.delete_package, name='delete_package'),
+    path('add-manager/', views.add_manager, name='add_manager'),
 
     
 ]

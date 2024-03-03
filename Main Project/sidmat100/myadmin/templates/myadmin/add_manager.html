@@ -52,8 +52,62 @@
     .view-more-link:hover {
         background-color: #FFD700; /* Change background color on hover to a slightly darker yellow */
     }
+
+
+
+
+    <style>
+        /* CSS for form container */
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
     
-</style>
+        /* CSS for form labels */
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    
+        /* CSS for form inputs */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+    
+        /* CSS for form submit button */
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    
+        /* CSS for form error messages */
+        .error-message {
+            color: red;
+            font-size: 12px;
+        }
+    </style>
+    
 </head>
 
 <body>
@@ -147,12 +201,34 @@
                     </div>
                     
                     
-                    <a href="{% url 'myadmin:add_package' %}" class="view-more-link">Add Package </a>
-                        
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_username">Username:</label>
+                            {{ form.username }}
+                            <small class="form-text text-muted">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_email">Email:</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_password1">Password:</label>
+                            {{ form.password1 }}
+                            <small class="form-text text-muted">Your password must contain at least 8 characters.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_password2">Password confirmation:</label>
+                            {{ form.password2 }}
+                            <small class="form-text text-muted">Enter the same password as before, for verification.</small>
+                        </div>
 
-                        <a href="{% url 'myadmin:adview_packages' %}" class="view-more-link">View Packages </a>
-                        <a href="{% url 'myadmin:add_manager' %}" class="view-more-link">Add Event manager </a>
-                            
+                        <div class="form-group">
+                            <label for="id_location">Location:</label>
+                            <input type="text" name="location" id="id_location">
+                        </div>
+                        <button type="submit">Submit</button>
+                    </form> 
                         
                 </div>
             </div>

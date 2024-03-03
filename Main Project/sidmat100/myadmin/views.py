@@ -503,6 +503,36 @@ def delete_package(request, pk):
 
 
 
+from accounts.forms import CreateUserForm
 
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from accounts.forms import CreateUserForm
+from .models import EventManager
 
+@login_required
+def add_manager(request):
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            location = request.POST.get('location')  # Get location from the form
+            EventManager.objects.create(user=user, location=location)  # Create EventManager instance
+            m = form.cleaned_data.get('username')
+            mymail = form.cleaned_data.get('email')
+            subject = 'Registration Confirmation'
+            message = f'Welcome to DreamWed - Your Journey of Love Begins Here! 🎉 Congratulations on Registering with Us, {m}! Explore a World of Love, Hope, and New Beginnings. ❤️🥂'
+
+            from_email = 'dreamwedofficials@gmail.com'  # Replace with your email
+            recipient_list = [mymail]  # Use the user's email
+            
+            send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+            messages.success(request, 'Account was created for: ' + m)
+            return redirect('accounts:login')
+    else:
+        form = CreateUserForm()
+    
+    return render(request, 'myadmin/add_manager.html', {'form': form})
