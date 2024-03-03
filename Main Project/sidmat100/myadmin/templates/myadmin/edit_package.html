@@ -213,6 +213,7 @@
                         const secondPackageForm = document.getElementById('secondPackageForm');
                     
                         const secondPackageNameInput = document.getElementById('id_package_name');
+                        const secondLocationInput = document.getElementById('id_location');
                         const secondStarRatingInput = document.getElementById('id_star_rating');
                         const secondMealPreferenceInput = document.getElementById('id_meal_preference');
                         const secondAttendeesInput = document.getElementById('id_attendees');
@@ -228,6 +229,19 @@
                                 secondPackageNameError.textContent = "Package name must be alphabetic and between 4 and 30 characters long.";
                             } else {
                                 secondPackageNameError.textContent = "";
+                            }
+                        });
+
+
+
+
+                        secondLocationInput.addEventListener('input', function() {
+                            const value = this.value.trim();
+                            const secondLocationError = document.getElementById('secondLocationError');
+                            if (!/^[a-zA-Z\s]{4,30}$/.test(value)) {
+                                secondLocationError.textContent = "Location must be alphabetic and between 4 and 30 characters long.";
+                            } else {
+                                secondLocationError.textContent = "";
                             }
                         });
                     

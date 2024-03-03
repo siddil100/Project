@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "matpayment",
     "matdest",
     "destpayment",
+    "destmanager",
     
 
 ]

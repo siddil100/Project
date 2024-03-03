@@ -7,6 +7,7 @@ from django.contrib import messages
 from matrimony.models import PersonalDetails
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from myadmin.models import *
 
 # Create your views here.
 
@@ -36,6 +37,8 @@ def register(request):
 
 from django.contrib.sessions.models import Session
 
+
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -45,13 +48,18 @@ def login_view(request):
         if user is not None:
             if user.is_superuser:
                 login(request, user)
-                 
-                
                 return redirect('myadmin:myadmin')  # Redirect superuser to custom admin panel
             else:
                 login(request, user)
                 request.session['suser'] = user.username  # Store the user's username in the 'suser' session
                 
+                # Check if the user has an associated EventManager object
+                try:
+                    event_manager = EventManager.objects.get(user=user)
+                    return redirect('destmanager:eventhome')  # Redirect user to eventhome if EventManager object exists
+                except EventManager.DoesNotExist:
+                    pass  # User does not have an EventManager object
+
                 # Retrieve the PersonalDetails instance for the user
                 try:
                     personal_details = PersonalDetails.objects.get(user=user)
@@ -72,6 +80,7 @@ def login_view(request):
     
     context = {}
     return render(request, 'accounts/login.html', context)
+
 
     
 @login_required(login_url='accounts:login')

@@ -28,13 +28,12 @@ from django.core.exceptions import ObjectDoesNotExist
 @login_required(login_url='accounts:login')
 def myadminview(request):
     # Get the filter criteria
-    # Get the filter criteria
     filter_name = request.GET.get('name', 'all')  # Default to 'all'
     filter_status = request.GET.get('status', 'all')  # Default to 'all'
     filter_gender = request.GET.get('gender', 'all')  # Default to 'all'
 
-    # Get all users
-    users = User.objects.filter(is_superuser=False)
+    # Get all users excluding those who have EventManager objects
+    users = User.objects.filter(is_superuser=False).exclude(eventmanager__isnull=False)
 
     # Apply filters based on the criteria
     if filter_name != 'all':
@@ -86,7 +85,6 @@ def myadminview(request):
             except User.DoesNotExist:
                 # Handle the case where the user is not found
                 pass
-            
 
     return render(request, 'myadmin/myadmin.html', {'users': page})
 
@@ -117,6 +115,9 @@ def aadharsusview(request):
         users = users.filter(personaldetails__aadhar_valid=True)  # Filter by valid Aadhar
     elif filter_aadhar_valid == 'invalid':
         users = users.filter(personaldetails__aadhar_valid=False)  # Filter by invalid Aadhar
+
+    # Exclude users with associated EventManager objects
+    users = users.exclude(eventmanager__isnull=False)
 
     # Define the number of users to display per page
     per_page = 10
@@ -519,20 +520,25 @@ def add_manager(request):
         form = CreateUserForm(request.POST)
         if form.is_valid():
             user = form.save()
+            usr = request.POST.get('username')
+            pas = form.cleaned_data.get('password1')
             location = request.POST.get('location')  # Get location from the form
+            print(usr)
+            print(pas)
             EventManager.objects.create(user=user, location=location)  # Create EventManager instance
             m = form.cleaned_data.get('username')
             mymail = form.cleaned_data.get('email')
             subject = 'Registration Confirmation'
-            message = f'Welcome to DreamWed - Your Journey of Love Begins Here! 🎉 Congratulations on Registering with Us, {m}! Explore a World of Love, Hope, and New Beginnings. ❤️🥂'
+            message = f'Welcome to DreamWed - Your Journey as an EventManager Begins Here! 🎉 Congratulations on Registering with Us, {m}! Explore a World of Love, Hope, and New Beginnings. ❤️🥂\n\nYour username: {usr}\nYour password: {pas}'
 
             from_email = 'dreamwedofficials@gmail.com'  # Replace with your email
             recipient_list = [mymail]  # Use the user's email
             
             send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-            messages.success(request, 'Account was created for: ' + m)
-            return redirect('accounts:login')
+            messages.success(request, 'Event Manager added: ' + m)
+            return redirect('myadmin:destadmin')
     else:
         form = CreateUserForm()
     
     return render(request, 'myadmin/add_manager.html', {'form': form})
+

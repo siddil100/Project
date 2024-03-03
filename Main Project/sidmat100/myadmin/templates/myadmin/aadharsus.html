@@ -298,59 +298,54 @@
                     </div>
                     <form method="post">
                         {% csrf_token %}
-                        <table>
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Profile_Image</td>
-                                    <td>view info</td>
-
-                                    <td>Address</td>
-                                    <td>Email</td>
-                                    <td>Adhaar</td>
-                                    <td>Account Status</td>
-                                    <td>Reason</td>
-                                    <td>Action</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for user in users %}
+                        {% if users %}
+                            <table>
+                                <thead>
                                     <tr>
-                                        <td>{{ user.username }}</td>
-                                        <td>
-                                            <div class="imgBx" style="border-radius: 50%; overflow: hidden; width: 40px; height: 40px;">
-                                                <img src="{{ user.personaldetails.profile_image.url }}" alt="{{ user.username }}" style="width: 100%; height: 100%; object-fit: cover;">
-                                            </div>
-                                        </td>
-                                        <td><a href="{% url 'myadmin:generate_pdf' user.id %}" class="view-more-link">View</a></td>
-
-
-                                        <td>{{ user.personaldetails.address }}</td>
-                                        <td>{{ user.email }}</td>
-                                        <td>
-                                            {% if user.personaldetails.aadhar_card %}
-                                            <a href="{{ user.personaldetails.aadhar_card.url }}" target="_blank" class="aadhar-button" style="text-decoration: none; padding: 5px 10px; background-color: #007bff; color: #fff; border: none; border-radius: 3px; cursor: pointer; display: inline-block;">View Aadhar</a>
-
-                                            {% else %}
-                                                Not Uploaded
-                                            {% endif %}
-                                        </td>
-                                        <td class="user-status">
-                                            {% if user.personaldetails.aadhar_valid %}
-                                                <span class="status delivered">Active</span>
+                                        <td>Name</td>
+                                        <td>Profile_Image</td>
+                                        <td>view info</td>
+                                        <td>Address</td>
+                                        <td>Email</td>
+                                        <td>Adhaar</td>
+                                        <td>Account Status</td>
+                                        <td>Reason</td>
+                                        <td>Action</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in users %}
+                                        <tr>
+                                            <td>{{ user.username }}</td>
+                                            <td>
+                                                <div class="imgBx" style="border-radius: 50%; overflow: hidden; width: 40px; height: 40px;">
+                                                    <img src="{{ user.personaldetails.profile_image.url }}" alt="{{ user.username }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                                </div>
+                                            </td>
+                                            <td><a href="{% url 'myadmin:generate_pdf' user.id %}" class="view-more-link">View</a></td>
+                                            <td>{{ user.personaldetails.address }}</td>
+                                            <td>{{ user.email }}</td>
+                                            <td>
+                                                {% if user.personaldetails.aadhar_card %}
+                                                    <a href="{{ user.personaldetails.aadhar_card.url }}" target="_blank" class="aadhar-button" style="text-decoration: none; padding: 5px 10px; background-color: #007bff; color: #fff; border: none; border-radius: 3px; cursor: pointer; display: inline-block;">View Aadhar</a>
                                                 {% else %}
-                                                <span class="status return">Suspended</span>
+                                                    Not Uploaded
                                                 {% endif %}
-                                        </td>
-                                        <td>
+                                            </td>
+                                            <td class="user-status">
+                                                {% if user.personaldetails.aadhar_valid %}
+                                                    <span class="status delivered">Active</span>
+                                                {% else %}
+                                                    <span class="status return">Suspended</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
                                                 <form method="post" style="display: inline-block;">
                                                     {% csrf_token %}
                                                     <!-- HTML -->
                                                     <select class="custom-select" name="suspension_reason" id="suspensionReason">
-                                                        
                                                         <option value="Adhaar mismatch" class="custom-option">Aadhar Mismatch</option>
                                                     </select>
-
                                                 </td>
                                                 <td>
                                                     {% if user.personaldetails.aadhar_valid %}
@@ -358,16 +353,18 @@
                                                     {% else %}
                                                         <span>{{ user.suspension_reason }}</span>
                                                         <button type="submit" name="user_id" value="{{ user.id }}" class="unsuspend-button">Unsuspend Aadhar</button>
-                                                </form>
                                                     {% endif %}
-                                                </td>
-                                                
-                                        
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p>No users found.</p>
+                        {% endif %}
                     </form>
+                    
                     <div class="pagination">
                         <span class="step-links">
                             {% if users.has_previous %}

@@ -152,6 +152,10 @@
 
                         <a href="{% url 'myadmin:adview_packages' %}" class="view-more-link">View Packages </a>
                         <a href="{% url 'myadmin:add_manager' %}" class="view-more-link">Add Event manager </a>
+
+                        {% for message in messages %}
+            <p id="messages"> {{message}} </p>
+            {%endfor%}
                             
                         
                 </div>

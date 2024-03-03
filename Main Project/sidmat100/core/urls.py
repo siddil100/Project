@@ -31,6 +31,7 @@ urlpatterns = [
     path("matpayment/", include('matpayment.urls')),
     path("matdest/", include('matdest.urls')),
     path("destpayment/", include('destpayment.urls')),
+    path("destmanager/", include('destmanager.urls')),
 
    
    

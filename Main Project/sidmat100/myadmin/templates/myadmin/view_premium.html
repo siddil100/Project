@@ -291,40 +291,42 @@
                     </div>
                     <form method="post">
                         {% csrf_token %}
-                        <table>
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Profile Image</td>
-                                    <td>View</td>
-                                    <td>Subscription Date</td>
-                                    <td>Expiry Date</td>
-                                    <td>Payment ID</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for user_data in users_data %}
-        <tr>
-            <td>{{ user_data.username }}</td>
-            <td>
-                {% if user_data.profile_image %}
-                    <img src="{{ user_data.profile_image }}" alt="{{ user_data.username }}" style="width: 40px; height: 40px; border-radius: 50%;">
-                {% else %}
-                    No Image
-                {% endif %}
-            </td>
-            
-                <td><a href="{% url 'myadmin:user_detail_admin' user_data.user_id %}" class="view-more-link">View</a></td>
-            
-            <td>{{ user_data.subscription_date }}</td>
-            <td>{{ user_data.expiry_date }}</td>
-            <td>{{ user_data.payment_id }}</td>
-        </tr>
-    {% endfor %}
-</tbody>
-                            </tbody>
-                        </table>
+                        {% if users_data %}
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>Profile Image</td>
+                                        <td>View</td>
+                                        <td>Subscription Date</td>
+                                        <td>Expiry Date</td>
+                                        <td>Payment ID</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user_data in users_data %}
+                                        <tr>
+                                            <td>{{ user_data.username }}</td>
+                                            <td>
+                                                {% if user_data.profile_image %}
+                                                    <img src="{{ user_data.profile_image }}" alt="{{ user_data.username }}" style="width: 40px; height: 40px; border-radius: 50%;">
+                                                {% else %}
+                                                    No Image
+                                                {% endif %}
+                                            </td>
+                                            <td><a href="{% url 'myadmin:user_detail_admin' user_data.user_id %}" class="view-more-link">View</a></td>
+                                            <td>{{ user_data.subscription_date }}</td>
+                                            <td>{{ user_data.expiry_date }}</td>
+                                            <td>{{ user_data.payment_id }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p>No records found.</p>
+                        {% endif %}
                     </form>
+                    
                     
                 
                 </div>

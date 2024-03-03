@@ -1,0 +1,172 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+    <title>Destination Weddings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .main-content {
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #333;
+        }
+
+        p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .card {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .card-img-top {
+            height: 200px; /* Adjust as needed */
+            object-fit: cover;
+        }
+
+        footer {
+            background-color: #333;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Custom Navbar Styles */
+        .custom-navbar {
+            background-color: #e72e77; /* Change the background color */
+        }
+        
+        .custom-navbar .navbar-brand {
+            color: #fff; /* Change brand text color */
+            font-weight: bold;
+        }
+        
+        .custom-navbar .navbar-nav .nav-link {
+            color: #fff; /* Change nav link text color */
+            margin-right: 15px; /* Adjust spacing between links */
+        }
+        
+        .custom-navbar .navbar-toggler {
+            border-color: #fff; /* Change toggler button color */
+        }
+        
+        .custom-navbar .navbar-toggler-icon {
+            background-color: #fff; /* Change toggler icon color */
+        }
+        
+        .custom-navbar .nav-item.active .nav-link {
+            color: #f39c12; /* Change active link color */
+            font-weight: bold; /* Make active link bold */
+            text-shadow: 0 0 2px #000; /* Small text stroke effect */
+        }
+        
+        .custom-navbar .dropdown-menu {
+            background-color: #2980b9; /* Change dropdown menu background color */
+        }
+        
+        .custom-navbar .dropdown-item {
+            color: #fff; /* Change dropdown item text color */
+        }
+        
+        .custom-navbar .dropdown-item:hover {
+            background-color: #1abc9c; /* Change dropdown item hover color */
+            color: #fff; /* Change dropdown item hover text color */
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
+        <a class="navbar-brand" href="{% url 'destmanager:eventhome' %}">DreamWed</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'destmanager:eventhome' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'matdest:desthome' %}">Booked Packages</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matdest:view_packages' %}">Packages</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matdest:my_packages' %}">My Packages</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {% if profile_image_url %}
+                        <img src="{{ profile_image_url }}" alt="Profile Picture" width="40" height="40"
+                            class="rounded-circle">
+                        {% else %}
+                        <img src="{% static '/images/no.jpg' %}" alt="Default Profile Picture" width="40"
+                            height="40" class="rounded-circle">
+                        {% endif %}
+                        {{ request.user.username }}
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                        <a class="dropdown-item" href="{% url 'accounts:password_change' %}">Change Password</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="main-content">
+        <h1>Package Details</h1>
+
+        <div class="card">
+            <img class="card-img-top" src="{{ package.image.url }}" alt="{{ package.package_name }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ package.package_name }}</h5>
+                <p class="card-text"><strong>Star Rating:</strong> {{ package.star_rating }}</p>
+                <p class="card-text"><strong>Meal Preference:</strong> {{ package.meal_preference }}</p>
+                <p class="card-text"><strong>Attendees:</strong> {{ package.attendees }}</p>
+                <p class="card-text"><strong>Days Count:</strong> {{ package.days_count }}</p>
+                <p class="card-text"><strong>Program Count:</strong> {{ package.program_count }}</p>
+                <p class="card-text"><strong>Price:</strong> ${{ package.price }}</p>
+                <p class="card-text"><strong>Location:</strong> {{ package.location }}</p>
+            </div>
+        </div>
+
+
+        <a href="{% url 'destmanager:eventhome' %}" class="btn btn-primary mt-3">Back</a>
+    </div>
+    <footer>
+        We Provide The Best Destination Wedding Locations In India
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
