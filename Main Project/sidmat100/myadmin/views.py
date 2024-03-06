@@ -542,3 +542,51 @@ def add_manager(request):
     
     return render(request, 'myadmin/add_manager.html', {'form': form})
 
+
+
+
+
+
+from django.shortcuts import render
+from myadmin.models import EventManager
+@login_required
+def view_manager(request):
+    managers = EventManager.objects.all()
+    return render(request, 'myadmin/view_manager.html', {'managers': managers})
+
+
+
+
+
+
+
+
+
+
+from django.contrib.auth.models import User
+
+@login_required
+def suspend_manager(request, user_id):
+    user = User.objects.get(id=user_id)
+
+    if request.method == 'POST':
+        # Get the reason for suspension from the form
+        reason = request.POST.get('reason', '')
+        
+        # Toggle the user's active status
+        user.is_active = not user.is_active
+        user.save()
+        
+        if not user.is_active:  # Send email only when suspending the account
+            # Send email to the user
+            send_mail(
+                'Account Suspension',
+                f'Your account has been suspended. Reason: {reason}',
+                'dreamwedofficials@gmail.com',  # Your email address
+                [user.email],  # User's email address
+                fail_silently=False,
+            )
+        
+        return redirect('myadmin:view_manager')
+
+    return redirect('myadmin:view_manager')  # Redirect in case of GET request

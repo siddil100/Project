@@ -19,6 +19,8 @@ urlpatterns = [
     path('package/<int:pk>/edit/', views.edit_package, name='edit_package'),
     path('package/<int:pk>/delete/',views.delete_package, name='delete_package'),
     path('add-manager/', views.add_manager, name='add_manager'),
+    path('view-manager/', views.view_manager, name='view_manager'),
+    path('suspend-manager/<int:user_id>/', views.suspend_manager, name='suspend_manager'),
 
     
 ]

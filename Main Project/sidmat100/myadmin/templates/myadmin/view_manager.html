@@ -1,0 +1,339 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Managers</title>
+    
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="{% static 'css/styleadmin.css' %}">
+    
+    <style>
+       
+
+        .step-links {
+            display: inline-block;
+        }
+
+        .step-links a {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 0 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            text-decoration: none;
+            color: #007bff;
+            background-color: #fff;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .step-links a:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .current-page {
+            font-weight: bold;
+            font-size: 18px;
+            color: #007bff;
+            margin: 0 10px;
+        }
+    </style>
+
+    <style>
+        /* Style for the entire td element */
+        .user-status {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        /* Style for the "Active" and "Suspended" statuses */
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .delivered {
+            background-color: #2ecc71;
+            color: #fff;
+        }
+
+        .return {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+
+        /* Style for the "Suspend Now" and "Unsuspend Now" buttons */
+        .suspend-button,
+        .unsuspend-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .suspend-button:hover,
+        .unsuspend-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Style for the "Suspended" status and reason */
+        .suspended-status {
+            background-color: #e74c3c;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+
+        .reason {
+            font-weight: normal;
+            margin-left: 10px;
+        }
+    </style>
+<style>
+    /* CSS */
+.custom-select {
+     /* Set the width to 100% or adjust as needed */
+    padding: 10px; /* Add padding to make it look more like a dropdown */
+    background-color: #f5f5f5; /* Background color */
+    border: 1px solid #ccc; /* Border style */
+    border-radius: 5px; /* Rounded corners */
+    color: #333; /* Text color */
+}
+
+.custom-option {
+    font-weight: normal; /* Remove the bold font weight for options */
+}
+
+/* Style for the selected (disabled) option */
+.custom-select option:disabled {
+    color: #888; /* Grayed-out color for the placeholder option */
+}
+
+/* Style for when the select box is open (active) */
+.custom-select:focus {
+    border-color: #007BFF; /* Highlight border color when active */
+}
+</style>
+<style>
+    /* CSS for the "View More" link with hard yellow color */
+    .view-more-link {
+        text-decoration: none; /* Remove the default underline */
+        background-color: #FFFF00; /* Hard yellow background color */
+        color: #333; /* Text color (you can adjust this color to your preference) */
+        padding: 5px 10px; /* Padding around the link text */
+        border-radius: 3px; /* Rounded corners */
+        transition: background-color 0.2s, color 0.2s; /* Add a smooth transition effect */
+    }
+    
+    .view-more-link:hover {
+        background-color: #FFD700; /* Change background color on hover to a slightly darker yellow */
+    }
+    
+</style>
+<style>
+    /* Style for the "Suspend" button */
+    .suspend-button {
+        background-color: #e74c3c; /* Red background color */
+        color: #fff; /* Text color */
+        padding: 5px 10px; /* Padding around the button text */
+        border: none; /* Remove border */
+        border-radius: 3px; /* Rounded corners */
+        cursor: pointer; /* Change cursor to pointer on hover */
+    }
+
+    .suspend-button:hover {
+        background-color: #c0392b; /* Darker red background color on hover */
+    }
+</style>
+
+</head>
+
+<body>
+    <!-- =============== Navigation ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon"></span>
+                        <span class="title">DreamWed</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'myadmin:myadmin' %}">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="{% url 'myadmin:view_premium' %}">
+                        <span class="icon">
+                            <ion-icon name="star"></ion-icon>
+                        </span>
+                        <span class="title">View Event Managers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'myadmin:aadharsus' %}">
+                        <span class="icon">
+                            <ion-icon name="document"></ion-icon>
+                        </span>
+                        <span class="title">Aadhar Details</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'myadmin:destadmin' %}">
+                        <span class="icon">
+                            <ion-icon name="heart"></ion-icon>
+                        </span>
+                        <span class="title">Destination Wedding</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="{% url 'myadmin:change_password_admin' %}">
+                        <span class="icon">
+                            <ion-icon name="lock-closed-outline"></ion-icon>
+                        </span>
+                        <span class="title">Password</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:logout' %}">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title">Sign Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+        <div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+                <div class="search">
+                    <label>
+                        <h1 style="font-size: 28px; margin-bottom: 5px; color: #0514f0; font-family: Arial, sans-serif;">DreamWed Admin Panel</h1>
+                    </label>
+                </div>
+                <div class="user">
+                    
+                </div>
+            </div>
+
+            <!-- ======================= Cards ================== -->
+            
+            <!-- ================ Order Details List ================= -->
+            <!-- ================ Order Details List ================= -->
+<div class="details">
+    <div class="recentOrders">
+        <div class="cardHeader">
+            <h2>Event Managers</h2>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Manager Name</th>
+                    <th>Location</th>
+                    <th>Date Joined</th>
+                    <th>Action</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for manager in managers %}
+                <tr>
+                    <td>{{ manager.user.username }}</td>
+                    <td>{{ manager.location }}</td>
+                    <td>{{ manager.user.date_joined|date:"F d, Y" }}</td>
+                    <td>
+                        {% if manager.user.is_active %}
+                            <!-- Suspend button -->
+                            <button id="suspend-button" type="button" class="suspend-button" onclick="showPopup(this);">Suspend</button>
+
+                            <div class="popup" style="display: none;">
+                                <div class="popup-content">
+                                    <span class="close" onclick="closePopup(this)">&times;</span>
+                                    <form id="suspend-form" action="{% url 'myadmin:suspend_manager' manager.user.id %}" method="post">
+                                        {% csrf_token %}
+                                        <label for="reason">Reason for Suspension:</label>
+                                        <textarea id="reason" name="reason" rows="4" cols="50"></textarea>
+                                        <button type="button"  class="suspend-button" onclick="submitForm(this.form)">Suspend</button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+
+
+
+                        {% else %}
+                            <!-- Unsuspend button -->
+                            <form action="{% url 'myadmin:suspend_manager' manager.user.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="unsuspend-button">Unsuspend</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            
+        </table>
+    </div>
+</div>
+
+        <!-- ================= New Customers ================ -->
+    </div>
+
+    <!-- =========== Scripts =========  -->
+    <script src="{% static 'js/mainadmin.js' %}"></script>
+
+
+
+    <script>
+        function showPopup(button) {
+            var popup = button.nextElementSibling;
+            popup.style.display = "block";
+            button.style.display = "none"; // Hide the button after showing the popup
+        }
+    
+        function closePopup(closeButton) {
+            var popup = closeButton.parentNode.parentNode;
+            popup.style.display = "none";
+        }
+    
+        // Function to submit the form with the reason
+        function submitForm(form) {
+            var reasonInput = form.querySelector('#reason');
+            if (reasonInput.value.trim() === '') {
+                alert('Please enter a reason for suspension.');
+                return false;
+            }
+            form.submit();
+        }
+    </script>
+    
+    
+    
+    
+
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

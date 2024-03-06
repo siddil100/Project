@@ -197,39 +197,43 @@
             <div class="details">
                 <div class="recentOrders">
                     <div class="cardHeader">
-                        <h2>Destination Wedding</h2>
+                        <h2>Add Event-Managers</h2>
                     </div>
                     
                     
-                    <form method="post">
+                    <form id="myForm" method="post" onsubmit="return validateForm()">
                         {% csrf_token %}
                         <div class="form-group">
-                            <label for="id_username">Username:</label>
-                            {{ form.username }}
-                            <small class="form-text text-muted">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
+                            <label for="username">Username:</label>
+                            <input type="text" name="username" id="username" oninput="validateUsername()">
+                            <small id="usernameError" class="text-danger"></small>
+                            
                         </div>
                         <div class="form-group">
-                            <label for="id_email">Email:</label>
-                            {{ form.email }}
+                            <label for="email">Email:</label>
+                            <input type="email" name="email" id="email" oninput="validateEmail()">
+                            <small id="emailError" class="text-danger"></small>
                         </div>
                         <div class="form-group">
-                            <label for="id_password1">Password:</label>
-                            {{ form.password1 }}
-                            <small class="form-text text-muted">Your password must contain at least 8 characters.</small>
+                            <label for="password1">Password:</label>
+                            <input type="password" name="password1" id="password1" oninput="validatePassword()">
+                            <small id="passwordError" class="text-danger"></small>
+                            
                         </div>
                         <div class="form-group">
-                            <label for="id_password2">Password confirmation:</label>
-                            {{ form.password2 }}
-                            <small class="form-text text-muted">Enter the same password as before, for verification.</small>
+                            <label for="password2">Password confirmation:</label>
+                            <input type="password" name="password2" id="password2" oninput="validatePasswordConfirmation()">
+                            <small id="password2Error" class="text-danger"></small>
+                           
                         </div>
-
+                    
                         <div class="form-group">
-                            <label for="id_location">Location:</label>
-                            <input type="text" name="location" id="id_location">
+                            <label for="location">Location:</label>
+                            <input type="text" name="location" id="location" oninput="validateLocation()">
+                            <small id="locationError" class="text-danger"></small>
                         </div>
-                        <button type="submit">Submit</button>
-                    </form> 
-                        
+                        <button type="submit">Add</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -239,6 +243,95 @@
     <!-- =========== Scripts =========  -->
     <script src="{% static 'js/mainadmin.js' %}"></script>
 
+    <script>
+        function validateUsername() {
+            var usernameInput = document.getElementById('username');
+            var usernameError = document.getElementById('usernameError');
+            var username = usernameInput.value.trim();
+            var regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    
+            if (username.length < 6) {
+                usernameError.innerText = 'Username must be at least 6 characters long';
+                usernameError.style.color = 'red'; // Change text color to red
+                return false;
+            } else if (!regex.test(username)) {
+                usernameError.innerText = 'Username must contain at least one letter and one number';
+                usernameError.style.color = 'red'; // Change text color to red
+                return false;
+            } else {
+                usernameError.innerText = '';
+                return true;
+            }
+        }
+    </script>
+    
+
+
+    <script>
+        function validateLocation() {
+            var locationInput = document.getElementById('location');
+            var locationError = document.getElementById('locationError');
+            var location = locationInput.value.trim();
+            var regex = /^[a-zA-Z]{3,}$/;
+    
+            if (location.length < 3) {
+                locationError.innerText = 'Location must be at least 3 characters long';
+                locationError.style.color = 'red';
+                return false;
+            } else if (!regex.test(location)) {
+                locationError.innerText = 'Location must contain only alphabets';
+                locationError.style.color = 'red';
+                return false;
+            } else {
+                locationError.innerText = '';
+                return true;
+            }
+        }
+    </script>
+    
+
+
+
+
+    <script>
+        function validatePassword() {
+            var passwordInput = document.getElementById('password1');
+            var passwordError = document.getElementById('passwordError');
+            var password = passwordInput.value.trim();
+            var regex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+}{":;'\[\]])[a-zA-Z0-9!@#$%^&*()_+}{":;'\[\]]{8,}$/;
+    
+            if (password.length < 8) {
+                passwordError.innerText = 'Password must be at least 8 characters long';
+                passwordError.style.color = 'red';
+                return false;
+            } else if (!regex.test(password)) {
+                passwordError.innerText = 'Password must contain at least one letter, one number, and one special character';
+                passwordError.style.color = 'red';
+                return false;
+            } else {
+                passwordError.innerText = '';
+                return true;
+            }
+        }
+    
+        function validatePasswordConfirmation() {
+            var password1Input = document.getElementById('password1');
+            var password2Input = document.getElementById('password2');
+            var password2Error = document.getElementById('password2Error');
+            var password1 = password1Input.value.trim();
+            var password2 = password2Input.value.trim();
+    
+            if (password1 !== password2) {
+                password2Error.innerText = 'Passwords do not match';
+                password2Error.style.color = 'red';
+                return false;
+            } else {
+                password2Error.innerText = '';
+                return true;
+            }
+        }
+    </script>
+    
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
