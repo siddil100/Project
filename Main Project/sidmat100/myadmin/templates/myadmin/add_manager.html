@@ -11,9 +11,36 @@
     <link rel="stylesheet" href="{% static 'css/styleadmin.css' %}">
     
     
+    
 
    
 <style>
+
+
+
+
+
+    /* Add styles for dropdown within .form-group */
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      background-color: #fff; /* Background color */
+      color: #333; /* Text color */
+    }
+    
+    /* Add styles for the dropdown when focused */
+    .form-group select:focus {
+      border-color: #007BFF; /* Highlight border color when active */
+    }
+
+    
+
+
+
     /* CSS */
 .custom-select {
      /* Set the width to 100% or adjust as needed */
@@ -201,13 +228,12 @@
                     </div>
                     
                     
-                    <form id="myForm" method="post" onsubmit="return validateForm()">
+                    <form id="myForm" method="post" onsubmit="return validateForm()" >
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="username">Username:</label>
                             <input type="text" name="username" id="username" oninput="validateUsername()">
                             <small id="usernameError" class="text-danger"></small>
-                            
                         </div>
                         <div class="form-group">
                             <label for="email">Email:</label>
@@ -215,25 +241,30 @@
                             <small id="emailError" class="text-danger"></small>
                         </div>
                         <div class="form-group">
-                            <label for="password1">Password:</label>
-                            <input type="password" name="password1" id="password1" oninput="validatePassword()">
-                            <small id="passwordError" class="text-danger"></small>
-                            
-                        </div>
-                        <div class="form-group">
-                            <label for="password2">Password confirmation:</label>
-                            <input type="password" name="password2" id="password2" oninput="validatePasswordConfirmation()">
-                            <small id="password2Error" class="text-danger"></small>
-                           
-                        </div>
-                    
-                        <div class="form-group">
                             <label for="location">Location:</label>
-                            <input type="text" name="location" id="location" oninput="validateLocation()">
+                            <select name="location" id="location" onchange="validateLocation()">
+                                <option value="">Select Location</option>
+                                <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                                <option value="Kollam">Kollam</option>
+                                <option value="Pathanamthitta">Pathanamthitta</option>
+                                <option value="Alappuzha">Alappuzha</option>
+                                <option value="Kottayam">Kottayam</option>
+                                <option value="Idukki">Idukki</option>
+                                <option value="Ernakulam">Ernakulam</option>
+                                <option value="Thrissur">Thrissur</option>
+                                <option value="Palakkad">Palakkad</option>
+                                <option value="Malappuram">Malappuram</option>
+                                <option value="Kozhikode">Kozhikode</option>
+                                <option value="Wayanad">Wayanad</option>
+                                <option value="Kannur">Kannur</option>
+                                <option value="Kasaragod">Kasaragod</option>
+                            </select>
                             <small id="locationError" class="text-danger"></small>
                         </div>
+                        
                         <button type="submit">Add</button>
                     </form>
+                    
                 </div>
             </div>
         </div>
@@ -268,67 +299,48 @@
 
 
     <script>
-        function validateLocation() {
-            var locationInput = document.getElementById('location');
-            var locationError = document.getElementById('locationError');
-            var location = locationInput.value.trim();
-            var regex = /^[a-zA-Z]{3,}$/;
+        function validateEmail() {
+            var emailInput = document.getElementById('email');
+            var emailError = document.getElementById('emailError');
+            var email = emailInput.value.trim();
+            var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     
-            if (location.length < 3) {
-                locationError.innerText = 'Location must be at least 3 characters long';
-                locationError.style.color = 'red';
-                return false;
-            } else if (!regex.test(location)) {
-                locationError.innerText = 'Location must contain only alphabets';
-                locationError.style.color = 'red';
+            if (!regex.test(email)) {
+                emailError.innerText = 'Invalid email address';
+                emailError.style.color = 'red'; // Change text color to red
                 return false;
             } else {
-                locationError.innerText = '';
+                emailError.innerText = '';
                 return true;
             }
         }
     </script>
     
 
-
-
-
     <script>
-        function validatePassword() {
-            var passwordInput = document.getElementById('password1');
-            var passwordError = document.getElementById('passwordError');
-            var password = passwordInput.value.trim();
-            var regex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+}{":;'\[\]])[a-zA-Z0-9!@#$%^&*()_+}{":;'\[\]]{8,}$/;
+        function validateLocation() {
+            var locationInput = document.getElementById('location');
+            var locationError = document.getElementById('locationError');
+            var location = locationInput.value.trim();
     
-            if (password.length < 8) {
-                passwordError.innerText = 'Password must be at least 8 characters long';
-                passwordError.style.color = 'red';
-                return false;
-            } else if (!regex.test(password)) {
-                passwordError.innerText = 'Password must contain at least one letter, one number, and one special character';
-                passwordError.style.color = 'red';
+            if (location === '') {
+                locationError.innerText = 'Please select a location';
+                locationError.style.color = 'red'; // Change text color to red
                 return false;
             } else {
-                passwordError.innerText = '';
+                locationError.innerText = '';
                 return true;
             }
         }
     
-        function validatePasswordConfirmation() {
-            var password1Input = document.getElementById('password1');
-            var password2Input = document.getElementById('password2');
-            var password2Error = document.getElementById('password2Error');
-            var password1 = password1Input.value.trim();
-            var password2 = password2Input.value.trim();
+        function validateForm() {
+            // Call validation functions for all fields
+            var isUsernameValid = validateUsername();
+            var isEmailValid = validateEmail();
+            var isLocationValid = validateLocation();
     
-            if (password1 !== password2) {
-                password2Error.innerText = 'Passwords do not match';
-                password2Error.style.color = 'red';
-                return false;
-            } else {
-                password2Error.innerText = '';
-                return true;
-            }
+            // Return true if all fields are valid, otherwise return false
+            return isUsernameValid && isEmailValid && isLocationValid;
         }
     </script>
     

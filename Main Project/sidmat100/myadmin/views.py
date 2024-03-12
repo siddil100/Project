@@ -502,16 +502,47 @@ def delete_package(request, pk):
 
 
 
+import random
+import string
+
+def generate_password():
+    special_chars = '!@#$%^&*()_+-=[]{}|;:,.<>?'
+    uppercase_letters = string.ascii_uppercase
+    digits = string.digits
+
+    # Generate a password with 1 uppercase letter, 1 special character, and 1 number
+    password = random.choice(uppercase_letters)
+    password += random.choice(special_chars)
+    password += random.choice(digits)
+    password += ''.join(random.choices(string.ascii_letters + string.digits + special_chars, k=5))
+    password = ''.join(random.sample(password, len(password)))  # Shuffle the password
+
+    return password
 
 
-from accounts.forms import CreateUserForm
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+from myadmin.forms import CreateUserForm
 
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from accounts.forms import CreateUserForm
+
 from .models import EventManager
 
 @login_required
@@ -519,23 +550,32 @@ def add_manager(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
+            # Generate password
+            password = generate_password()
+            form.cleaned_data['password1'] = password
+            form.cleaned_data['password2'] = password
+
             user = form.save()
-            usr = request.POST.get('username')
-            pas = form.cleaned_data.get('password1')
-            location = request.POST.get('location')  # Get location from the form
-            print(usr)
-            print(pas)
-            EventManager.objects.create(user=user, location=location)  # Create EventManager instance
-            m = form.cleaned_data.get('username')
+            usr = form.cleaned_data.get('username')
+            location = request.POST.get('location')
+
+            # Create EventManager instance
+            try:
+                event_manager = EventManager.objects.create(user=user, location=location)
+            except Exception as e:
+                # Handle the exception (e.g., IntegrityError)
+                messages.error(request, f'Error: {str(e)}')
+                return redirect('myadmin:destadmin')
+
+            # Sending email notification
             mymail = form.cleaned_data.get('email')
             subject = 'Registration Confirmation'
-            message = f'Welcome to DreamWed - Your Journey as an EventManager Begins Here! 🎉 Congratulations on Registering with Us, {m}! Explore a World of Love, Hope, and New Beginnings. ❤️🥂\n\nYour username: {usr}\nYour password: {pas}'
-
+            message = f'Welcome to DreamWed - Your Journey as an EventManager Begins Here! 🎉 Congratulations on Registering with Us, {usr}! Explore a World of Love, Hope, and New Beginnings. ❤️🥂\n\nYour username: {usr}\nYour password: {password}'
             from_email = 'dreamwedofficials@gmail.com'  # Replace with your email
             recipient_list = [mymail]  # Use the user's email
-            
             send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-            messages.success(request, 'Event Manager added: ' + m)
+
+            messages.success(request, 'Event Manager added: ' + usr)
             return redirect('myadmin:destadmin')
     else:
         form = CreateUserForm()

@@ -11,6 +11,13 @@ def eventhome(request):
     return render(request, 'destmanager/eventhome.html')
 
 
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordChangeView
+from accounts.forms import ChangePasswordForm
+class MyPasswordChangeView(PasswordChangeView):
+    form_class = ChangePasswordForm
+    template_name = 'destmanager/change_password.html'  
+    success_url = reverse_lazy('destmanager:eventhome')  
 
 
 
@@ -62,3 +69,8 @@ def edit_package(request, pk):
     else:
         form = PackageForm(instance=package)
     return render(request, 'destmanager/edit_package.html', {'form': form})
+
+
+
+
+
