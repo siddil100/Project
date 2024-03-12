@@ -74,3 +74,15 @@ def edit_package(request, pk):
 
 
 
+from django.shortcuts import render, redirect
+from .forms import FoodOptionForm
+
+def add_food_item(request):
+    if request.method == 'POST':
+        form = FoodOptionForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('destmanager:eventhome')
+    else:
+        form = FoodOptionForm()
+    return render(request, 'destmanager/add_food_item.html', {'form': form})

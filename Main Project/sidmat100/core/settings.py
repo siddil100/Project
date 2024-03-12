@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "matdest",
     "destpayment",
     "destmanager",
+    'widget_tweaks',
     
 
 ]
