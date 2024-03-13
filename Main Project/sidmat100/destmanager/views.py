@@ -86,3 +86,46 @@ def add_food_item(request):
     else:
         form = FoodOptionForm()
     return render(request, 'destmanager/add_food_item.html', {'form': form})
+
+
+
+
+
+from .forms import DecorationOptionForm  
+
+def add_decorations(request):
+    if request.method == 'POST':
+        form = DecorationOptionForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('destmanager:eventhome')
+    else:
+        form = DecorationOptionForm()
+    return render(request, 'destmanager/add_decorations.html', {'form': form})
+
+
+
+
+
+from django.shortcuts import render, redirect
+from .models import License
+from .forms import LicenseForm
+
+def upload_license(request):
+    user = request.user
+    try:
+        existing_license = License.objects.get(user=user)
+    except License.DoesNotExist:
+        existing_license = None
+
+    if request.method == 'POST':
+        form = LicenseForm(request.POST, request.FILES, instance=existing_license)
+        if form.is_valid():
+            license_instance = form.save(commit=False)
+            license_instance.user = user
+            license_instance.is_valid = False  # Set is_valid to True for simplicity
+            license_instance.save()
+            return redirect('destmanager:eventhome')
+    else:
+        form = LicenseForm(instance=existing_license)
+    return render(request, 'destmanager/upload_license.html', {'form': form})

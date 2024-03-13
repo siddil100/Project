@@ -21,6 +21,13 @@ urlpatterns = [
     path('add-manager/', views.add_manager, name='add_manager'),
     path('view-manager/', views.view_manager, name='view_manager'),
     path('suspend-manager/<int:user_id>/', views.suspend_manager, name='suspend_manager'),
+   
+    path('licenses/', views.license_list, name='license_list'),
+    path('licenses/approve/<int:license_id>/', views.approve_license, name='approve_license'),
+    path('licenses/decline/<int:license_id>/', views.decline_license, name='decline_license'),
+
+   
+    
 
     
 ]

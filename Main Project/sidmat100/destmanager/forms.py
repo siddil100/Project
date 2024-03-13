@@ -1,7 +1,40 @@
 from django import forms
-from destmanager.models import FoodOption
+from destmanager.models import *
 
 class FoodOptionForm(forms.ModelForm):
     class Meta:
         model = FoodOption
         fields = ['category', 'name', 'description', 'image', 'price']
+
+
+
+
+
+
+
+class DecorationOptionForm(forms.ModelForm):
+    class Meta:
+        model = DecorationOption
+        fields = ['type', 'name', 'description', 'image', 'price']
+
+
+
+
+
+
+from django import forms
+from django.core.exceptions import ValidationError
+from .models import License
+
+class LicenseForm(forms.ModelForm):
+    class Meta:
+        model = License
+        fields = ['license_file']
+
+    def clean_license_file(self):
+        data = self.cleaned_data['license_file']
+        # Check if the file extension is PDF
+        if not data.name.endswith('.pdf'):
+            raise ValidationError('Only PDF files are allowed.')
+        return data
+

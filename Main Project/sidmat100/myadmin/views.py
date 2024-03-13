@@ -630,3 +630,38 @@ def suspend_manager(request, user_id):
         return redirect('myadmin:view_manager')
 
     return redirect('myadmin:view_manager')  # Redirect in case of GET request
+
+
+
+
+
+
+
+from django.shortcuts import render
+from destmanager.models import License
+
+def license_list(request):
+    licenses = License.objects.select_related('user').all()
+    # Fetch related EventManager objects for each user
+    for license in licenses:
+        license.user.eventmanager = license.user.eventmanager_set.first()
+    return render(request, 'myadmin/license_list.html', {'licenses': licenses})
+
+
+
+
+def approve_license(request, license_id):
+    if request.method == 'POST':
+        license = License.objects.get(id=license_id)
+        license.is_valid = True
+        license.save()
+        messages.success(request, 'License approved successfully.')
+    return redirect('myadmin:license_list')
+
+def decline_license(request, license_id):
+    if request.method == 'POST':
+        license = License.objects.get(id=license_id)
+        license.is_valid = False
+        license.save()
+        messages.warning(request, 'License declined.')
+    return redirect('myadmin:license_list')

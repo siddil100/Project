@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add Food Item</title>
+    <title>Add Decoration</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -66,8 +66,6 @@
     }
 
 </style>
-
-
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
@@ -111,22 +109,18 @@
         </div>
     </nav>
 
-
-
-
-    <h1 align="center">Add Food Item</h1>
+    <h1 align="center">Add Decoration</h1>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
                         <div class="form-group">
-                            <form id="foodForm" method="post" enctype="multipart/form-data">
+                            <form id="decorationForm" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="form-group">
-                                    <label for="id_category" class="col-form-label">Category:</label>
-                                    {{ form.category|add_class:"form-control" }}
-                                    <div id="categoryError" class="invalid-feedback"></div>
+                                    <label for="id_type" class="col-form-label">Type:</label>
+                                    {{ form.type|add_class:"form-control" }}
                                 </div>
                                 <div class="form-group">
                                     <label for="id_name" class="col-form-label">Name:</label>
@@ -149,7 +143,7 @@
                                     <input type="number" id="id_price" name="price" class="form-control">
                                     <div id="priceError" class="invalid-feedback"></div>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Add Food Item</button>
+                                <button type="submit" class="btn btn-primary">Add Decoration</button>
                             </form>
                     </div>
                 </div>
@@ -157,29 +151,23 @@
         </div>
     </div>
     
+    <!-- Your footer code remains the same -->
 
     <script>
-        document.getElementById('foodForm').addEventListener('submit', function(event) {
+        document.getElementById('decorationForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission for now
     
             // Perform custom validation
-            var category = document.getElementById('id_category').value.trim();
             var name = document.getElementById('id_name').value.trim();
             var description = document.getElementById('id_description').value.trim();
             var price = parseFloat(document.getElementById('id_price').value);
             var image = document.getElementById('id_image').value;
     
             // Reset error messages
-            document.getElementById('categoryError').innerHTML = '';
             document.getElementById('nameError').innerHTML = '';
             document.getElementById('descriptionError').innerHTML = '';
             document.getElementById('priceError').innerHTML = '';
             document.getElementById('imageError').innerHTML = '';
-    
-            // Category validation
-            if (!category) {
-                document.getElementById('categoryError').innerHTML = 'Please select a category.';
-            }
     
             // Name validation
             if (!/^[a-zA-Z]{3,15}$/.test(name)) {
@@ -202,8 +190,7 @@
             }
     
             // If all validations pass, submit the form
-            if (document.getElementById('categoryError').innerHTML === '' &&
-                document.getElementById('nameError').innerHTML === '' && 
+            if (document.getElementById('nameError').innerHTML === '' && 
                 document.getElementById('descriptionError').innerHTML === '' &&
                 document.getElementById('priceError').innerHTML === '' &&
                 document.getElementById('imageError').innerHTML === '') {
@@ -244,13 +231,9 @@
                 this.classList.remove('is-invalid');
             }
         });
-    
-        document.getElementById('id_category').addEventListener('change', function() {
-            if (this.value) {
-                document.getElementById('categoryError').innerHTML = '';
-            }
-        });
     </script>
+    
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>

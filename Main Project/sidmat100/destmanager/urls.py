@@ -15,5 +15,7 @@ urlpatterns = [
     path('view-package/<int:package_id>/', views.view_package, name='view_package'),
     path('package/<int:pk>/edit/', views.edit_package, name='edit_package'),
     path('addfood/', views.add_food_item, name='addfood'),
+    path('adddecorations/', views.add_decorations, name='add_decor'),
+    path('upload/', views.upload_license, name='upload_license'),
 
 ]
