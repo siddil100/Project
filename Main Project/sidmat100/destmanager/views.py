@@ -93,6 +93,9 @@ def add_food_item(request):
         if form.is_valid():
             form.save()
             return redirect('destmanager:eventhome')
+        else:
+            # Print form errors to the console
+            print(form.errors)
     else:
         form = FoodOptionForm()
     return render(request, 'destmanager/add_food_item.html', {'form': form})
@@ -149,3 +152,18 @@ def upload_license(request):
     else:
         form = LicenseForm(instance=existing_license)
     return render(request, 'destmanager/upload_license.html', {'form': form})
+
+
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+def check_phone_number(request):
+    if request.method == 'POST':
+        phone_number = request.POST.get('phone')
+        existing_license = License.objects.filter(phone=phone_number).exists()
+        return JsonResponse({'exists': existing_license})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+

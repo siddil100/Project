@@ -122,6 +122,12 @@
                                     <label for="id_type" class="col-form-label">Type:</label>
                                     {{ form.type|add_class:"form-control" }}
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="id_subtype" class="col-form-label">Subtype:</label>
+                                    <select id="id_subtype" name="subtype" class="form-control"></select>
+                                </div>
+                                
                                 <div class="form-group">
                                     <label for="id_name" class="col-form-label">Name:</label>
                                     <input type="text" id="id_name" name="name" class="form-control">
@@ -139,7 +145,7 @@
 
                                 </div>
                                 <div class="form-group">
-                                    <label for="id_price" class="col-form-label">Price:</label>
+                                    <label for="id_price" class="col-form-label">Price Per Sq-Ft in INR ₹:</label>
                                     <input type="number" id="id_price" name="price" class="form-control">
                                     <div id="priceError" class="invalid-feedback"></div>
                                 </div>
@@ -202,7 +208,7 @@
         // Validation on input
         document.getElementById('id_name').addEventListener('input', function() {
             var name = this.value.trim();
-            if (!/^[a-zA-Z]{3,15}$/.test(name)) {
+            if (!/^[a-zA-Z]{3,30}$/.test(name)) {
                 this.classList.add('is-invalid');
             } else {
                 this.classList.remove('is-invalid');
@@ -233,6 +239,38 @@
             }
         });
     </script>
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const typeField = document.getElementById('id_type');
+            const subtypeField = document.getElementById('id_subtype');
+    
+            const subtypes = {
+                floral: ['Bouquets and Boutonnieres', 'Ceremony Arch Decor', 'Reception Centerpieces'],
+                candles: ['Tabletop Candle Decor', 'Outdoor Lanterns', 'Floating Candles'],
+                lighting: ['String Lights', 'Chandeliers', 'Uplighting'],
+                signage: ['Welcome Signs', 'Menu Cards', 'Seating Charts'],
+                themed: ['Beach-themed', 'Rustic', 'Vintage']
+            };
+    
+            function populateSubtypes() {
+                const selectedType = typeField.value;
+                subtypeField.innerHTML = ''; // Clear previous options
+    
+                subtypes[selectedType].forEach(function (subtype) {
+                    const option = document.createElement('option');
+                    option.textContent = subtype;
+                    option.value = subtype; // Use subtype directly
+                    subtypeField.appendChild(option);
+                });
+            }
+    
+            typeField.addEventListener('change', populateSubtypes);
+            populateSubtypes(); // Initial population
+        });
+    </script>
+    
     
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

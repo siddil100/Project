@@ -4,7 +4,7 @@ from destmanager.models import *
 class FoodOptionForm(forms.ModelForm):
     class Meta:
         model = FoodOption
-        fields = ['category', 'name', 'description', 'image', 'price']
+        fields = ['category','subcategory', 'name', 'description', 'image', 'price']
 
 
 
@@ -15,7 +15,7 @@ class FoodOptionForm(forms.ModelForm):
 class DecorationOptionForm(forms.ModelForm):
     class Meta:
         model = DecorationOption
-        fields = ['type', 'name', 'description', 'image', 'price']
+        fields = ['type','subtype', 'name', 'description', 'image', 'price']
 
 
 
@@ -40,5 +40,8 @@ class LicenseForm(forms.ModelForm):
         if not data.name.endswith('.pdf'):
             raise forms.ValidationError('Only PDF files are allowed.')
         return data
+    
+
+    
 
 

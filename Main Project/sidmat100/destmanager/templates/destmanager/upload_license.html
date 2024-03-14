@@ -224,37 +224,47 @@
 <h1 align="center">Update Profile</h1>
 <br>
 
-<form method="POST" enctype="multipart/form-data" class="upload-form">
+<form method="POST" enctype="multipart/form-data" class="upload-form" id="uploadForm">
     {% csrf_token %}
     <div class="form-group">
         <label for="id_first_name">First Name</label>
-        {{ form.first_name }}
+        <input type="text" id="id_first_name" name="first_name" class="form-control" maxlength="15" required value="{{ form.instance.first_name }}">
+        <small class="text-danger" id="firstNameError"></small>
     </div>
     <div class="form-group">
         <label for="id_middle_name">Middle Name</label>
-        {{ form.middle_name }}
+        <input type="text" id="id_middle_name" name="middle_name" class="form-control" maxlength="15" value="{{ form.instance.middle_name }}">
+        <small class="text-danger" id="middleNameError"></small>
     </div>
     <div class="form-group">
         <label for="id_last_name">Last Name</label>
-        {{ form.last_name }}
+        <input type="text" id="id_last_name" name="last_name" class="form-control" maxlength="15" required value="{{ form.instance.last_name }}">
+        <small class="text-danger" id="lastNameError"></small>
     </div>
     <div class="form-group">
         <label for="id_gender">Gender</label>
-        {{ form.gender }}
+        <select id="id_gender" name="gender" class="form-control" required>
+            <option value="M" {% if form.instance.gender == 'M' %} selected {% endif %}>Male</option>
+            <option value="F" {% if form.instance.gender == 'F' %} selected {% endif %}>Female</option>
+        </select>
     </div>
     <div class="form-group">
-        <label for="id_dob">Date of Birth</label>
-        {{ form.dob }}
-        <!-- Add a hidden input field for dob to store the selected date -->
-        <input type="hidden" id="dob-datepicker" name="dob" value="{{ form.dob.value }}">
-    </div>
+    <label for="id_dob">Date of Birth</label>
+    <input type="date" id="id_dob" name="dob" class="form-control" required value="{{ form.instance.dob|date:'Y-m-d' }}">
+    <small class="text-danger" id="dobError"></small>
+</div>
+
     <div class="form-group">
         <label for="id_phone">Phone</label>
-        {{ form.phone }}
+        <input type="tel" id="id_phone" name="phone" pattern="[0-9]{10}" class="form-control" required value="{{ form.instance.phone }}">
+        <small class="text-danger" id="phoneError"></small>
     </div>
     <div class="form-group">
         <label for="id_license_file">License File</label>
-        {{ form.license_file }}
+        {% if form.instance.license_file %}
+            <p>{{ form.instance.license_file.name }}</p>
+        {% endif %}
+        <input type="file" id="id_license_file" name="license_file" class="form-control" accept=".pdf" required>
         <small class="form-text text-muted">Upload only PDF files.</small>
         {% if form.license_file.errors %}
             <div class="alert alert-danger" role="alert">
@@ -262,9 +272,14 @@
             </div>
         {% endif %}
     </div>
-    <button type="submit" class="btn">Upload</button><br>
+    
+    <button type="submit" class="btn" {% if not form.is_valid %} disabled {% endif %}>Upload</button><br>
     <a href="{% url 'destmanager:eventhome' %}" class="btn mt-3">Back</a>
 </form>
+
+
+
+
 
 <!-- Initialize datepicker for dob field -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -280,5 +295,155 @@
     });
 </script>
 
+<script>
+    $(document).ready(function() {
+        // Show the upload button by default
+        $('.upload-btn').show();
+
+        $('#id_first_name').on('input', function() {
+            validateName(this, '#firstNameError', 3, 15);
+        });
+
+        $('#id_middle_name').on('input', function() {
+            validateName(this, '#middleNameError', 1, 15);
+        });
+
+        $('#id_last_name').on('input', function() {
+            validateName(this, '#lastNameError', 3, 15);
+        });
+
+        $('#id_dob').on('input', function() {
+            validateDOB(this, '#dobError');
+        });
+
+        $('#id_phone').on('input', function() {
+            validatePhone(this, '#phoneError');
+        });
+
+        $('#fileInput').on('change', function() {
+            // Check if a file is selected
+            var filename = $(this).val();
+            if (filename.trim() !== '') {
+                $('.upload-btn').show(); // Show the upload button
+            } else {
+                $('.upload-btn').hide(); // Hide the upload button
+            }
+        });
+
+        function validateName(input, errorId, minLength, maxLength) {
+            var value = $(input).val();
+            var regex = /^[a-zA-Z ]+$/;
+
+            if (value.length < minLength || value.length > maxLength || !regex.test(value)) {
+                $(errorId).text(`Name must be between ${minLength} and ${maxLength} characters and contain only letters.`);
+            } else {
+                $(errorId).text('');
+            }
+            checkFormValidity();
+        }
+
+        function validateDOB(input, errorId) {
+            var dob = new Date($(input).val());
+            var age = calculateAge(dob);
+
+            if (age < 18) {
+                $(errorId).text('You must be at least 18 years old.');
+            } else {
+                $(errorId).text('');
+            }
+            checkFormValidity();
+        }
+
+        function validatePhone(input, errorId) {
+            var value = $(input).val();
+            var regex = /^\d{10}$/;
+
+            if (!regex.test(value)) {
+                $(errorId).text('Invalid phone number. It should be exactly 10 digits.');
+            } else {
+                $(errorId).text('');
+            }
+            checkFormValidity();
+        }
+
+        function calculateAge(dob) {
+            var today = new Date();
+            var age = today.getFullYear() - dob.getFullYear();
+            var monthDiff = today.getMonth() - dob.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        function checkFormValidity() {
+            var isValid = true;
+            $('.text-danger').each(function() {
+                if ($(this).text() !== '') {
+                    isValid = false;
+                    return false; // Exit the loop early
+                }
+            });
+
+            if (isValid) {
+                $('.btn').prop('disabled', false);
+            } else {
+                $('.btn').prop('disabled', true);
+            }
+        }
+    });
+</script>
+
+
+
+
+
+<script>
+    $(document).ready(function() {
+        // Get CSRF token from cookies
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Extract the csrf token
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Attach CSRF token to AJAX requests
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+            }
+        });
+
+        $('#id_phone').on('blur', function() {
+            var phone = $(this).val();
+            $.ajax({
+                url: '{% url "destmanager:check_phone_number" %}',
+                type: 'POST',
+                data: {phone: phone},
+                success: function(data) {
+                    if (data.exists) {
+                        $('#phoneError').text('Phone number already exists.');
+                    } else {
+                        $('#phoneError').text('');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                    $('#phoneError').text('Error checking phone number.');
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

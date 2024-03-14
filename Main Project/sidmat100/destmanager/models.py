@@ -2,6 +2,8 @@ from django.db import models
 from django.conf import settings
 # Create your models here.
 
+from django.db import models
+
 class FoodOption(models.Model):
     CATEGORY_CHOICES = (
         ('veg', 'Vegetarian'),
@@ -9,6 +11,7 @@ class FoodOption(models.Model):
         ('mixed', 'Mixed'),
     )
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES)
+    subcategory = models.CharField(max_length=20)
     name = models.CharField(max_length=255)
     description = models.TextField()
     image = models.ImageField(upload_to='food_images/')
@@ -16,6 +19,7 @@ class FoodOption(models.Model):
 
     def __str__(self):
         return self.name
+
     
 
 
@@ -29,6 +33,7 @@ class DecorationOption(models.Model):
         ('themed', 'Themed Decor'),
     )
     type = models.CharField(max_length=10, choices=TYPE_CHOICES)
+    subtype = models.CharField(max_length=20)
     name = models.CharField(max_length=255)
     description = models.TextField()
     image = models.ImageField(upload_to='decoration_images/')

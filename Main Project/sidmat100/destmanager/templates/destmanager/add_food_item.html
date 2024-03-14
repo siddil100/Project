@@ -128,7 +128,19 @@
                                     {{ form.category|add_class:"form-control" }}
                                     <div id="categoryError" class="invalid-feedback"></div>
                                 </div>
+                            
                                 <div class="form-group">
+                                    <label for="id_subcategory" class="col-form-label">Subcategory:</label>
+                                    <select id="id_subcategory" name="subcategory" class="form-control">
+                                        <option value="" selected="selected">---------</option>
+                                        <!-- Options will be dynamically populated -->
+                                    </select>
+                                    <div id="subcategoryError" class="invalid-feedback"></div>
+                                </div>
+                            
+                                <!-- Other form fields -->
+                            
+                                 <div class="form-group">
                                     <label for="id_name" class="col-form-label">Name:</label>
                                     <input type="text" id="id_name" name="name" class="form-control">
                                     <div id="nameError" class="invalid-feedback"></div>
@@ -145,12 +157,11 @@
 
                                 </div>
                                 <div class="form-group">
-                                    <label for="id_price" class="col-form-label">Price:</label>
+                                    <label for="id_price" class="col-form-label">Price Per Plate in INR ₹:</label>
                                     <input type="number" id="id_price" name="price" class="form-control">
                                     <div id="priceError" class="invalid-feedback"></div>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Add Food Item</button>
-                                
                             </form>
                             <a href="{% url 'destmanager:eventhome' %}" class="btn btn-primary mt-3">Back</a>
                     </div>
@@ -159,6 +170,50 @@
         </div>
     </div>
     
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#id_category').change(function() {
+        var selectedCategory = $(this).val();
+        var subcategorySelect = $('#id_subcategory');
+        subcategorySelect.empty(); // Clear previous options
+
+        if (selectedCategory === 'veg') {
+            $.each({
+                'punjabi': 'Punjabi Cuisine',
+                'kerala': 'Kerala Cuisine',
+                'rajasthani': 'Rajasthani Cuisine',
+                'bengali': 'Bengali Cuisine',
+                'gujarati': 'Gujarati Cuisine',
+            }, function(key, value) {
+                subcategorySelect.append($('<option></option>').attr('value', key).text(value));
+            });
+        } else if (selectedCategory === 'non_veg') {
+            $.each({
+                'indian': 'Indian Non-Veg',
+                'continental': 'Continental Non-Veg',
+                'asian': 'Asian Non-Veg',
+                'mexican': 'Mexican Non-Veg',
+                'mediterranean': 'Mediterranean Non-Veg',
+            }, function(key, value) {
+                subcategorySelect.append($('<option></option>').attr('value', key).text(value));
+            });
+        } else if (selectedCategory === 'mixed') {
+            $.each({
+                'fusion': 'Fusion Cuisine',
+                'international': 'International Mix',
+                'gourmet': 'Gourmet Mix',
+                'healthy': 'Healthy Mix',
+                'regional': 'Regional Mix',
+            }, function(key, value) {
+                subcategorySelect.append($('<option></option>').attr('value', key).text(value));
+            });
+        }
+    });
+});
+</script>
 
     <script>
         document.getElementById('foodForm').addEventListener('submit', function(event) {
