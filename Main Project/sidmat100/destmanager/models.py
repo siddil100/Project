@@ -40,11 +40,22 @@ class DecorationOption(models.Model):
 
 
 
-
+from datetime import date
 class License(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     license_file = models.FileField(upload_to='licenses/')
-    is_valid = models.BooleanField(default=False)  # Add the is_valid field
+    is_valid = models.BooleanField(default=False)
+    first_name = models.CharField(max_length=255)
+    middle_name = models.CharField(max_length=255, blank=True, null=True)
+    last_name = models.CharField(max_length=255)
+    gender_choices = [
+        ('M', 'Male'),
+        ('F', 'Female'),
+        
+    ]
+    gender = models.CharField(max_length=1, choices=gender_choices)
+    dob = models.DateField()  # Default to today's date
+    phone = models.CharField(max_length=15)
 
     def __str__(self):
         return f"License for {self.user.username}"

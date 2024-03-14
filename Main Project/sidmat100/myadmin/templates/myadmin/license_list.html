@@ -216,7 +216,7 @@
                         <span class="icon">
                             <ion-icon name="document"></ion-icon>
                         </span>
-                        <span class="title">Aadhar Details</span>
+                        <span class="title">Aadhaar Details</span>
                     </a>
                 </li>
 
@@ -271,51 +271,58 @@
 <div class="details">
     <div class="recentOrders">
         <div class="cardHeader">
-            <h2>Event Managers</h2>
+            <h2>Licenses</h2>
         </div>
         <table>
-            <thead>
-                <tr>
-                    <th>User Name</th>
-                    <th>Location</th>
-                    <th>License</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for license in licenses %}
-                <tr>
-                    <td>{{ license.user.username }}</td>
-                    <td>
-                        {% if license.user.eventmanager %}
-                            {{ license.user.eventmanager.location }}
-                        {% else %}
-                            N/A
-                        {% endif %}
-                    </td>
-                    <td><a href="{{ license.license_file.url }}" target="_blank"  class="view-more-link">View License</a></td>
-                    <td>
-                        {% if license.is_valid %}
-                        <span class="status delivered">Approved</span>
-                        {% else %}
-                        <span class="status return">Pending</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <form action="{% url 'myadmin:approve_license' license.id %}" method="post">
-                            {% csrf_token %}
-                            <button type="submit" class="unsuspend-button">Approve</button>
-                        </form>
-                        <form action="{% url 'myadmin:decline_license' license.id %}" method="post">
-                            {% csrf_token %}
-                            <button type="submit" class="suspend-button">Decline</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
+            {% if licenses %}
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Location</th>
+                        <th>License</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for license in licenses %}
+                    <tr>
+                        <td>{{ license.user.username }}</td>
+                        <td>
+                            {% if license.user.eventmanager %}
+                                {{ license.user.eventmanager.location }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td><a href="{{ license.license_file.url }}" target="_blank" class="view-more-link">View License</a></td>
+        
+                        <td>
+                            {% if license.is_valid %}
+                                <form action="{% url 'myadmin:decline_license' license.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="unsuspend-button">Decline</button>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'myadmin:approve_license' license.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="suspend-button">Approve</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            {% else %}
+                <tbody>
+                    <tr style="text-align: center;">
+                        <td colspan="8">.........................Sorry,No records found..........................................................................</td>
+                    </tr>
+                </tbody>
+            {% endif %}
         </table>
+        
+        
+        
         
     </div>
 </div>

@@ -36,12 +36,18 @@ def package_booking_list(request):
         location = event_manager.location
         # Filter package bookings based on the location of the event manager
         package_bookings = PackageBooking.objects.filter(package__location=location)
+        
+        # Check if the user has a valid license
+        if License.objects.filter(user=current_user, is_valid=True).exists():
+            package_bookings = PackageBooking.objects.filter(package__location=location)
+        else:
+            # Redirect to upload_license view if is_valid is not true
+            return redirect('destmanager:upload_license')
     except EventManager.DoesNotExist:
         # Handle the case where the current user is not associated with any event manager
         package_bookings = []
 
     return render(request, 'destmanager/package_booking_list.html', {'package_bookings': package_bookings})
-
 
 
 
@@ -78,6 +84,10 @@ from django.shortcuts import render, redirect
 from .forms import FoodOptionForm
 
 def add_food_item(request):
+    # Check if the user has a valid license
+    if not License.objects.filter(user=request.user, is_valid=True).exists():
+        return redirect('destmanager:upload_license')
+
     if request.method == 'POST':
         form = FoodOptionForm(request.POST, request.FILES)
         if form.is_valid():
@@ -94,6 +104,11 @@ def add_food_item(request):
 from .forms import DecorationOptionForm  
 
 def add_decorations(request):
+     # Check if the user has a valid license
+    if not License.objects.filter(user=request.user, is_valid=True).exists():
+        return redirect('destmanager:upload_license')
+
+
     if request.method == 'POST':
         form = DecorationOptionForm(request.POST, request.FILES)
         if form.is_valid():
@@ -110,7 +125,9 @@ def add_decorations(request):
 from django.shortcuts import render, redirect
 from .models import License
 from .forms import LicenseForm
+import logging
 
+logger = logging.getLogger(__name__)
 def upload_license(request):
     user = request.user
     try:
@@ -123,9 +140,12 @@ def upload_license(request):
         if form.is_valid():
             license_instance = form.save(commit=False)
             license_instance.user = user
-            license_instance.is_valid = False  # Set is_valid to True for simplicity
+            license_instance.is_valid = False 
             license_instance.save()
             return redirect('destmanager:eventhome')
+        else:
+            # Print errors to console
+            logger.error(form.errors)
     else:
         form = LicenseForm(instance=existing_license)
     return render(request, 'destmanager/upload_license.html', {'form': form})

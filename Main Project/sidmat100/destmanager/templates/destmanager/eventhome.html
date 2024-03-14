@@ -200,9 +200,21 @@
                                     <a class="nav-link" href="{% url 'destmanager:add_decor' %}">Add Decoration</a>
                                     <li>
 
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{% url 'destmanager:upload_license' %}">Upload License</a>
-                                            <li>
+                                        {% if request.user.license.is_valid %}
+    <!-- Display tick mark if the user's license is valid -->
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'destmanager:upload_license' %}">
+            Update Profile <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="green">
+                <path d="M9 16.2l-4.2-4.2-1.4 1.4 5.6 5.6 12-12-1.4-1.4z"/>
+            </svg>
+        </a>
+    </li>
+{% else %}
+    <!-- Display normal link if the user's license is not valid -->
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'destmanager:upload_license' %}">Update Profile</a>
+    </li>
+{% endif %}
     
     
             

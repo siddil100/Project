@@ -26,15 +26,19 @@ from django import forms
 from django.core.exceptions import ValidationError
 from .models import License
 
+from django import forms
+from .models import License
+
 class LicenseForm(forms.ModelForm):
     class Meta:
         model = License
-        fields = ['license_file']
+        fields = ['first_name', 'middle_name', 'last_name', 'gender', 'dob', 'phone', 'license_file']
 
     def clean_license_file(self):
         data = self.cleaned_data['license_file']
         # Check if the file extension is PDF
         if not data.name.endswith('.pdf'):
-            raise ValidationError('Only PDF files are allowed.')
+            raise forms.ValidationError('Only PDF files are allowed.')
         return data
+
 

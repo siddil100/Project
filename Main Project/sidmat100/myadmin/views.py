@@ -650,11 +650,26 @@ def license_list(request):
 
 
 
+from django.core.mail import send_mail
+from django.shortcuts import redirect
+from django.contrib import messages
+from destmanager.models import License
+
 def approve_license(request, license_id):
     if request.method == 'POST':
         license = License.objects.get(id=license_id)
         license.is_valid = True
         license.save()
+
+        # Send approval email
+        send_mail(
+            'License Approved',
+            'Your license has been approved Enjoy Managing Events.',
+            'dreamwedofficials@gmail.com',
+            [license.user.email],
+            fail_silently=False,
+        )
+
         messages.success(request, 'License approved successfully.')
     return redirect('myadmin:license_list')
 
@@ -663,5 +678,21 @@ def decline_license(request, license_id):
         license = License.objects.get(id=license_id)
         license.is_valid = False
         license.save()
+
+        # Send decline email
+        send_mail(
+            'License Declined',
+            'Your license has been declined due to some mismatches,kindly upload a new license.',
+            'dreamwedofficials@gmail.com',
+            [license.user.email],
+            fail_silently=False,
+        )
+
         messages.warning(request, 'License declined.')
     return redirect('myadmin:license_list')
+
+
+
+
+
+
