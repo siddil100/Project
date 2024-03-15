@@ -127,11 +127,7 @@
                 <li class="nav-item ">
                     <a class="nav-link" href="{% url 'matdest:desthome' %}">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'matdest:desthome' %}">Venues</a>
-    
-    
-                </li>
+                
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'matdest:view_packages' %}">Packages</a>
                 </li>
@@ -171,25 +167,36 @@
                         <th>Package Name</th>
                         <th>Subscription Date</th>
                         <th>Action</th>
+                        <th>Receipt</th> <!-- New column for the receipt -->
                     </tr>
                 </thead>
                 <tbody>
                     {% for booking in user_packages %}
-                        <tr>
-                            <td>{{ booking.package.package_name }}</td>
-                            <td>{{ booking.subscription_date }}</td>
-                            <td> <!-- New column for the action button -->
-                                <a href="{% url 'matdest:view_package_details' booking.package.id %}" class="btn btn-info">View Details</a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>{{ booking.package.package_name }}</td>
+                        <td>{{ booking.subscription_date }}</td>
+                        <td>
+                            <!-- Action buttons -->
+                            <a href="{% url 'matdest:view_package_details' booking.package.id %}" class="btn btn-info">View Details</a>
+                        </td>
+                        <td>
+                            <!-- Receipt download link -->
+                            {% if booking.receipt %}
+                            <a href="{{ booking.receipt.url }}" class="btn btn-success" download>Download Receipt</a>
+                            {% else %}
+                            No receipt available
+                            {% endif %}
+                        </td>
+                    </tr>
                     {% empty %}
-                        <!-- Display message if no bookings found -->
-                        <tr>
-                            <td colspan="2">No bookings found</td>
-                        </tr>
+                    <!-- Display message if no bookings found -->
+                    <tr>
+                        <td colspan="4">No bookings found</td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
+            
             <div class="center-button">
                 <a href="{% url 'matdest:desthome' %}" class="btn btn-primary btn-back">Go Back</a>
             </div>

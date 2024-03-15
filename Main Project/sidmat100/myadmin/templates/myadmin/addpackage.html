@@ -196,142 +196,245 @@
                     <div class="cardHeader">
                         <h2>Add a Package</h2>
                     </div>
-                    <form id="packageForm" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                    <form method="post" enctype="multipart/form-data" id="packageForm">
                         {% csrf_token %}
-                        {{ form.non_field_errors }}
                         <label for="id_package_name">Package Name:</label>
-                        {{ form.package_name }}
-                        <span id="packageNameError" class="error-message"></span>
-                        <label for="id_location">Location:</label>
-                            {{ form.location }}
-                            <span id="locationError" class="error-message"></span>
-                       
-                        <label for="id_days_count">Days Count:</label>
-                        {{ form.days_count }}
-                        <span id="daysCountError" class="error-message"></span>
-                        <label for="id_program_count">Program Count:</label>
-                        {{ form.program_count }}
-                        <span id="programCountError" class="error-message"></span>
-                        <label for="id_price">Price:</label>
-                        {{ form.price }}
-                        <span id="priceError" class="error-message"></span>
-                        <label for="id_image">Image:</label>
-                        {{ form.image }}
-                        <span id="imageError" class="error-message"></span>
+                        <input type="text" name="package_name" id="id_package_name">
+                        <small id="package_error" style="color: red;"></small>
+                        <br>
                         <label for="id_star_rating">Star Rating:</label>
-                        <select id="id_star_rating" name="star_rating">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
-                        <label>Meal Preference:</label>
-                        <label><input type="radio" name="meal_preference" value="veg" checked> Veg</label>
-<label><input type="radio" name="meal_preference" value="non-veg"> Non-Veg</label>
-<label><input type="radio" name="meal_preference" value="mixed"> Mixed</label>
+<select name="star_rating" id="id_star_rating" required>
+  <option value="">Select Rating</option> <!-- Empty option for default -->
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+</select>
 
+                        <br>
+                        <label for="id_meal_preference">Meal Preference:</label>
+                <select name="meal_preference" id="id_meal_preference" required>
+                    <option value="">Select preference</option>  <!-- Default option -->
+                    {% for preference in form.meal_preference.field.queryset %}
+                        <option value="{{ preference }}">{{ preference }}</option>
+                    {% endfor %}
+                </select>
+                
+                        <br>
+                        <label for="id_subcategory">Subcategory:</label>
+                <select name="subcategory" id="id_subcategory" required>
+                    <option value="">Select subcategory</option>  <!-- Default option -->
+                    {% for subcat in form.subcategory.field.queryset %}
+                        <option value="{{ subcat }}">{{ subcat }}</option>
+                    {% endfor %}
+                </select>
+
+
+
+
+                <br>
+                        <label for="id_dectype">Decoration Type:</label>
+                <select name="dectype" id="id_dectype" required>
+                    <option value="">Select decoration type</option>  <!-- Default option -->
+                    {% for dtype in form.dectype.field.queryset %}
+                        <option value="{{ dtype }}">{{ dtype }}</option>
+                    {% endfor %}
+                </select>
+                
+                        <br>
+                        <label for="id_subtype">Decoration Subtype:</label>
+                        <select name="subtype" id="id_subtype" required>
+                            <option value="">Select decoration subtype</option>  <!-- Default option -->
+                            {% for stype in form.subtype.field.queryset %}
+                                <option value="{{ stype }}">{{ stype }}</option>
+                            {% endfor %}
+                        </select>
+                        
+                        <br>
+                
+                        <br>
                         <label for="id_attendees">Attendees:</label>
-                        <select id="id_attendees" name="attendees">
-                            <option value="25">25</option>
-                            <option value="50">50</option>
+                <select name="attendees" id="id_attendees" required>
+                    <option value="">Select attendees</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                
+                        <br>
+                        <label for="days_count">Days Count:</label>
+<select name="days_count" id="id_days_count">
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+  <option value="6">6</option>
+  <option value="7" selected>7</option> <!-- Default selection -->
+</select>
+
+                        <br>
+                        <label for="id_program_count">Program Count:</label>
+                        <select name="program_count" id="id_program_count">
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                          <option value="6">6</option>
+                          <option value="7" selected>7</option> <!-- Default selection -->
+                          <option value="8">8</option>
+                          <option value="9">9</option>
+                          <option value="10">10</option>
+                          
                         </select>
+                        <br>
+                        <label for="id_price">Price (Based on Food and Decoration):</label>
+                <input type="text" name="price" id="id_price" readonly>
+                
+                        <br>
+                        <label for="id_image">Image:</label>
+                        <input type="file" name="image" id="id_image" required>
+                        <br>
+                        
+                        <label for="id_location">Location:</label>
+                        <select name="location" id="id_location" required>
+                          <option value="">Select Location</option> <!-- Empty option for default -->
+                          <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                          <option value="Kollam">Kollam</option>
+                          <option value="Pathanamthitta">Pathanamthitta</option>
+                          <option value="Alappuzha">Alappuzha</option>
+                          <option value="Kottayam">Kottayam</option>
+                          <option value="Idukki">Idukki</option>
+                          <option value="Ernakulam">Ernakulam</option>
+                          <option value="Thrissur">Thrissur</option>
+                          <option value="Palakkad">Palakkad</option>
+                          <option value="Malappuram">Malappuram</option>
+                          <option value="Kozhikode">Kozhikode</option>
+                          <option value="Wayanad">Wayanad</option>
+                          <option value="Kannur">Kannur</option>
+                          <option value="Kasaragod">Kasaragod</option>
+                        </select>
+                        
 
                         
-                            
-                        
-                        <button type="submit">Submit</button>
+                        <button type="submit">Save Package</button>
                     </form>
                     
                     <script>
-                        const packageForm = document.getElementById('packageForm');
-                        const locationInput = document.getElementById('id_location');
-const locationError = document.getElementById('locationError');
-                        const packageNameInput = document.getElementById('id_package_name');
-                        const daysCountInput = document.getElementById('id_days_count');
-                        const programCountInput = document.getElementById('id_program_count');
-                        const priceInput = document.getElementById('id_price');
-                    
-                        packageNameInput.addEventListener('input', function() {
-                            const value = this.value.trim();
-                            const packageNameError = document.getElementById('packageNameError');
-                            if (!/^[a-zA-Z\s]{4,30}$/.test(value)) {
-                                packageNameError.textContent = "Package name must be alphabetic and between 4 and 30 characters long.";
-                            } else {
-                                packageNameError.textContent = "";
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const categorySelect = document.getElementById('id_meal_preference');
+                            const subcategorySelect = document.getElementById('id_subcategory');
+                        
+                            categorySelect.addEventListener('change', function() {
+                                const selectedCategory = categorySelect.value;
+                                fetch("{% url 'myadmin:get_subcategories' %}?category=" + selectedCategory)
+                                .then(response => response.json())
+                                .then(data => {
+                                    subcategorySelect.innerHTML = ''; // Clear previous options
+                                    data.forEach(subcat => {
+                                        const option = document.createElement('option');
+                                        option.value = subcat.subcategory;
+                                        option.textContent = `${subcat.subcategory} (${subcat.name})`; // Display name in brackets
+                                        subcategorySelect.appendChild(option);
+                                    });
+                                })
+                                .catch(error => console.error('Error fetching subcategories:', error));
+                            });
+                        });
+                        
+                
+                
+                
+                
+                
+                
+                
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const typeSelect = document.getElementById('id_dectype');
+                            const subtypeSelect = document.getElementById('id_subtype');
+                        
+                            typeSelect.addEventListener('change', function() {
+                                const selectedType = typeSelect.value;
+                                fetch("{% url 'myadmin:get_decoration_subtypes' %}?decoration_type=" + selectedType)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        subtypeSelect.innerHTML = ''; // Clear previous options
+                                        data.forEach(subtype => {
+                                            const option = document.createElement('option');
+                                            option.value = subtype;
+                                            option.textContent = subtype;
+                                            subtypeSelect.appendChild(option);
+                                        });
+                                    })
+                                    .catch(error => console.error('Error fetching decoration subtypes:', error));
+                            });
+                        });
+                        
+                
+                
+                
+                
+                
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const subcategorySelect = document.getElementById('id_subcategory');
+                            const subtypeSelect = document.getElementById('id_subtype');
+                            const attendeesSelect = document.getElementById('id_attendees');
+                            const priceInput = document.getElementById('id_price');
+                        
+                            // Event listeners for changes in subcategory, subtype, and attendees
+                            subcategorySelect.addEventListener('change', fetchAndCalculatePrice);
+                            subtypeSelect.addEventListener('change', fetchAndCalculatePrice);
+                            attendeesSelect.addEventListener('change', fetchAndCalculatePrice);
+                        
+                            function fetchAndCalculatePrice() {
+                                const subcategoryValue = subcategorySelect.value;
+                                const subtypeValue = subtypeSelect.value;
+                                const attendeesValue = attendeesSelect.value;
+                        
+                                // Fetch prices from the server using AJAX
+                                fetch("/myadmin/api/get-price/?subcategory=" + subcategoryValue + "&subtype=" + subtypeValue)
+                    .then(response => response.json())
+                    .then(data => {
+                        const subcategoryPrice = parseFloat(data.subcategory_price);
+                        const subtypePrice = parseFloat(data.subtype_price);
+                        const attendees = parseFloat(attendeesValue);
+                
+                        // Calculate total price based on fetched prices and attendees
+                        const totalPrice = subcategoryPrice * subtypePrice * attendees;
+                        if (!isNaN(totalPrice)) {
+                            priceInput.value = totalPrice.toFixed(2); // Set the calculated price in the input field
+                        } else {
+                            priceInput.value = ''; // Clear the price if calculation fails
+                        }
+                    })
+                    .catch(error => console.error('Error fetching prices:', error));
+                
                             }
                         });
                         
 
-                        locationInput.addEventListener('input', function() {
-                            const value = this.value.trim();
-                            
-                            if (!/^[a-zA-Z\s]+$/.test(value)) {
-                                locationError.textContent = "Location must contain alphabetic characters only.";
-                            } else if (value.length < 4 || value.length > 30) {
-                                locationError.textContent = "Location must be between 4 and 30 characters long.";
-                            } else {
-                                locationError.textContent = "";
-                            }
-                        });
-                    
-                        daysCountInput.addEventListener('input', function() {
-                            const value = parseInt(this.value, 10);
-                            const daysCountError = document.getElementById('daysCountError');
-                            if (isNaN(value) || value <= 0 || value > 100) {
-                                daysCountError.textContent = "Days count must be a positive number between 1 and 100.";
-                            } else {
-                                daysCountError.textContent = "";
-                            }
-                        });
-                    
-                        programCountInput.addEventListener('input', function() {
-                            const value = parseInt(this.value, 10);
-                            const programCountError = document.getElementById('programCountError');
-                            if (isNaN(value) || value <= 0 || value > 100) {
-                                programCountError.textContent = "Program count must be a positive number between 1 and 100.";
-                            } else {
-                                programCountError.textContent = "";
-                            }
-                        });
-                    
-                        priceInput.addEventListener('input', function() {
-                            const value = parseFloat(this.value);
-                            const priceError = document.getElementById('priceError');
-                            if (isNaN(value) || value <= 0) {
-                                priceError.textContent = "Price must be a positive number.";
-                            } else {
-                                priceError.textContent = "";
-                            }
-                        });
-                    
-                        packageForm.addEventListener('submit', function(event) {
-                            const errorMessages = document.querySelectorAll('.error-message');
-                            for (let errorMessage of errorMessages) {
-                                if (errorMessage.textContent !== "") {
-                                    event.preventDefault();
-                                    return;
-                                }
-                            }
-                        });
+
+
+
+                        
                     </script>
-                    
+                        
                     <script>
-                        function validateForm() {
-                            var fileInput = document.getElementById('id_image');
-                            var filePath = fileInput.value;
-                            var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
-                            if (!allowedExtensions.exec(filePath)) {
-                                document.getElementById('imageError').innerText = 'Please select a valid image file (JPEG, JPG, PNG, GIF)';
-                                return false; // Prevent form submission
-                            } else {
-                                document.getElementById('imageError').innerText = ''; // Reset error message
-                                return true; // Allow form submission
-                            }
-                        }
-                        </script>
-                        
-                        
+  const packageNameInput = document.getElementById('id_package_name');
+  const packageError = document.getElementById('package_error');
+
+  packageNameInput.addEventListener('input', function() {
+    let packageName = this.value.trim();
+    let isValid = /^[a-zA-Z ]{3,16}$/.test(packageName);
+    if (isValid) {
+      packageError.textContent = ''; // Clear error message
+    } else {
+      packageError.textContent = 'Package name must contain only letters and spaces, with a length between 3 and 16 characters.';
+    }
+  });
+</script>
                 </div>
             </div>
         </div>

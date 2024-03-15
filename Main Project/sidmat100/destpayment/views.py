@@ -169,15 +169,16 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import Paragraph
+import io
+from django.core.files.base import ContentFile
 
 
 @login_required(login_url='accounts:login')
 def generate_pdf_receipt(package_booking):
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="receipt.pdf"'
+    buffer = io.BytesIO()  # Create a buffer to store the PDF content
 
     # Create PDF document
-    p = canvas.Canvas(response, pagesize=letter)
+    p = canvas.Canvas(buffer, pagesize=letter)
 
     # Add bold heading at center on top of the PDF
     heading_style = ParagraphStyle(name='Heading', fontSize=16, alignment=1, fontName='Helvetica-Bold')
@@ -197,7 +198,10 @@ def generate_pdf_receipt(package_booking):
     p.showPage()
     p.save()
 
-    return response
+    # Save the PDF content to the package_booking's receipt field
+    package_booking.receipt.save('receipt.pdf', ContentFile(buffer.getvalue()))
+
+    return HttpResponse(buffer.getvalue(), content_type='application/pdf')
 
 
 

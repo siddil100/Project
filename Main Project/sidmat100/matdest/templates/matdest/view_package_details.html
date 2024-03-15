@@ -64,11 +64,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'matdest:desthome' %}">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'matdest:desthome' %}">Venues</a>
-    
-    
-                </li>
+                
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'matdest:view_packages' %}">Packages</a>
                 </li>
@@ -104,10 +100,14 @@
                     <h5 class="card-title">{{ package.package_name }}</h5>
                     <p class="card-text">Star Rating: {{ package.star_rating }}</p>
                     <p class="card-text">Meal Preference: {{ package.meal_preference }}</p>
+                    <p class="card-text">Meal Subcategory: {{ package.subcategory }}</p>
+                    
                     <p class="card-text">Attendees: {{ package.attendees }}</p>
                     <p class="card-text">Days Count: {{ package.days_count }}</p>
                     <p class="card-text">Program Count: {{ package.program_count }}</p>
-                    <p class="card-text">Price: ${{ package.price }}</p>
+                    <p class="card-text">Decoration Type: {{ package.dectype }}</p>
+                    <p class="card-text">Decoration SubType: {{ package.subtype }}</p>
+                    <p class="card-text">Price:INR ₹{{ package.price }}</p>
                     <p class="card-text">Location: {{ package.location }}</p>
                     <a href="{% url 'destpayment:book_package' package.id %}" class="btn btn-primary">Book Package</a>
                     <a href="{% url 'matdest:view_packages' %}" class="btn btn-secondary">Back</a>

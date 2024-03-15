@@ -439,17 +439,76 @@ from .models import Package
 from .forms import PackageForm
 
 
-@never_cache
-@login_required(login_url='accounts:login')
+from django.shortcuts import render, redirect
+from .models import Package
+from destmanager.models import FoodOption, DecorationOption
+from .forms import PackageForm
+import logging
+
+logger = logging.getLogger(__name__)
+
 def addpackage(request):
     if request.method == 'POST':
         form = PackageForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('myadmin:destadmin')  
+            return redirect('myadmin:destadmin')
+        else:
+            # Print form errors to console
+            logger.error(form.errors)
     else:
         form = PackageForm()
+        # Dynamically populate choices for meal preference
+        form.fields['meal_preference'].queryset = FoodOption.objects.all().values_list('category', flat=True).distinct()
+        form.fields['subcategory'].queryset = FoodOption.objects.all().values_list('subcategory', flat=True).distinct()
+        # Dynamically populate choices for dectype (decoration type)
+        form.fields['dectype'].queryset = DecorationOption.objects.all().values_list('type', flat=True).distinct()
+        # Dynamically populate choices for subtype (decoration subtype)
+        form.fields['subtype'].queryset = DecorationOption.objects.all().values_list('subtype', flat=True).distinct()
     return render(request, 'myadmin/addpackage.html', {'form': form})
+
+
+
+
+# views.py
+from django.http import JsonResponse
+from destmanager.models import FoodOption
+
+def get_subcategories(request):
+    category = request.GET.get('category')
+    if category:
+        subcategories = FoodOption.objects.filter(category=category).values_list('subcategory', 'name').distinct()
+        subcat_list = [{'subcategory': subcat[0], 'name': subcat[1]} for subcat in subcategories]
+        return JsonResponse(subcat_list, safe=False)
+    return JsonResponse([], safe=False)  # Return empty array if no category specified
+
+
+
+from destmanager.models import DecorationOption
+
+def get_decoration_subtypes(request):
+    decoration_type = request.GET.get('decoration_type')
+    if decoration_type:
+        subtypes = DecorationOption.objects.filter(type=decoration_type).values_list('subtype', flat=True).distinct()
+        return JsonResponse(list(subtypes), safe=False)
+    return JsonResponse([], safe=False)
+
+
+
+
+# views.py (inside your app)
+from django.http import JsonResponse
+from destmanager.models import FoodOption, DecorationOption
+
+def get_price(request):
+    subcategory_value = request.GET.get('subcategory')
+    subtype_value = request.GET.get('subtype')
+
+    subcategory_price = FoodOption.objects.filter(subcategory=subcategory_value).values_list('price', flat=True).first()
+    subtype_price = DecorationOption.objects.filter(subtype=subtype_value).values_list('price', flat=True).first()
+
+    return JsonResponse({'subcategory_price': subcategory_price, 'subtype_price': subtype_price})
+
 
 
 

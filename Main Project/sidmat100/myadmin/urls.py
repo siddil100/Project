@@ -25,7 +25,9 @@ urlpatterns = [
     path('licenses/', views.license_list, name='license_list'),
     path('licenses/approve/<int:license_id>/', views.approve_license, name='approve_license'),
     path('licenses/decline/<int:license_id>/', views.decline_license, name='decline_license'),
-
+    path('api/get-subcategories/', views.get_subcategories, name='get_subcategories'),
+    path('api/get-subtypes/', views.get_decoration_subtypes, name='get_decoration_subtypes'),
+    path('api/get-price/', views.get_price, name='get_price'),
    
     
 
