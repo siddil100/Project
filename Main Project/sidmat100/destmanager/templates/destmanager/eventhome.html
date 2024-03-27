@@ -200,6 +200,10 @@
                                     <a class="nav-link" href="{% url 'destmanager:add_decor' %}">Add Decoration</a>
                                     <li>
 
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'destmanager:addevents' %}">Add Events</a>
+                                            <li>
+
                                         {% if request.user.license.is_valid %}
     <!-- Display tick mark if the user's license is valid -->
     <li class="nav-item">

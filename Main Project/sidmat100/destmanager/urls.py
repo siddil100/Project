@@ -16,6 +16,7 @@ urlpatterns = [
     path('package/<int:pk>/edit/', views.edit_package, name='edit_package'),
     path('addfood/', views.add_food_item, name='addfood'),
     path('adddecorations/', views.add_decorations, name='add_decor'),
+    path('addevents/', views.add_events, name='addevents'),
     path('upload/', views.upload_license, name='upload_license'),
     path('check-phone/', views.check_phone_number, name='check_phone_number'),
 

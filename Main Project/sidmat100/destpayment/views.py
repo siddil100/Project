@@ -38,20 +38,27 @@ from .models import PackageBooking
 import razorpay
 
 
-
+from django.http import HttpResponseBadRequest
 @login_required(login_url='accounts:login')
 def book_package(request, package_id):
     package = get_object_or_404(Package, id=package_id)
     amount = package.price
 
-    client = razorpay.Client(
-            auth=("rzp_test_GEoDNWPzqie17l", "9PedkHAJFcBloHLpfJqLxTYN"))
+    client = razorpay.Client(auth=("rzp_test_GEoDNWPzqie17l", "9PedkHAJFcBloHLpfJqLxTYN"))
+
+    event_date = request.GET.get('date')
+    if event_date:
+        print("date is$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",event_date)  # Debugging print statement
 
     if request.method == "POST":
+        # Validate and sanitize event_date if necessary
+        if not event_date:
+            return HttpResponseBadRequest('Event date is missing')
+
         payment = client.order.create({'amount': amount, 'currency': 'INR', 'payment_capture': '1'})
-        return render(request, 'destpayment/book_package.html', {'package': package, 'payment': payment})
+        return render(request, 'destpayment/book_package.html', {'package': package, 'event_date': event_date, 'payment': payment})
     else:
-        return render(request, 'destpayment/book_package.html', {'package': package})
+        return render(request, 'destpayment/book_package.html', {'package': package,'event_date': event_date,})
 
 
 
@@ -59,41 +66,7 @@ def book_package(request, package_id):
 
 
 
-@login_required(login_url='accounts:login')
-def process_booking_payment(request):
-    if request.method == 'POST':
-        payment_id = request.POST.get('payment_id')
-        order_id = request.POST.get('order_id')
-        package_id = request.POST.get('package_id')  # Assuming you are passing package_id from the frontend
-        
-        # Initialize Razorpay client with your API keys
-        client = razorpay.Client(auth=('rzp_test_GEoDNWPzqie17l', '9PedkHAJFcBloHLpfJqLxTYN'))
-
-        try:
-            # Fetch payment details from Razorpay
-            payment = client.payment.fetch(payment_id)
-            print(f"Payment Details: {payment}")
-
-            # Validate if the payment was successful
-            if payment['status'] == 'captured' and payment['order_id'] == order_id:
-                # Update the PackageBooking with payment ID
-                package_booking = PackageBooking.objects.create(
-                    user=request.user,
-                    package_id=package_id,
-                    payment_id=payment_id,
-                    subscription_date=timezone.now()
-                )
-                print("Package booking created successfully")
-
-                return JsonResponse({'success': True})  # Send a success response after creating the package booking
-            else:
-                return JsonResponse({'success': False, 'message': 'Payment verification failed.'})
-        except Exception as e:
-            print(f"Exception occurred: {e}")
-            return JsonResponse({'success': False, 'message': str(e)})  # Handle other exceptions generically
-
-    return JsonResponse({'success': False, 'message': 'Invalid request.'})
-
+  
 
 
 
@@ -110,16 +83,20 @@ import datetime
 @login_required(login_url='accounts:login')
 def payment_success(request):
     if request.method == 'POST':
+        print("POST data:", request.POST)
         current_user = request.user
         payment_id = request.POST.get('payment_id')  # Retrieve the payment ID from the form
         package_id = request.POST.get('package_id')  # Retrieve the package ID from the form
+        event_date = request.POST.get('event_date')  # Retrieve the event date from the form
+        print("Event Date received in view:", event_date) 
         
         try:
             # Check if a PackageBooking object already exists for the user and the same package ID
             package_booking = PackageBooking.objects.get(user=current_user, package_id=package_id)
-            # Update the existing PackageBooking object with the new payment ID and package ID
+            # Update the existing PackageBooking object with the new payment ID, package ID, and event date
             package_booking.payment_id = payment_id
             package_booking.subscription_date = timezone.now()
+            package_booking.event_date = event_date  # Set the event date
             package_booking.save()
         except PackageBooking.DoesNotExist:
             # Create a new PackageBooking object if none exists for the user with the same package ID
@@ -127,7 +104,8 @@ def payment_success(request):
                 user=current_user,
                 package_id=package_id,
                 payment_id=payment_id,
-                subscription_date=timezone.now()
+                subscription_date=timezone.now(),
+                event_date=event_date  # Set the event date
             )
 
         pdf_response = generate_pdf_receipt(package_booking)

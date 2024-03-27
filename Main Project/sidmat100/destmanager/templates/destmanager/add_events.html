@@ -1,0 +1,239 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Food Item</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+    
+</head>
+<style>
+    footer {
+        background-color: #333;
+        color: #ffffff;
+        text-align: center;
+        padding: 20px;
+    }
+    
+
+    .custom-navbar {
+        background-color: #e72e77; /* Change the background color */
+    }
+    
+    .custom-navbar .navbar-brand {
+        color: #fff; /* Change brand text color */
+        font-weight: bold;
+    }
+    
+    .custom-navbar .navbar-nav .nav-link {
+        color: #fff; /* Change nav link text color */
+        margin-right: 15px; /* Adjust spacing between links */
+    }
+    
+    .custom-navbar .navbar-toggler {
+        border-color: #fff; /* Change toggler button color */
+    }
+    
+    .custom-navbar .navbar-toggler-icon {
+        background-color: #fff; /* Change toggler icon color */
+    }
+    
+    .custom-navbar .nav-item.active .nav-link {
+        color: #f39c12; /* Change active link color */
+        font-weight: bold; /* Make active link bold */
+        text-shadow: 0 0 2px #000; /* Small text stroke effect */
+    }
+    
+    
+    
+    .custom-navbar .dropdown-menu {
+        background-color: #2980b9; /* Change dropdown menu background color */
+    }
+    
+    .custom-navbar .dropdown-item {
+        color: #fff; /* Change dropdown item text color */
+    }
+    
+    .custom-navbar .dropdown-item:hover {
+        background-color: #1abc9c; /* Change dropdown item hover color */
+        color: #fff; /* Change dropdown item hover text color */
+    }
+
+</style>
+
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
+        <a class="navbar-brand" href="{% url 'destmanager:eventhome' %}">DreamWed</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'destmanager:eventhome' %}">Home</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'destmanager:package_booking_list' %}">Booked Packages</a>
+    
+    
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'destmanager:addfood' %}">Add Food Item</a>
+                    <li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'destmanager:add_decor' %}">Add Decoration</a>
+                            <li>
+
+                                {% if request.user.license.is_valid %}
+<!-- Display tick mark if the user's license is valid -->
+<li class="nav-item">
+<a class="nav-link" href="{% url 'destmanager:upload_license' %}">
+    Update Profile <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="green">
+        <path d="M9 16.2l-4.2-4.2-1.4 1.4 5.6 5.6 12-12-1.4-1.4z"/>
+    </svg>
+</a>
+</li>
+{% else %}
+<!-- Display normal link if the user's license is not valid -->
+<li class="nav-item">
+<a class="nav-link" href="{% url 'destmanager:upload_license' %}">Update Profile</a>
+</li>
+{% endif %}
+
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {% if profile_image_url %}
+                            <img src="{{ profile_image_url }}" alt="Profile Picture" width="40" height="40" class="rounded-circle">
+                        {% else %}
+                            <img src="{% static '/images/no.jpg' %}" alt="Default Profile Picture" width="40" height="40" class="rounded-circle">
+                        {% endif %}
+                        {{ request.user.username }}
+                    </a>
+                    
+                    <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                        
+                        <a class="dropdown-item" href="{% url 'destmanager:password_change' %}">Change Password</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+
+
+    <h1 align="center">Add Event</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <form id="eventForm" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="id_category" class="col-form-label">Category:</label>
+                                <select id="id_category" name="category" class="form-control">
+                                    <option value="" selected="selected">Select Category</option>
+                                    <option value="wedding_events">Wedding Events</option>
+                                    <option value="pre_wedding_events">Pre-Wedding Events</option>
+                                    <option value="post_wedding_events">Post-Wedding Events</option>
+                                </select>
+                                <div id="categoryError" class="invalid-feedback"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_event" class="col-form-label">Event:</label>
+                                <select id="id_event" name="event" class="form-control">
+                                    <option value="" selected="selected">Select Event</option>
+                                </select>
+                                <div id="eventError" class="invalid-feedback"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="id_name" class="col-form-label">Name:</label>
+                                <input type="text" id="id_name" name="name" class="form-control">
+                                <div id="nameError" class="invalid-feedback"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_description" class="col-form-label">Description:</label>
+                                <input type="text" id="id_description" name="description" class="form-control">
+                                <div id="descriptionError" class="invalid-feedback"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_image" class="col-form-label">Image:</label>
+                                <input type="file" id="id_image" name="image" class="form-control-file">
+                                <div id="imageError" class="invalid-feedback"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_price" class="col-form-label">Price:</label>
+                                <input type="number" id="id_price" name="price" class="form-control">
+                                <div id="priceError" class="invalid-feedback"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Event</button>
+                        </form>
+                        <a href="{% url 'destmanager:eventhome' %}" class="btn btn-primary mt-3">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        $('#id_category').change(function() {
+            var selectedCategory = $(this).val();
+            var eventSelect = $('#id_event');
+            eventSelect.empty(); // Clear previous options
+            eventSelect.append($('<option></option>').attr('value', '').text('Select Event')); // Add default option
+    
+            // Define event options based on the selected category
+            var eventOptions = {};
+            if (selectedCategory === 'wedding_events') {
+                eventOptions = {
+                    'wedding_ceremony': 'Wedding Ceremony',
+                    'reception': 'Reception',
+                    'rehearsal_dinner': 'Rehearsal Dinner'
+                };
+            } else if (selectedCategory === 'pre_wedding_events') {
+                eventOptions = {
+                    'welcome_party': 'Welcome Party',
+                    'activities_excursions': 'Activities and Excursions',
+                    'travel_information': 'Travel Information'
+                };
+            } else if (selectedCategory === 'post_wedding_events') {
+                eventOptions = {
+                    'post_wedding_brunch': 'Post-Wedding Brunch',
+                    'local_attractions': 'Local Attractions and Recommendations',
+                    'faqs_tips': 'FAQs and Tips'
+                };
+            }
+    
+            // Populate the event dropdown with options
+            $.each(eventOptions, function(key, value) {
+                eventSelect.append($('<option></option>').attr('value', key).text(value));
+            });
+        });
+    });
+</script>    
+    
+</body>
+</html>

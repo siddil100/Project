@@ -3,5 +3,6 @@ from .models import *
 # Register your models here.
 admin.site.register(FoodOption)
 admin.site.register(DecorationOption)
+admin.site.register(EventOption)
 admin.site.register(License)
 

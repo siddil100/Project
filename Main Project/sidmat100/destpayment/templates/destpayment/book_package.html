@@ -71,11 +71,17 @@
             <input type="hidden" name="payment_id" id="payment_id">
             <!-- Hidden input field to store package ID -->
 <input type="hidden" name="package_id" value="{{ package.id }}">
+<input type="hidden" name="event_date" value="{{ event_date }}">
+
+
+
 
 
             <!-- RAZORPAY INTEGRATION HERE -->
             <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
             <button id="rzp-button">Proceed with Razorpay</button>
+            DATE IS {{event_date}}
+            
 
             <!-- Render package price as a JavaScript variable -->
             <script>
@@ -109,6 +115,11 @@
                     rzp.open();
                     e.preventDefault();
                 };
+
+
+
+     
+
             </script>
         </form>
     </div>

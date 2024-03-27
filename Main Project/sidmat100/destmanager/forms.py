@@ -9,6 +9,14 @@ class FoodOptionForm(forms.ModelForm):
 
 
 
+class EventOptionForm(forms.ModelForm):
+    class Meta:
+        model = EventOption
+        fields = ['category','event', 'name', 'description', 'image', 'price']
+
+
+
+
 
 
 

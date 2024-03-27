@@ -105,7 +105,8 @@
                             
                             <p class="card-text">Price:INR ₹{{ package.price }}</p>
                             <a href="{% url 'matdest:view_package_details' package.id %}" class="btn btn-secondary">View Details</a>
-                            <a href="{% url 'destpayment:book_package' package.id %}" class="btn btn-primary">Book Package</a>
+                            <a href="#" class="btn btn-primary book-package-btn" data-id="{{ package.id }}" data-toggle="modal" data-target="#dateModal">Book Package</a>
+
                             <!-- Add other package details as needed -->
                         </div>
                     </div>
@@ -113,8 +114,92 @@
             {% endfor %}
         </div>
     </div>
+    <div class="modal fade" id="dateModal" tabindex="-1" role="dialog" aria-labelledby="dateModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dateModalLabel">Select Event Date</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <label for="eventDate">Event Date:</label>
+                    <input type="date" id="eventDate" class="form-control">
+                    <p id="dateErrorMessage" class="text-danger mt-2"></p> <!-- Error message element -->
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="confirmDateBtn">Confirm Date</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Bootstrap JS script if needed -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Show modal when "Book Package" button is clicked
+        var bookButtons = document.querySelectorAll('.book-package-btn');
+        bookButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                // Get the package ID from the data-id attribute of the button
+                var packageId = this.getAttribute('data-id');
+                $('#dateModal').modal('show');
+        
+                // Handle date confirmation
+                document.getElementById('confirmDateBtn').addEventListener('click', function() {
+                    // Get the selected date
+                    var eventDate = document.getElementById('eventDate').value;
+        
+                    // Get today's date and tomorrow's date
+                    var today = new Date();
+                    var tomorrow = new Date(today);
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+        
+                    // Convert selected date to Date object for comparison
+                    var selectedDate = new Date(eventDate);
+        
+                    // Extract year, month, and day components for comparison
+                    var selectedYear = selectedDate.getFullYear();
+                    var selectedMonth = selectedDate.getMonth();
+                    var selectedDay = selectedDate.getDate();
+        
+                    var tomorrowYear = tomorrow.getFullYear();
+                    var tomorrowMonth = tomorrow.getMonth();
+                    var tomorrowDay = tomorrow.getDate();
+        
+                    // Validate the selected date against tomorrow's date
+                    if (
+                        selectedYear > tomorrowYear ||
+                        (selectedYear === tomorrowYear && selectedMonth > tomorrowMonth) ||
+                        (selectedYear === tomorrowYear && selectedMonth === tomorrowMonth && selectedDay >= tomorrowDay)
+                    ) {
+                        // Construct the URL with the selected package ID and event date
+                        var url = '{% url "destpayment:book_package" 0 %}'.replace('0', packageId) + '?date=' + eventDate;
+        
+                        // Redirect to the constructed URL
+                        window.location.href = url;
+        
+                        // Clear previous error message if any
+                        document.getElementById('dateErrorMessage').textContent = '';
+                    } else {
+                        // Show error message and set its content and style
+                        var errorMessage = 'Please Select a Valid Date.';
+                        var errorMessageElement = document.getElementById('dateErrorMessage');
+                        errorMessageElement.textContent = errorMessage;
+                        errorMessageElement.style.color = 'red'; // Set text color to red
+                    }
+                });
+            });
+        });
+    });
+    
+    
+</script>
 </body>
 </html>

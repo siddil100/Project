@@ -64,3 +64,26 @@ class License(models.Model):
 
     def __str__(self):
         return f"License for {self.user.username}"
+    
+
+
+
+
+
+
+
+class EventOption(models.Model):
+    CATEGORY_CHOICES = (
+        ('wedding_events', 'Wedding Events'),
+        ('pre_wedding_events', 'Pre Wedding Events'),
+        ('post_wedding_events', 'Post Wedding Events'),
+    )
+    category = models.CharField(max_length=40, choices=CATEGORY_CHOICES)
+    event = models.CharField(max_length=20)
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    image = models.ImageField(upload_to='food_images/')
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+
+    def __str__(self):
+        return self.name

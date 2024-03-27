@@ -65,6 +65,7 @@ from myadmin.forms import *
 
 
 
+@login_required(login_url='accounts:login')
 def edit_package(request, pk):
     package = get_object_or_404(Package, pk=pk)
     if request.method == 'POST':
@@ -83,6 +84,7 @@ def edit_package(request, pk):
 from django.shortcuts import render, redirect
 from .forms import FoodOptionForm
 
+@login_required(login_url='accounts:login')
 def add_food_item(request):
     # Check if the user has a valid license
     if not License.objects.filter(user=request.user, is_valid=True).exists():
@@ -106,6 +108,7 @@ def add_food_item(request):
 
 from .forms import DecorationOptionForm  
 
+@login_required(login_url='accounts:login')
 def add_decorations(request):
      # Check if the user has a valid license
     if not License.objects.filter(user=request.user, is_valid=True).exists():
@@ -125,12 +128,43 @@ def add_decorations(request):
 
 
 
+
+from .forms import EventOptionForm  
+
+@login_required(login_url='accounts:login')
+
+
+def add_events(request):
+    # Check if the user has a valid license
+    if not License.objects.filter(user=request.user, is_valid=True).exists():
+        return redirect('destmanager:upload_license')
+
+    if request.method == 'POST':
+        form = EventOptionForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('destmanager:eventhome')
+        else:
+            # Print form errors to the console
+            print(form.errors)
+            
+    else:
+        form = DecorationOptionForm()
+    return render(request, 'destmanager/add_events.html', {'form': form})
+
+
+
+
+
+
 from django.shortcuts import render, redirect
 from .models import License
 from .forms import LicenseForm
 import logging
 
 logger = logging.getLogger(__name__)
+
+@login_required(login_url='accounts:login')
 def upload_license(request):
     user = request.user
     try:

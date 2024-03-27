@@ -244,9 +244,12 @@
                                         <p class="card-text">Location: {{ package.location }}</p>
                                         <p class="card-text">Star Rating: {{ package.star_rating }}</p>
                                         <p class="card-text">Meal Preference: {{ package.meal_preference }}</p>
+                                        <p class="card-text">Meal Subcategory: {{ package.subcategory }}</p>
                                         <p class="card-text">Attendees: {{ package.attendees }}</p>
                                         <p class="card-text">Days Count: {{ package.days_count }}</p>
                                         <p class="card-text">Program Count: {{ package.program_count }}</p>
+                                        <p class="card-text">Decoration: {{ package.dectype }}</p>
+                                        <p class="card-text">Decoration Subtype: {{ package.subtype }}</p>
                                         <p class="card-text">Price:INR ₹{{ package.price }}</p>
                                         <a href="{% url 'myadmin:edit_package' package.id %}" class="btn btn-primary">Edit</a>
                                         <a href="{% url 'myadmin:delete_package' package.id %}" class="btn btn-danger">Disable</a>

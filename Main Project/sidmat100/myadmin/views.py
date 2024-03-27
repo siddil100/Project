@@ -698,7 +698,8 @@ def suspend_manager(request, user_id):
 
 from django.shortcuts import render
 from destmanager.models import License
-
+@never_cache
+@login_required(login_url='accounts:login')
 def license_list(request):
     licenses = License.objects.select_related('user').all()
     # Fetch related EventManager objects for each user
