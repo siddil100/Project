@@ -14,3 +14,25 @@ class PackageBooking(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - {self.package.package_name}'
+    
+
+
+
+
+
+class CustomPackageBooking(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    subscription_date = models.DateTimeField(null=True, blank=True)
+    event_date = models.DateTimeField(null=True, blank=True)
+    payment_id = models.CharField(max_length=100, null=True, blank=True)
+    package_name = models.CharField(max_length=255)
+    decor_type = models.CharField(max_length=255)
+    
+    event_type = models.CharField(max_length=255)
+
+    food_type = models.CharField(max_length=255)
+
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.user.username}'s Booking - {self.package_name}"

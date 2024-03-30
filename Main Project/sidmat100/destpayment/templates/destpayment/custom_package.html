@@ -1,0 +1,58 @@
+<!-- booking_form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Package Booking</title>
+</head>
+<body>
+  <h1>Custom Package Booking</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="id_decor_type">Decoration Type:</label><br>
+    {% for id, label, image_url in decor_choices %}
+      <input type="checkbox" id="decor_type_{{ id }}" name="decor_type" value="{{ id }}">
+      <label for="decor_type_{{ id }}">
+        {{ label }}
+        <img src="{{ image_url }}" alt="Decor Image" width="100" height="100">
+      </label><br>
+    {% endfor %}
+    <br>
+
+    <label for="id_event_type">Event Type:</label><br>
+    {% for id, label, image_url in event_choices %}
+      <input type="checkbox" id="event_type_{{ id }}" name="event_type" value="{{ id }}">
+      <label for="event_type_{{ id }}">
+        {{ label }}
+        <img src="{{ image_url }}" alt="Event Image" width="100" height="100">
+      </label><br>
+    {% endfor %}
+    <br>
+
+    <label for="id_food_type">Food Type:</label><br>
+    {% for id, label, image_url in food_choices %}
+      <input type="checkbox" id="food_type_{{ id }}" name="food_type" value="{{ id }}">
+      <label for="food_type_{{ id }}">
+        {{ label }}
+        <img src="{{ image_url }}" alt="Food Image" width="100" height="100">
+      </label><br>
+    {% endfor %}
+    <br>
+
+    <label for="id_event_date">Event Date:</label>
+    {{ form.event_date }}
+    <br>
+
+    <label for="id_package_name">Package Name:</label>
+    {{ form.package_name }}
+    <br>
+
+    <label for="id_price">Price:</label>
+    {{ form.price }}
+    <br>
+
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>

@@ -14,6 +14,7 @@ urlpatterns = [
 
     path('render-payment-success/', views.render_payment_success, name='render_payment_success'),
     path('download-pdf/', views.download_pdf, name='download_pdf'),
+    path('custompackage/', views.custom_package, name='custompackage'),
    
 
 ]

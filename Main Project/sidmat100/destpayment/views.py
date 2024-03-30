@@ -59,6 +59,44 @@ def book_package(request, package_id):
         return render(request, 'destpayment/book_package.html', {'package': package, 'event_date': event_date, 'payment': payment})
     else:
         return render(request, 'destpayment/book_package.html', {'package': package,'event_date': event_date,})
+    
+
+
+
+
+
+from django.shortcuts import render
+from destmanager.models import FoodOption, DecorationOption, EventOption
+from destmanager.forms import BookingForm  # Assuming you have a BookingForm defined in forms.py
+
+
+
+# views.py
+
+def custom_package(request):
+    if request.method == 'POST':
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            booking = form.save(commit=False)
+            booking.user = request.user  # Set the user ID
+            booking.save()
+            return redirect('success_page')  # Redirect to success page
+    else:
+        form = BookingForm()
+
+    # Fetch choices with images for rendering the form
+    decor_choices_with_images = [(choice.id, f"{choice.name} ({choice.type}, {choice.subtype}, {choice.description}, {choice.price})", choice.image.url) for choice in DecorationOption.objects.all()]
+    event_choices_with_images = [(choice.id, f"{choice.name} ({choice.category}, {choice.event}, {choice.description}, {choice.price})", choice.image.url) for choice in EventOption.objects.all()]
+    food_choices_with_images = [(choice.id, f"{choice.name} ({choice.category}, {choice.subcategory}, {choice.description}, {choice.price})", choice.image.url) for choice in FoodOption.objects.all()]
+
+    return render(request, 'destpayment/custom_package.html', {
+        'form': form,
+        'decor_choices': decor_choices_with_images,
+        'event_choices': event_choices_with_images,
+        'food_choices': food_choices_with_images
+    })
+
+
 
 
 

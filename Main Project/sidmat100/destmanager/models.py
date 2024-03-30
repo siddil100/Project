@@ -19,6 +19,8 @@ class FoodOption(models.Model):
 
     def __str__(self):
         return self.name
+    
+    
 
     
 
@@ -42,6 +44,8 @@ class DecorationOption(models.Model):
     def __str__(self):
         return self.name
     
+
+  
 
 
 
@@ -68,7 +72,7 @@ class License(models.Model):
 
 
 
-
+from django.utils.html import mark_safe
 
 
 
@@ -87,3 +91,5 @@ class EventOption(models.Model):
 
     def __str__(self):
         return self.name
+    
+   
