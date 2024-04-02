@@ -61,7 +61,7 @@
 </head>
 <body>
     <div class="center">
-        <form id="paymentForm" class="payment-form" method="POST" action="{% url 'destpayment:payment_success' %}">
+        <form id="paymentForm" class="payment-form" method="POST" action="{% url 'destpayment:custompayment_success' %}">
             {% csrf_token %}
 
             <h3>Book Package!</h3>
@@ -71,7 +71,7 @@
             <input type="hidden" name="payment_id" id="payment_id">
             <!-- Hidden input field to store package ID -->
 <input type="hidden" name="package_id" value="{{ package.id }}">
-<input type="hidden" name="event_date" value="{{ event_date }}">
+
 
 
 

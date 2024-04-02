@@ -246,7 +246,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    {% if package_bookings %}
+                    {% if custom_package_bookings %}
     <table class="table table-bordered">
         <thead class="thead-dark">
             <tr>
@@ -254,21 +254,26 @@
                 <th>Contact</th>
                 <th>Package Name</th>
                 <th>View Package</th>
-                
                 <th>Receipt</th>
+                
+                
             </tr>
         </thead>
-        <tbody>
-            {% for booking in package_bookings %}
-            <tr>
-                <td>{{ booking.user.personaldetails.first_name }} {{ booking.user.personaldetails.last_name }}</td>
-                <td>{{ booking.user.personaldetails.phone_number }}</td>
-                <td>{{ booking.package.package_name }}</td>
-                <td><a href="{% url 'destmanager:view_package' booking.package.pk %}" class="btn btn-info">View Details</a></td>
-                
-               <td> <a href="{{ booking.receipt.url }}" class="btn btn-success" download>Download Receipt</a> </td>
-            </tr>
-            {% endfor %}
+        {% for booking in custom_package_bookings %}
+                                    <tr>
+                                        <td>{{ booking.user.personaldetails.first_name }} {{ booking.user.personaldetails.last_name }}</td>
+                                        <td>{{ booking.user.personaldetails.phone_number }}</td>
+                                        <td>{{ booking.package_name }}</td>
+                                        <td><a href="{% url 'destmanager:view_custom_package' booking.pk %}" class="btn btn-info">View Details</a></td>
+                                        <td>
+                                            {% if booking.receipt %}
+                                                <a href="{{ booking.receipt.url }}" class="btn btn-success" download>Download Receipt</a>
+                                            {% else %}
+                                                NA
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
         </tbody>
     </table>
 {% else %}

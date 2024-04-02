@@ -80,18 +80,27 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'destmanager:eventhome' %}">Home</a>
                 </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="{% url 'destmanager:package_booking_list' %}">Booked Packages</a>
-    
-    
+                <li class="nav-item dropdown ">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Booked Packages
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'destmanager:package_booking_list' %}">Normal Packages</a>
+                        <a class="dropdown-item" href="{% url 'destmanager:custom_booking_list' %}">Custom Packages</a>
+                        <!-- Add more dropdown items as needed -->
+                    </div>
                 </li>
-                <li class="nav-item active">
+                
+                <li class="nav-item ">
                     <a class="nav-link" href="{% url 'destmanager:addfood' %}">Add Food Item</a>
                     <li>
 
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'destmanager:add_decor' %}">Add Decoration</a>
                             <li>
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="{% url 'destmanager:addevents' %}">Add Events</a>
+                                    <li>
 
                                 {% if request.user.license.is_valid %}
 <!-- Display tick mark if the user's license is valid -->
@@ -235,5 +244,9 @@
     });
 </script>    
     
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

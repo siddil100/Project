@@ -51,6 +51,34 @@ def package_booking_list(request):
 
 
 
+from django.db.models import Q
+
+
+
+def custom_booking_list(request):
+    # Get the event manager associated with the logged-in user
+    current_user = request.user
+    try:
+        event_manager = EventManager.objects.get(user=current_user)
+        location = event_manager.location
+
+        # Filter custom package bookings based on the location of the event manager
+        custom_package_bookings = CustomPackageBooking.objects.filter(Q(location__iexact=location) | Q(location__icontains=location))
+        
+        # Check if the user has a valid license
+        if License.objects.filter(user=current_user, is_valid=True).exists():
+            custom_package_bookings = CustomPackageBooking.objects.filter(Q(location__iexact=location) | Q(location__icontains=location))
+        else:
+            # Redirect to upload_license view if is_valid is not true
+            return redirect('destmanager:upload_license')
+    except EventManager.DoesNotExist:
+        # Handle the case where the current user is not associated with any event manager
+        custom_package_bookings = []
+
+    return render(request, 'destmanager/custom_bookinglist.html', {'custom_package_bookings': custom_package_bookings})
+
+
+
 
 from django.shortcuts import render, get_object_or_404
 from myadmin.models import *
@@ -59,6 +87,16 @@ from myadmin.models import *
 def view_package(request, package_id):
     package = get_object_or_404(Package, pk=package_id)
     return render(request, 'destmanager/view_package.html', {'package': package})
+
+
+
+
+
+def view_custom_package(request, pk):
+    # Retrieve the custom package booking object
+    custom_package = get_object_or_404(CustomPackageBooking, pk=pk)
+
+    return render(request, 'destmanager/view_custom_package.html', {'custom_package': custom_package})
 
 
 from myadmin.forms import *

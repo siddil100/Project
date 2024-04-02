@@ -1,58 +1,349 @@
-<!-- booking_form.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Custom Package Booking</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .form-check-input:hover,
+    .form-check-label:hover {
+      background-color: #e9ecef; /* Change to your desired hover background color */
+    }
+  
+    /* Pop-out effect */
+    .form-check-input,
+    .form-check-label {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+  
+    .form-check-input:hover,
+    .form-check-label:hover {
+      transform: scale(1.1); /* Scale up to 110% size on hover */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add a subtle shadow effect */
+    }
+
+
+
+
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      padding-top: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      font-family: 'Arial Black', sans-serif;
+    }
+
+    form {
+      max-width: 800px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card {
+      margin-bottom: 20px;
+    }
+
+    .form-check-label {
+      display: flex;
+      align-items: center;
+    }
+
+    .form-check-label img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-right: 15px;
+    }
+
+    button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+
+
+
+    .text-danger {
+      color: red;
+    }
+    
+  </style>
 </head>
 <body>
   <h1>Custom Package Booking</h1>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <label for="id_decor_type">Decoration Type:</label><br>
-    {% for id, label, image_url in decor_choices %}
-      <input type="checkbox" id="decor_type_{{ id }}" name="decor_type" value="{{ id }}">
-      <label for="decor_type_{{ id }}">
-        {{ label }}
-        <img src="{{ image_url }}" alt="Decor Image" width="100" height="100">
-      </label><br>
-    {% endfor %}
-    <br>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Decoration Type:</h5>
+              {% for id, label, image_url in decor_choices %}
+                <div class="form-check">
+                  <input type="checkbox" id="decor_type_{{ id }}" name="decor_type" value="{{ id }}" class="form-check-input" >
 
-    <label for="id_event_type">Event Type:</label><br>
-    {% for id, label, image_url in event_choices %}
-      <input type="checkbox" id="event_type_{{ id }}" name="event_type" value="{{ id }}">
-      <label for="event_type_{{ id }}">
-        {{ label }}
-        <img src="{{ image_url }}" alt="Event Image" width="100" height="100">
-      </label><br>
-    {% endfor %}
-    <br>
+                  <label for="decor_type_{{ id }}" class="form-check-label">
+                    <img src="{{ image_url }}" alt="Decor Image">
+                    {{ label }}
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
 
-    <label for="id_food_type">Food Type:</label><br>
-    {% for id, label, image_url in food_choices %}
-      <input type="checkbox" id="food_type_{{ id }}" name="food_type" value="{{ id }}">
-      <label for="food_type_{{ id }}">
-        {{ label }}
-        <img src="{{ image_url }}" alt="Food Image" width="100" height="100">
-      </label><br>
-    {% endfor %}
-    <br>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Event Type:</h5>
+              {% for id, label, image_url in event_choices %}
+                <div class="form-check">
+                  <input type="checkbox" id="event_type_{{ id }}" name="event_type" value="{{ id }}" class="form-check-input" >
 
-    <label for="id_event_date">Event Date:</label>
-    {{ form.event_date }}
-    <br>
+                  <label for="event_type_{{ id }}" class="form-check-label">
+                    <img src="{{ image_url }}" alt="Event Image">
+                    {{ label }}
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
 
-    <label for="id_package_name">Package Name:</label>
-    {{ form.package_name }}
-    <br>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Food Type:</h5>
+              {% for id, label, image_url in food_choices %}
+                <div class="form-check">
+                  <input type="checkbox" id="food_type_{{ id }}" name="food_type" value="{{ id }}" class="form-check-input">
 
-    <label for="id_price">Price:</label>
-    {{ form.price }}
-    <br>
+                  <label for="food_type_{{ id }}" class="form-check-label">
+                    <img src="{{ image_url }}" alt="Food Image">
+                    {{ label }}
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
 
-    <button type="submit">Submit</button>
-  </form>
+          <div class="form-group">
+            <label for="id_event_date">Event Date:</label>
+            <input type="date" id="id_event_date" name="event_date" class="form-control" required>
+            <div id="date_error" class="text-danger"></div> <!-- Error message container -->
+          </div>
+          
+
+          <div class="form-group">
+            <label for="id_package_name">Package Name:</label>
+            <input type="text" id="id_package_name" name="package_name" class="form-control" required>
+            <div id="name_error" class="text-danger"></div> <!-- Error message container -->
+          </div>
+          
+
+          <div class="form-group">
+            <label for="id_price">Price:</label>
+            <input type="text" id="id_price" name="price" class="form-control" readonly>
+            <span id="price_display"></span>
+          </div>
+          
+
+          <div class="form-group">
+            <label for="id_attendees">Attendees:</label>
+            <input type="number" id="id_attendees" name="attendees" class="form-control" required>
+            <div id="attendees_error" class="text-danger"></div> <!-- Error message container -->
+          </div>
+          
+
+          <div class="form-group">
+            <label for="id_location">Location:</label>
+            <select name="location" id="id_location" class="form-control" required>
+              <option value="">Select Location</option>
+              <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+              <option value="Kollam">Kollam</option>
+              <option value="Pathanamthitta">Pathanamthitta</option>
+              <option value="Alappuzha">Alappuzha</option>
+              <option value="Kottayam">Kottayam</option>
+              <option value="Idukki">Idukki</option>
+              <option value="Ernakulam">Ernakulam</option>
+              <option value="Thrissur">Thrissur</option>
+              <option value="Palakkad">Palakkad</option>
+              <option value="Malappuram">Malappuram</option>
+              <option value="Kozhikode">Kozhikode</option>
+              <option value="Wayanad">Wayanad</option>
+              <option value="Kannur">Kannur</option>
+              <option value="Kasaragod">Kasaragod</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+  <!-- Add this script at the bottom of your HTML file -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      // Function to calculate and update the price for a specific type (decor, event, or food)
+      function updateTotalPrice() {
+        const types = ['decor', 'event', 'food'];
+        let total = 0;
+        const attendees = parseInt($("#id_attendees").val()) || 0; // Get the number of attendees
+        
+        // Iterate through each type and fetch prices for selected options
+        Promise.all(types.map(type => {
+          const selectedOptions = $(`input[name='${type}_type']:checked`);
+    
+          // Calculate the total price for this type
+          return Promise.all(selectedOptions.toArray().map(checkbox => {
+            const optionID = $(checkbox).val();
+            return fetch(`/destpayment/get_${type}_price/?id=${optionID}`)
+              .then(response => response.json())
+              .then(data => parseFloat(data.price))
+              .catch(error => {
+                console.error('Error fetching price:', error);
+                return 0; // Return 0 in case of error
+              });
+          })).then(prices => {
+            const typeTotal = prices.reduce((acc, price) => acc + price, 0) * attendees; // Multiply by attendees
+            total += typeTotal; // Add this type's total to overall total
+          });
+        })).then(() => {
+          updateTotalDisplay(total.toFixed(2)); // Update the total display after all fetches are done
+        });
+      }
+    
+      // Function to update the total price display
+      function updateTotalDisplay(total) {
+        $("#price_display").text(`Total Price: ₹${total}`);
+        $("#id_price").val(total); // Update the hidden price field value
+      }
+    
+      // Attach change event listeners to checkboxes for each type and attendees input
+      $("input[name='decor_type'], input[name='event_type'], input[name='food_type'], #id_attendees").change(function() {
+        // Call updateTotalPrice to recalculate the total price
+        updateTotalPrice();
+      });
+    });
+    
+
+    
+    
+
+
+
+
+    $(document).ready(function() {
+      // Get today's date
+      const today = new Date();
+      today.setDate(today.getDate() + 1); // Set to tomorrow
+    
+      // Set the minimum date for the input field
+      const minDate = today.toISOString().split('T')[0];
+      $("#id_event_date").attr('min', minDate);
+    
+      // Function to validate the selected date
+      function validateDate() {
+        const selectedDate = new Date($("#id_event_date").val());
+        if (selectedDate < today) {
+          $("#date_error").text("Please select a date from tomorrow onwards.").show();
+          return false;
+        } else {
+          $("#date_error").text("").hide();
+          return true;
+        }
+      }
+    
+      // Attach change event listener to the date input
+      $("#id_event_date").change(validateDate);
+    
+      // Optional: You can also trigger the validation on page load
+      validateDate();
+    });
+    
+
+
+
+
+
+
+    $(document).ready(function() {
+      // Function to validate package name
+      function validatePackageName() {
+        const packageName = $("#id_package_name").val().trim();
+    
+        // Regular expression to check for alphabets only
+        const regex = /^[a-zA-Z ]+$/;
+    
+        if (packageName.length < 3 || packageName.length > 20 || !regex.test(packageName)) {
+          $("#name_error").text("Package name must contain alphabets only (minimum 3 characters, maximum 20 characters).").show();
+          return false;
+        } else {
+          $("#name_error").text("").hide();
+          return true;
+        }
+      }
+    
+      // Attach keyup event listener to the package name input
+      $("#id_package_name").keyup(validatePackageName);
+    
+      // Optional: You can also trigger the validation on input blur
+      $("#id_package_name").blur(validatePackageName);
+    });
+    
+    
+
+
+
+
+
+    $(document).ready(function() {
+      // Function to validate number of attendees
+      function validateAttendees() {
+        const attendees = $("#id_attendees").val();
+    
+        if (attendees === '' || isNaN(attendees) || attendees < 1 || attendees > 100 || attendees % 1 !== 0) {
+          $("#attendees_error").text("Please enter a valid integer between 1 and 100.").show();
+          return false;
+        } else {
+          $("#attendees_error").text("").hide();
+          return true;
+        }
+      }
+    
+      // Attach input event listener to the attendees input
+      $("#id_attendees").on("input", validateAttendees);
+    
+      // Optional: You can also trigger the validation on input blur
+      $("#id_attendees").blur(validateAttendees);
+    });
+    
+    
+</script>
+
 </body>
 </html>
