@@ -71,6 +71,11 @@ from destmanager.forms import BookingForm  # Assuming you have a BookingForm def
 
 
 
+
+def proceed_tocustom(request):
+    return render(request, 'destpayment/proceed_tocustom.html')
+
+from django.db.models import Max
 # views.py
 
 def custom_package(request):
@@ -79,6 +84,13 @@ def custom_package(request):
         if form.is_valid():
             booking = form.save(commit=False)
             booking.user = request.user  # Set the user ID
+            
+            # Generate a unique package name starting with "custom"
+            latest_package = CustomPackageBooking.objects.aggregate(Max('id'))['id__max']
+            latest_id = 1 if latest_package is None else latest_package + 1
+            package_name = f"custom{latest_id}"
+            booking.package_name = package_name
+            
             booking.save()
             form.save_m2m()
             
@@ -90,9 +102,9 @@ def custom_package(request):
         form = BookingForm()
 
     # Fetch choices with images for rendering the form
-    decor_choices_with_images = [(choice.id, f"{choice.name} ({choice.type}, {choice.subtype}, {choice.description}, {choice.price})", choice.image.url) for choice in DecorationOption.objects.all()]
-    event_choices_with_images = [(choice.id, f"{choice.name} ({choice.category}, {choice.event}, {choice.description}, {choice.price})", choice.image.url) for choice in EventOption.objects.all()]
-    food_choices_with_images = [(choice.id, f"{choice.name} ({choice.category}, {choice.subcategory}, {choice.description}, {choice.price})", choice.image.url) for choice in FoodOption.objects.all()]
+    decor_choices_with_images = [(choice.id, f"{choice.name} ({choice.type},  {choice.description}, INR ₹ {choice.price} Per Sq Ft)", choice.image.url) for choice in DecorationOption.objects.all()]
+    event_choices_with_images = [(choice.id, f"{choice.name} ({choice.category},  {choice.description}, INR ₹ {choice.price} Per event )", choice.image.url) for choice in EventOption.objects.all()]
+    food_choices_with_images = [(choice.id, f"{choice.name} ({choice.category},  {choice.description}, INR ₹ {choice.price} Per Plate)", choice.image.url) for choice in FoodOption.objects.all()]
 
     return render(request, 'destpayment/custom_package.html', {
         'form': form,
@@ -100,6 +112,7 @@ def custom_package(request):
         'event_choices': event_choices_with_images,
         'food_choices': food_choices_with_images
     })
+
 
 
 
@@ -186,6 +199,15 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import CustomPackageBooking
 
+
+import qrcode
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+import base64
+
+
+
 def custompayment_success(request):
     if request.method == 'POST':
         print("POST data:", request.POST)
@@ -207,8 +229,30 @@ def custompayment_success(request):
             filename = f"receipt_{booking.id}.pdf"  # Unique filename for each receipt
             booking.receipt.save(filename, ContentFile(pdf_data))
 
+
+
+            subscription_date_formatted = booking.subscription_date.strftime("%d-%m-%Y")
+            event_date_formatted = booking.event_date.strftime("%d-%m-%Y")
+            event_date_from_formatted = booking.event_datefrom.strftime("%d-%m-%Y")
+            event_date_to_formatted = booking.event_dateto.strftime("%d-%m-%Y")
+            # Generate QR code with booked package details
+            package_details = f"Package ID: {booking.id}, User: {current_user.username}, Subscription Date: {subscription_date_formatted}, Event Date: {event_date_formatted}, Payment ID: {booking.payment_id}, Package Name: {booking.package_name}, Decor Type: {', '.join([str(decor) for decor in booking.decor_type.all()])}, Event Type: {', '.join([str(event) for event in booking.event_type.all()])}, Food Type: {', '.join([str(food) for food in booking.food_type.all()])}, Price: {booking.price}, Attendees: {booking.attendees}, Location: {booking.location}, Event Date From: {event_date_from_formatted}, Event Date To: {event_date_to_formatted}"
+            qr = qrcode.make(package_details)
+
+            # Convert QR code image to bytes
+            buffer = BytesIO()
             
-            return redirect('destpayment:render_custompayment_success')  # Redirect to render_payment_success view
+            qr.save(buffer, format='PNG')
+            qr_image_data = buffer.getvalue()
+            qr_image_base64 = base64.b64encode(qr_image_data).decode()
+
+            # Render template with QR code image data
+            context = {
+                'qr_code': qr_image_base64,
+            }
+            html_content = render_to_string('destpayment/custompayment_success.html', context)
+
+            return HttpResponse(html_content)
         else:
             messages.error(request, 'Booking not found or does not belong to the current user.')
             return redirect('destpayment:error_page')  # Redirect to error_page in destpayment app

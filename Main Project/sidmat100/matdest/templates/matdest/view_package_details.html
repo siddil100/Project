@@ -49,6 +49,19 @@
             background-color: #1abc9c; /* Change dropdown item hover color */
             color: #fff; /* Change dropdown item hover text color */
         }
+
+
+
+        .view-more-section {
+            display: none; /* Initially hide the view more section */
+        }
+
+        .view-more-section.show {
+            display: block; /* Show the view more section when toggled */
+        }
+
+
+        
     </style>
 
     
@@ -69,6 +82,10 @@
                     <a class="nav-link" href="{% url 'matdest:view_packages' %}">Packages</a>
                 </li>
     
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'destpayment:proceed_tocustom' %}">Custom Package</a>
+                </li>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'matdest:my_packages' %}">My Packages</a>
@@ -98,17 +115,27 @@
                 <img src="{{ package.image.url }}" alt="{{ package.package_name }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ package.package_name }}</h5>
+                    <h5 class="card-title"><strong>Facilities Offered</strong></h5>
+
                     <p class="card-text">Star Rating: {{ package.star_rating }}</p>
-                    <p class="card-text">Meal Preference: {{ package.meal_preference }}</p>
-                    <p class="card-text">Meal Subcategory: {{ package.subcategory }}</p>
+                    <p class="card-text">Meal offered: {{ package.meal_preference }}</p>
+                    <div class="view-more-section" id="viewMoreSection1">
+                        <!-- Show Meal Subcategory when expanded -->
+                        <p class="card-text">Meal Subcategory: {{ package.subcategory }}</p>
+                    </div>
                     
                     <p class="card-text">Attendees: {{ package.attendees }}</p>
                     <p class="card-text">Days Count: {{ package.days_count }}</p>
                     <p class="card-text">Program Count: {{ package.program_count }}</p>
-                    <p class="card-text">Decoration Type: {{ package.dectype }}</p>
-                    <p class="card-text">Decoration SubType: {{ package.subtype }}</p>
-                    <p class="card-text">Price:INR ₹{{ package.price }}</p>
+                    <p class="card-text">Decoration offered: {{ package.dectype }}</p>
+                    <div class="view-more-section" id="viewMoreSection2">
+                        <!-- Show Decoration Subtype when expanded -->
+                        <p class="card-text">Decoration Subtype: {{ package.subtype }}</p>
+                    </div>
+                    <p class="card-text">PricePer Pack:INR ₹{{ package.price }}</p>
                     <p class="card-text">Location: {{ package.location }}</p>
+                    <p class="card-text">Description: {{ package.description }}</p>
+                    <button class="btn btn-primary" id="viewMoreBtn">View More details</button>
                     <a href="#" class="btn btn-primary" id="bookPackageBtn" data-toggle="modal" data-target="#dateModal">Book Package</a>
             <a href="{% url 'matdest:view_packages' %}" class="btn btn-secondary">Back</a>
                 </div>
@@ -198,6 +225,30 @@
         });
     </script>        
     
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Toggle both View More sections
+            document.getElementById('viewMoreBtn').addEventListener('click', function() {
+                var viewMoreSection1 = document.getElementById('viewMoreSection1');
+                var viewMoreSection2 = document.getElementById('viewMoreSection2');
+                
+                // Toggle the first section
+                if (viewMoreSection1) {
+                    viewMoreSection1.classList.toggle('show');
+                }
+                
+                // Toggle the second section
+                if (viewMoreSection2) {
+                    viewMoreSection2.classList.toggle('show');
+                }
+            });
+        });
+        
+        
+        
+    </script>
     
 </body>
 </html>

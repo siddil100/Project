@@ -31,7 +31,7 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f4f4f4;
-      padding-top: 20px;
+      
     }
 
     h1 {
@@ -84,11 +84,111 @@
     .text-danger {
       color: red;
     }
+
+
+
+
+
+
+
+    .custom-navbar {
+      background-color: #e72e77; /* Change the background color */
+  }
+  
+  .custom-navbar .navbar-brand {
+      color: #fff; /* Change brand text color */
+      font-weight: bold;
+  }
+  
+  .custom-navbar .navbar-nav .nav-link {
+      color: #fff; /* Change nav link text color */
+      margin-right: 15px; /* Adjust spacing between links */
+  }
+  
+  .custom-navbar .navbar-toggler {
+      border-color: #fff; /* Change toggler button color */
+  }
+  
+  .custom-navbar .navbar-toggler-icon {
+      background-color: #fff; /* Change toggler icon color */
+  }
+  
+  .custom-navbar .nav-item.active .nav-link {
+      color: #f39c12; /* Change active link color */
+      font-weight: bold; /* Make active link bold */
+      text-shadow: 0 0 2px #000; /* Small text stroke effect */
+  }
+  
+  
+  
+  .custom-navbar .dropdown-menu {
+      background-color: #2980b9; /* Change dropdown menu background color */
+  }
+  
+  .custom-navbar .dropdown-item {
+      color: #fff; /* Change dropdown item text color */
+  }
+  
+  .custom-navbar .dropdown-item:hover {
+      background-color: #1abc9c; /* Change dropdown item hover color */
+      color: #fff; /* Change dropdown item hover text color */
+  }
+
+  
     
   </style>
+  
 </head>
 <body>
-  <h1>Custom Package Booking</h1>
+
+
+  <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
+    <a class="navbar-brand" href="{% url 'matrimony:home' %}">DreamWed</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item ">
+                <a class="nav-link" href="{% url 'matdest:desthome' %}">Home</a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'matdest:view_packages' %}">Packages</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'destpayment:custompackage' %}">Custom Package</a>
+            </li>
+        </li>
+        <li class="nav-item ">
+            <a class="nav-link" href="{% url 'matdest:my_packages' %}">My Packages</a>
+        </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role a "button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img src="{{ request.session.profile_image_url }}" alt="Profile Picture" width="40" height="40" class="rounded-circle">
+                    {{ request.user.username }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                    <a class="dropdown-item" href="{% url 'matrimony:myprofile' %}">My Profile</a>
+                    <a class="dropdown-item" href="#">Settings</a>
+                    <a class="dropdown-item" href="{% url 'accounts:password_change' %}">Change Password</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+
+
+
+
+
+  
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-md-10">
@@ -147,20 +247,26 @@
             <input type="date" id="id_event_date" name="event_date" class="form-control" required>
             <div id="date_error" class="text-danger"></div> <!-- Error message container -->
           </div>
-          
+
 
           <div class="form-group">
-            <label for="id_package_name">Package Name:</label>
-            <input type="text" id="id_package_name" name="package_name" class="form-control" required>
-            <div id="name_error" class="text-danger"></div> <!-- Error message container -->
-          </div>
+            <label for="id_event_datefrom">Event period From:</label>
+            <input type="date" id="id_event_datefrom" name="event_datefrom" class="form-control">
+            <div id="datefrom_error" class="text-danger"></div> <!-- Error message container -->
+        </div>
+        
+        <div class="form-group">
+            <label for="id_event_dateto">Event period To:</label>
+            <input type="date" id="id_event_dateto" name="event_dateto" class="form-control" >
+            <div id="dateto_error" class="text-danger"></div> <!-- Error message container -->
+        </div>
+        
           
 
-          <div class="form-group">
-            <label for="id_price">Price:</label>
-            <input type="text" id="id_price" name="price" class="form-control" readonly>
-            <span id="price_display"></span>
-          </div>
+          
+          
+
+          
           
 
           <div class="form-group">
@@ -190,7 +296,12 @@
               <option value="Kasaragod">Kasaragod</option>
             </select>
           </div>
-
+          <div class="form-group">
+            <label for="id_price">Price:</label>
+            <input type="text" id="id_price" name="price" class="form-control" readonly>
+            <span id="price_display"></span>
+          </div>
+          
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
       </div>
@@ -344,6 +455,61 @@
     
     
 </script>
+
+
+<script>
+  $(document).ready(function() {
+    // Function to validate the date range (from date and to date)
+    function validateDateRange() {
+      const fromDate = new Date($("#id_event_datefrom").val());
+      const toDate = new Date($("#id_event_dateto").val());
+      const eventDate = new Date($("#id_event_date").val());
+      const oneDay = 24 * 60 * 60 * 1000; // Number of milliseconds in one day
+
+      // Calculate the difference in days between the two dates
+      const diffDays = Math.round(Math.abs((toDate - fromDate) / oneDay));
+
+      // Get tomorrow's date
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      if (fromDate > eventDate || toDate < eventDate) {
+        $("#dateto_error").text("From and to dates should contain the event date.").show();
+        return false;
+      } else if (fromDate < tomorrow || toDate < tomorrow) {
+        $("#dateto_error").text("From and to dates should be after tomorrow.").show();
+        return false;
+      } else if (diffDays > 7) {
+        $("#dateto_error").text("The difference between from date and to date should not exceed 7 days.").show();
+        return false;
+      } else {
+        $("#dateto_error").text("").hide();
+        return true;
+      }
+    }
+
+    // Function to handle location change and update dates if necessary
+    function handleLocationChange() {
+      const selectedLocation = $("#id_location").val();
+      if (selectedLocation) {
+        // If location is selected, set "from" and "to" dates to event date
+        const eventDate = $("#id_event_date").val();
+        $("#id_event_datefrom").val(eventDate);
+        $("#id_event_dateto").val(eventDate);
+      }
+    }
+
+    // Attach change event listener to the from date and to date inputs
+    $("#id_event_datefrom, #id_event_dateto").change(validateDateRange);
+
+    // Attach change event listener to the location input
+    $("#id_location").change(handleLocationChange);
+  });
+</script>
+
+
+
+
 
 </body>
 </html>

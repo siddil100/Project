@@ -21,9 +21,22 @@ from myadmin.models import Package
 @never_cache
 @login_required(login_url='accounts:login')
 def view_packages(request):
-    packages = Package.objects.all()
-    return render(request, 'matdest/view_packages.html', {'packages': packages})
+    # Retrieve all packages initially
+    packages = Package.objects.filter(pack_status=True)
 
+    # Handle filters if provided in the request
+    location = request.GET.get('location')
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+
+    if location:
+        packages = packages.filter(location__icontains=location)
+    if min_price:
+        packages = packages.filter(price__gte=min_price)
+    if max_price:
+        packages = packages.filter(price__lte=max_price)
+
+    return render(request, 'matdest/view_packages.html', {'packages': packages})
 
 
 

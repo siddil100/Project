@@ -63,4 +63,4 @@ class BookingForm(forms.ModelForm):
 
     class Meta:
         model = CustomPackageBooking
-        fields = ['event_date', 'package_name', 'decor_type', 'event_type', 'food_type', 'price', 'attendees', 'location']
+        fields = ['event_date','event_datefrom','event_dateto',  'decor_type', 'event_type', 'food_type', 'price', 'attendees', 'location']

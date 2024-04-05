@@ -49,6 +49,57 @@
             background-color: #1abc9c; /* Change dropdown item hover color */
             color: #fff; /* Change dropdown item hover text color */
         }
+
+
+
+
+
+        /* Style for form */
+form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Style for form labels */
+label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+/* Style for form inputs */
+input[type="text"],
+input[type="number"] {
+  flex: 1; /* Take up remaining space */
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Style for Apply Filters button */
+button[type="submit"] {
+  margin-top: 10px; /* Adjust the margin-top value as needed */
+  margin-bottom: 15px; /* Space between inputs and button */
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Hover effect for the button */
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+
+
+
+
+        
     </style>
 
     
@@ -67,6 +118,10 @@
                 
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'matdest:view_packages' %}">Packages</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'destpayment:proceed_tocustom' %}">Custom Package</a>
                 </li>
     
             </li>
@@ -94,6 +149,18 @@
     <div class="container">
         <h2 align="center">Packages</h2>
         <div class="row">
+            <form method="GET" action="{% url 'matdest:view_packages' %}">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location">
+            
+                <label for="min_price">Min Price:</label>
+                <input type="number" id="min_price" name="min_price">
+            
+                <label for="max_price">Max Price:</label>
+                <input type="number" id="max_price" name="max_price">
+            
+                <button type="submit">Apply Filters</button>
+            </form>
             {% for package in packages %}
                 <div class="col-md-4 mb-4">
                     <div class="card">
@@ -111,6 +178,9 @@
                         </div>
                     </div>
                 </div>
+                {% empty %}
+                <br>
+                <p>No packages found.</p>
             {% endfor %}
         </div>
     </div>

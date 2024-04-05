@@ -108,7 +108,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Home</a>
+                    <a class="nav-link" href="{% url 'matdest:desthome' %}">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'matdest:view_packages' %}">Packages</a>
@@ -141,7 +141,13 @@
             Thanks, You are awesome! <i class="fas fa-check-circle"></i>
         </h3>
         <p>Congratulations on purchasing our Custom  package! Hope you will have a wonderful Wedding.</p>
-        <a href="{% url 'destpayment:download_custompdf' %}" download="receipt.pdf">Download Receipt</a>
+        <a href="{% url 'destpayment:download_custompdf' %}" class="btn btn-primary mt-3" download="receipt.pdf">Download Receipt</a>
+        <a href="data:image/png;base64,{{ qr_code }}" download="qr_code.png" class="btn btn-primary mt-3">Download QR Code</a>
+        <!-- Include this inside your HTML body where you want to display the QR code -->
+        <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" width="350" height="350">
+        <br>
+        
+
 
         
         <h5>

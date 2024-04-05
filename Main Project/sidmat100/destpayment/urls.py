@@ -18,6 +18,7 @@ urlpatterns = [
     path('render-custompayment-success/', views.render_custompayment_success, name='render_custompayment_success'),
     path('download-pdf/', views.download_pdf, name='download_pdf'),
     path('download-custompdf/', views.download_custompdf, name='download_custompdf'),
+    path('proceed_tocustom/', views.proceed_tocustom, name='proceed_tocustom'),
     path('custompackage/', views.custom_package, name='custompackage'),
     path('get_decor_price/', views.get_decor_price, name='get_decor_price'),
     path('get_event_price/', views.get_event_price, name='get_event_price'),

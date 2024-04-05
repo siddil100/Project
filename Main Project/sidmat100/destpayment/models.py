@@ -35,6 +35,9 @@ class CustomPackageBooking(models.Model):
     location = models.CharField(max_length=100)
     receipt = models.FileField(upload_to='receipts/', null=True, blank=True)
 
+    event_datefrom = models.DateTimeField(null=True, blank=True)
+    event_dateto = models.DateTimeField(null=True, blank=True)
+
 
 
     def __str__(self):

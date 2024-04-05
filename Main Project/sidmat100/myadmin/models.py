@@ -20,6 +20,8 @@ class Package(models.Model):
     location = models.CharField(max_length=100)
     dectype = models.CharField(max_length=10)
     subtype = models.CharField(max_length=20)
+    description = models.TextField(default="No description provided")
+    pack_status = models.BooleanField(default=True) 
 
     def __str__(self):
         return self.package_name

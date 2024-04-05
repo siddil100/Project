@@ -98,6 +98,22 @@
             color: red;
         }
     
+
+        textarea#id_description {
+            width: 100%; /* Make it take full width */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            resize: vertical; /* Allow vertical resizing */
+        }
+    
+        /* Optional: Add styles for the label associated with description */
+        label[for="id_description"] {
+            display: block;
+            margin-bottom: 5px;
+        }
     
 </style>
 </head>
@@ -317,7 +333,10 @@
                           <option value="Kasaragod">Kasaragod</option>
                         </select>
                         
-
+                        <label for="id_description">Description:</label>
+<textarea name="description" id="id_description" rows="4" cols="50" placeholder="Enter description" required></textarea>
+<small id="description_error" style="color: red;"></small>
+<br>
                         
                         <button type="submit">Save Package</button>
                     </form>
@@ -434,6 +453,24 @@
       packageError.textContent = 'Package name must contain only letters and spaces, with a length between 3 and 16 characters.';
     }
   });
+</script>
+
+
+
+
+<script>
+    const descriptionInput = document.getElementById('id_description');
+    const descriptionError = document.getElementById('description_error');
+
+    descriptionInput.addEventListener('input', function() {
+        let description = this.value.trim();
+        let isValid = /^[\d]*[a-zA-Z]+(?:[^\d\s]|[a-zA-Z\d])*$/.test(description); // Regex pattern allowing numbers and characters
+        if (isValid && description.length >= 10 && description.length <= 50) {
+            descriptionError.textContent = ''; // Clear error message
+        } else {
+            descriptionError.textContent = 'Description must be between 10 and 50 characters and should not be only numbers.';
+        }
+    });
 </script>
                 </div>
             </div>

@@ -18,6 +18,8 @@ urlpatterns = [
     path('adview_packages/', views.adview_packages, name='adview_packages'),
     path('package/<int:pk>/edit/', views.edit_package, name='edit_package'),
     path('package/<int:pk>/delete/',views.delete_package, name='delete_package'),
+    path('package/<int:pk>/update_status/', views.update_package_status, name='update_package_status'),
+
     path('add-manager/', views.add_manager, name='add_manager'),
     path('view-manager/', views.view_manager, name='view_manager'),
     path('suspend-manager/<int:user_id>/', views.suspend_manager, name='suspend_manager'),

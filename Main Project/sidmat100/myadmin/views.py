@@ -561,6 +561,18 @@ def delete_package(request, pk):
 
 
 
+def update_package_status(request, pk):
+    # Retrieve the Package instance using the provided pk (primary key)
+    package = get_object_or_404(Package, pk=pk)
+
+    # Toggle pack_status between True and False
+    package.pack_status = not package.pack_status
+    package.save()
+
+    # Redirect to a success URL or another page
+    return redirect('myadmin:adview_packages')
+
+
 import random
 import string
 

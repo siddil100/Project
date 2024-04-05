@@ -252,7 +252,14 @@
                                         <p class="card-text">Decoration Subtype: {{ package.subtype }}</p>
                                         <p class="card-text">Price:INR ₹{{ package.price }}</p>
                                         <a href="{% url 'myadmin:edit_package' package.id %}" class="btn btn-primary">Edit</a>
-                                        <a href="{% url 'myadmin:delete_package' package.id %}" class="btn btn-danger">Disable</a>
+                                        {% if package.pack_status %}
+                <!-- Show Disable button if pack_status is True -->
+                <a href="{% url 'myadmin:update_package_status' pk=package.pk %}" class="btn btn-danger">Disable</a>
+            {% else %}
+                <!-- Show Enable button if pack_status is False -->
+                <a href="{% url 'myadmin:update_package_status' pk=package.pk %}" class="btn btn-success">Enable</a>
+            {% endif %}
+
 
                                         <!-- Add other package details as needed -->
                                     </div>
