@@ -73,6 +73,7 @@ class License(models.Model):
 
 
 from django.utils.html import mark_safe
+from django.utils import timezone
 
 
 
@@ -92,4 +93,33 @@ class EventOption(models.Model):
     def __str__(self):
         return self.name
     
+   
+
+
+
+
+class Scheduling(models.Model):
+    location = models.CharField(max_length=100)
+    
+    limit = models.IntegerField()
+    
+
+    def __str__(self):
+        return self.location
+    
+
+
+
+class SchedulingBooking(models.Model):
+    location = models.CharField(max_length=100)
+    booking_count = models.IntegerField(default=0)
+    limit = models.IntegerField()
+    date = models.DateField(default=timezone.now)
+
+    def __str__(self):
+        return self.location
+
+    
+
+   
    

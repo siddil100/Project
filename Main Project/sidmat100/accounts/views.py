@@ -56,6 +56,15 @@ def login_view(request):
                 # Check if the user has an associated EventManager object
                 try:
                     event_manager = EventManager.objects.get(user=user)
+                    personal_details = PersonalDetails.objects.get(user=user)
+                    if personal_details.profile_image:
+                        request.session['profile_image_url'] = personal_details.profile_image.url  # Store the profile image URL in the session
+                        print("view is called")
+                        profile_image_url = request.session.get('profile_image_url')
+                        print(profile_image_url)
+                    else:
+                        request.session['profile_image_url'] = ''
+                    
                     return redirect('destmanager:eventhome')  # Redirect user to eventhome if EventManager object exists
                 except EventManager.DoesNotExist:
                     pass  # User does not have an EventManager object

@@ -239,3 +239,27 @@ def check_phone_number(request):
         return JsonResponse({'exists': existing_license})
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+
+
+
+
+
+def list_scheduling(request):
+    schedulings = Scheduling.objects.all()
+    return render(request, 'destmanager/list_scheduling.html', {'schedulings': schedulings})
+
+
+
+
+from .models import Scheduling
+
+def update_scheduling(request, scheduling_id):
+    scheduling = get_object_or_404(Scheduling, pk=scheduling_id)
+    
+    if request.method == 'POST':
+        scheduling.location = request.POST.get('location')
+        scheduling.limit = request.POST.get('limit')
+        scheduling.save()
+        return redirect('destmanager:eventhome')  # Redirect to wherever you want after update
+    
+    return render(request, 'destmanager/update_scheduling.html', {'scheduling': scheduling})

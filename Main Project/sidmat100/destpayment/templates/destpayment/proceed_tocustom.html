@@ -135,8 +135,14 @@
                     <a class="nav-link" href="{% url 'destpayment:proceed_tocustom' %}">Custom Package</a>
                 </li>
             </li>
-            <li class="nav-item ">
-                <a class="nav-link" href="{% url 'matdest:my_packages' %}">My Packages</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="packagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    My Packages
+                </a>
+                <div class="dropdown-menu" aria-labelledby="packagesDropdown">
+                    <a class="dropdown-item" href="{% url 'matdest:my_packages' %}">My Packages</a>
+                    <a class="dropdown-item" href="{% url 'matdest:my_custom_packages' %}">Custom Package Bookings</a>
+                </div>
             </li>
             </ul>
             <ul class="navbar-nav ml-auto">

@@ -564,6 +564,7 @@ def update_personaldetails(request):
         if form.is_valid():
             try:
                 updated_personal_details = form.save(commit=False)
+                updated_personal_details.aadhar_valid = True
                 form.save_m2m()
                 updated_personal_details.save()
 

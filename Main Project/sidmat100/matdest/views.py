@@ -40,6 +40,18 @@ def view_packages(request):
 
 
 
+
+
+
+from destpayment.models import CustomPackageBooking
+
+def custom_package_bookings(request):
+    user = request.user
+    custom_package_bookings = CustomPackageBooking.objects.filter(user=user)
+    return render(request, 'matdest/custom_package_bookings.html', {'custom_package_bookings': custom_package_bookings})
+
+
+
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.urls import reverse
@@ -124,3 +136,71 @@ def view_package_details(request, package_id):
     return render(request, 'matdest/view_package_details.html', {'package': package})
 
 
+
+
+def view_mypackage_details(request, package_id):
+    package = get_object_or_404(Package, pk=package_id)
+    return render(request, 'matdest/my_pack_details.html', {'package': package})
+
+
+
+
+
+
+
+def view_custom_package_details(request, booking_id):
+    booking = get_object_or_404(CustomPackageBooking, pk=booking_id)
+    return render(request, 'matdest/view_custom_package_details.html', {'booking': booking})
+
+
+
+
+
+def get_package_location(request):
+    if request.method == 'GET':
+        package_id = request.GET.get('package_id')
+        try:
+            package = Package.objects.get(id=package_id)
+            location = package.location
+            return JsonResponse({'success': True, 'location': location})
+        except Package.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Package not found'})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+
+
+
+
+
+
+
+# views.py
+
+from django.http import JsonResponse
+from destpayment.models import SchedulingBooking
+
+def check_booking_limit(request):
+    if request.method == 'GET':
+        # Get location and date from the AJAX request
+        location = request.GET.get('location')
+        date = request.GET.get('date')
+
+        try:
+            # Retrieve the scheduling booking for the given location and date
+            scheduling_booking = SchedulingBooking.objects.get(location=location, date=date)
+            
+            # Check if booking count has reached the limit
+            if scheduling_booking.booking_count >= scheduling_booking.limit:
+                # If booking limit reached, return booking_full as True
+                return JsonResponse({'booking_full': True})
+            else:
+                # If booking limit not reached, return booking_full as False
+                return JsonResponse({'booking_full': False})
+        except SchedulingBooking.DoesNotExist:
+            # If no scheduling booking exists for the given location and date,
+            # assume booking is not full
+            return JsonResponse({'booking_full': False})
+    else:
+        # If request method is not GET, return an error response
+        return JsonResponse({'error': 'Method not allowed'}, status=405)

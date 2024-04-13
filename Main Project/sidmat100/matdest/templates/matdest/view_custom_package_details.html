@@ -1,0 +1,169 @@
+<!-- view_custom_package_details.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Package Details</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your custom styles -->
+    <style>
+        /* Add your custom CSS styles here */
+        body {
+            background-color: #f8f9fa; /* Set a light background color */
+        }
+        .container {
+            margin-top: 50px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333; /* Adjust title color */
+        }
+        /* Add more custom CSS styles below */
+
+
+
+
+        .custom-navbar {
+            background-color: #e72e77; /* Change the background color */
+        }
+        
+        .custom-navbar .navbar-brand {
+            color: #fff; /* Change brand text color */
+            font-weight: bold;
+        }
+        
+        .custom-navbar .navbar-nav .nav-link {
+            color: #fff; /* Change nav link text color */
+            margin-right: 15px; /* Adjust spacing between links */
+        }
+        
+        .custom-navbar .navbar-toggler {
+            border-color: #fff; /* Change toggler button color */
+        }
+        
+        .custom-navbar .navbar-toggler-icon {
+            background-color: #fff; /* Change toggler icon color */
+        }
+        
+        .custom-navbar .nav-item.active .nav-link {
+            color: #f39c12; /* Change active link color */
+            font-weight: bold; /* Make active link bold */
+            text-shadow: 0 0 2px #000; /* Small text stroke effect */
+        }
+        
+        
+        
+        .custom-navbar .dropdown-menu {
+            background-color: #2980b9; /* Change dropdown menu background color */
+        }
+        
+        .custom-navbar .dropdown-item {
+            color: #fff; /* Change dropdown item text color */
+        }
+        
+        .custom-navbar .dropdown-item:hover {
+            background-color: #1abc9c; /* Change dropdown item hover color */
+            color: #fff; /* Change dropdown item hover text color */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
+        <a class="navbar-brand" href="{% url 'matrimony:home' %}">DreamWed</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'matdest:desthome' %}">Home</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matdest:view_packages' %}">Packages</a>
+                </li>
+                <li class="nav-item dropdown active">
+                <a class="nav-link dropdown-toggle" href="#" id="packagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    My Packages
+                </a>
+                <div class="dropdown-menu" aria-labelledby="packagesDropdown">
+                    <a class="dropdown-item" href="{% url 'matdest:my_packages' %}">My Packages</a>
+                    <a class="dropdown-item" href="{% url 'matdest:my_custom_packages' %}">Custom Package Bookings</a>
+                </div>
+            </li>
+            
+            
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role a "button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ request.session.profile_image_url }}" alt="Profile Picture" width="40" height="40" class="rounded-circle">
+                        {{ request.user.username }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                        <a class="dropdown-item" href="{% url 'matrimony:myprofile' %}">My Profile</a>
+                        <a class="dropdown-item" href="#">Settings</a>
+                        <a class="dropdown-item" href="{% url 'accounts:password_change' %}">Change Password</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Custom Package Details</h1>
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Package Name: {{ booking.package_name }}</h5>
+                        <p class="card-text">Subscription Date: {{ booking.subscription_date|date:"F j, Y" }}</p>
+                        <p class="card-text">Event Date: {{ booking.event_date|date:"F j, Y" }}</p>
+                        <p class="card-text">Price:INR ₹{{ booking.price }}</p>
+                        <p class="card-text">Attendees: {{ booking.attendees }}</p>
+                        <p class="card-text">Location: {{ booking.location }}</p>
+                        <!-- Show associated decoration options -->
+                        <p class="card-text">Decoration Options:</p>
+                        <ul>
+                            {% for decor_option in booking.decor_type.all %}
+                            <li>{{ decor_option }}</li>
+                            {% endfor %}
+                        </ul>
+                        <!-- Show associated event options -->
+                        <p class="card-text">Event Options:</p>
+                        <ul>
+                            {% for event_option in booking.event_type.all %}
+                            <li>{{ event_option }}</li>
+                            {% endfor %}
+                        </ul>
+                        <!-- Show associated food options -->
+                        <p class="card-text">Food Options:</p>
+                        <ul>
+                            {% for food_option in booking.food_type.all %}
+                            <li>{{ food_option }}</li>
+                            {% endfor %}
+                        </ul>
+                        <!-- You can add more details as needed -->
+                        {% if booking.receipt %}
+                        <a href="{{ booking.receipt.url }}" class="btn btn-success" download>Download Receipt</a>
+                        {% else %}
+                        No receipt available
+                        {% endif %}
+                        <a href="{% url 'matdest:my_custom_packages' %}" class="btn btn-primary">Back to My Packages</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Your custom scripts -->
+    <script>
+        // Add your custom JavaScript code here if needed
+    </script>
+</body>
+</html>

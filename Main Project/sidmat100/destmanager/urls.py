@@ -23,4 +23,7 @@ urlpatterns = [
     path('upload/', views.upload_license, name='upload_license'),
     path('check-phone/', views.check_phone_number, name='check_phone_number'),
 
+    path('update-scheduling/<int:scheduling_id>/', views.update_scheduling, name='update_scheduling'),
+    path('list-scheduling/', views.list_scheduling, name='list_scheduling'),
+
 ]

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Packages</title>
+    <!-- Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Add custom CSS if needed */
+
+        .custom-navbar {
+            background-color: #e72e77; /* Change the background color */
+        }
+        
+        .custom-navbar .navbar-brand {
+            color: #fff; /* Change brand text color */
+            font-weight: bold;
+        }
+        
+        .custom-navbar .navbar-nav .nav-link {
+            color: #fff; /* Change nav link text color */
+            margin-right: 15px; /* Adjust spacing between links */
+        }
+        
+        .custom-navbar .navbar-toggler {
+            border-color: #fff; /* Change toggler button color */
+        }
+        
+        .custom-navbar .navbar-toggler-icon {
+            background-color: #fff; /* Change toggler icon color */
+        }
+        
+        .custom-navbar .nav-item.active .nav-link {
+            color: #f39c12; /* Change active link color */
+            font-weight: bold; /* Make active link bold */
+            text-shadow: 0 0 2px #000; /* Small text stroke effect */
+        }
+        
+        
+        
+        .custom-navbar .dropdown-menu {
+            background-color: #2980b9; /* Change dropdown menu background color */
+        }
+        
+        .custom-navbar .dropdown-item {
+            color: #fff; /* Change dropdown item text color */
+        }
+        
+        .custom-navbar .dropdown-item:hover {
+            background-color: #1abc9c; /* Change dropdown item hover color */
+            color: #fff; /* Change dropdown item hover text color */
+        }
+
+
+
+        .view-more-section {
+            display: none; /* Initially hide the view more section */
+        }
+
+        .view-more-section.show {
+            display: block; /* Show the view more section when toggled */
+        }
+
+
+        
+    </style>
+
+    
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
+        <a class="navbar-brand" href="{% url 'matrimony:home' %}">DreamWed</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'matdest:desthome' %}">Home</a>
+                </li>
+                
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'matdest:view_packages' %}">Packages</a>
+                </li>
+    
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'destpayment:proceed_tocustom' %}">Custom Package</a>
+                </li>
+            </li>
+            <li class="nav-item dropdown active">
+                <a class="nav-link dropdown-toggle" href="#" id="packagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    My Packages
+                </a>
+                <div class="dropdown-menu" aria-labelledby="packagesDropdown">
+                    <a class="dropdown-item" href="{% url 'matdest:my_packages' %}">My Packages</a>
+                    <a class="dropdown-item" href="{% url 'matdest:my_custom_packages' %}">Custom Package Bookings</a>
+                </div>
+            </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role a "button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ request.session.profile_image_url }}" alt="Profile Picture" width="40" height="40" class="rounded-circle">
+                        {{ request.user.username }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                        <a class="dropdown-item" href="{% url 'matrimony:myprofile' %}">My Profile</a>
+                        <a class="dropdown-item" href="#">Settings</a>
+                        <a class="dropdown-item" href="{% url 'accounts:password_change' %}">Change Password</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+<body>
+    <body>
+        <div class="container">
+            <div class="card">
+                <img src="{{ package.image.url }}" alt="{{ package.package_name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ package.package_name }}</h5>
+                    <h5 class="card-title"><strong>Facilities Offered</strong></h5>
+
+                    <p class="card-text">Star Rating: {{ package.star_rating }}</p>
+                    <p class="card-text">Meal offered: {{ package.meal_preference }}</p>
+                    <div class="view-more-section" id="viewMoreSection1">
+                        <!-- Show Meal Subcategory when expanded -->
+                        <p class="card-text">Meal Subcategory: {{ package.subcategory }}</p>
+                    </div>
+                    
+                    <p class="card-text">Attendees: {{ package.attendees }}</p>
+                    <p class="card-text">Days Count: {{ package.days_count }}</p>
+                    <p class="card-text">Program Count: {{ package.program_count }}</p>
+                    <p class="card-text">Decoration offered: {{ package.dectype }}</p>
+                    <div class="view-more-section" id="viewMoreSection2">
+                        <!-- Show Decoration Subtype when expanded -->
+                        <p class="card-text">Decoration Subtype: {{ package.subtype }}</p>
+                    </div>
+                    <p class="card-text">Price Per Pack:INR ₹{{ package.price }}</p>
+                    <p class="card-text">Location: {{ package.location }}</p>
+                    <p class="card-text">Description: {{ package.description }}</p>
+                    <button class="btn btn-primary" id="viewMoreBtn">View More details</button>
+                    
+            <a href="{% url 'matdest:view_packages' %}" class="btn btn-secondary">Back</a>
+                </div>
+            </div>
+        </div>
+
+ 
+    <!-- Bootstrap JS script if needed -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Toggle both View More sections
+            document.getElementById('viewMoreBtn').addEventListener('click', function() {
+                var viewMoreSection1 = document.getElementById('viewMoreSection1');
+                var viewMoreSection2 = document.getElementById('viewMoreSection2');
+                
+                // Toggle the first section
+                if (viewMoreSection1) {
+                    viewMoreSection1.classList.toggle('show');
+                }
+                
+                // Toggle the second section
+                if (viewMoreSection2) {
+                    viewMoreSection2.classList.toggle('show');
+                }
+            });
+        });
+        
+        
+        
+    </script>
+    
+</body>
+</html>

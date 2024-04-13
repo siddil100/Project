@@ -30,6 +30,7 @@ urlpatterns = [
     path("matchat/", include('matchat.urls')),
     path("matpayment/", include('matpayment.urls')),
     path("matdest/", include('matdest.urls')),
+    path("matgp/", include('matgp.urls')),
     path("destpayment/", include('destpayment.urls')),
     path("destmanager/", include('destmanager.urls')),
 

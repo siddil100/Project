@@ -151,7 +151,9 @@ def get_food_price(request):
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from .models import PackageBooking
+from destmanager.models import *
 import datetime
+from django.db.models import F
 
 
 
@@ -173,6 +175,29 @@ def payment_success(request):
             package_booking.subscription_date = timezone.now()
             package_booking.event_date = event_date  # Set the event date
             package_booking.save()
+
+
+
+            try:
+                scheduling = Scheduling.objects.get(location=package_booking.package.location)
+                scheduling_booking = SchedulingBooking.objects.get(location=scheduling, date=event_date)
+                
+                scheduling_booking.booking_count = F('booking_count') + 1
+                scheduling_booking.limit = scheduling.limit
+                scheduling_booking.save()
+            except Scheduling.DoesNotExist:
+    # If there is no corresponding Scheduling for the location, handle it accordingly
+                pass
+                
+                # Create a new SchedulingBooking instance if none exists for the location and date
+            except SchedulingBooking.DoesNotExist:
+    # Create a new SchedulingBooking instance if none exists for the location and date
+                scheduling_booking = SchedulingBooking.objects.create(
+                    location=package_booking.package.location,
+                    booking_count=1,  # Initial booking count is 1
+                    limit=scheduling.limit,  # Set limit based on Scheduling
+                    date=event_date  # Set the event date
+                )
         except PackageBooking.DoesNotExist:
             # Create a new PackageBooking object if none exists for the user with the same package ID
             package_booking = PackageBooking.objects.create(
@@ -182,6 +207,29 @@ def payment_success(request):
                 subscription_date=timezone.now(),
                 event_date=event_date  # Set the event date
             )
+            
+            # Update the corresponding SchedulingBooking instance
+            try:
+                scheduling = Scheduling.objects.get(location=package_booking.package.location)
+                scheduling_booking = SchedulingBooking.objects.get(location=scheduling, date=event_date)
+                
+                scheduling_booking.booking_count = F('booking_count') + 1
+                scheduling_booking.limit = scheduling.limit
+                scheduling_booking.save()
+            except Scheduling.DoesNotExist:
+    # If there is no corresponding Scheduling for the location, handle it accordingly
+                pass
+                
+                # Create a new SchedulingBooking instance if none exists for the location and date
+            except SchedulingBooking.DoesNotExist:
+    # Create a new SchedulingBooking instance if none exists for the location and date
+                scheduling_booking = SchedulingBooking.objects.create(
+                    location=package_booking.package.location,
+                    booking_count=1,  # Initial booking count is 1
+                    limit=scheduling.limit,  # Set limit based on Scheduling
+                    date=event_date  # Set the event date
+                )
+
 
         pdf_response = generate_pdf_receipt(package_booking)
 
@@ -236,7 +284,7 @@ def custompayment_success(request):
             event_date_from_formatted = booking.event_datefrom.strftime("%d-%m-%Y")
             event_date_to_formatted = booking.event_dateto.strftime("%d-%m-%Y")
             # Generate QR code with booked package details
-            package_details = f"Package ID: {booking.id}, User: {current_user.username}, Subscription Date: {subscription_date_formatted}, Event Date: {event_date_formatted}, Payment ID: {booking.payment_id}, Package Name: {booking.package_name}, Decor Type: {', '.join([str(decor) for decor in booking.decor_type.all()])}, Event Type: {', '.join([str(event) for event in booking.event_type.all()])}, Food Type: {', '.join([str(food) for food in booking.food_type.all()])}, Price: {booking.price}, Attendees: {booking.attendees}, Location: {booking.location}, Event Date From: {event_date_from_formatted}, Event Date To: {event_date_to_formatted}"
+            package_details = f"Package ID: {booking.id}, UserName: {current_user.username}, Subscription Date: {subscription_date_formatted}, Event Date: {event_date_formatted}, Payment ID: {booking.payment_id}, Package Name: {booking.package_name}, Decor Type: {', '.join([str(decor) for decor in booking.decor_type.all()])}, Event Type: {', '.join([str(event) for event in booking.event_type.all()])}, Food Type: {', '.join([str(food) for food in booking.food_type.all()])}, Price: {booking.price}, Attendees: {booking.attendees}, Location: {booking.location}, Event Date From: {event_date_from_formatted}, Event Date To: {event_date_to_formatted}"
             qr = qrcode.make(package_details)
 
             # Convert QR code image to bytes

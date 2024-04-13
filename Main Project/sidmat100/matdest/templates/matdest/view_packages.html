@@ -125,8 +125,14 @@ button[type="submit"]:hover {
                 </li>
     
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'matdest:my_packages' %}">My Packages</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="packagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    My Packages
+                </a>
+                <div class="dropdown-menu" aria-labelledby="packagesDropdown">
+                    <a class="dropdown-item" href="{% url 'matdest:my_packages' %}">My Packages</a>
+                    <a class="dropdown-item" href="{% url 'matdest:my_custom_packages' %}">Custom Package Bookings</a>
+                </div>
             </li>
             </ul>
             <ul class="navbar-nav ml-auto">
@@ -209,6 +215,7 @@ button[type="submit"]:hover {
     </div>
     <!-- Bootstrap JS script if needed -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
@@ -220,56 +227,89 @@ button[type="submit"]:hover {
                 // Get the package ID from the data-id attribute of the button
                 var packageId = this.getAttribute('data-id');
                 $('#dateModal').modal('show');
-        
-                // Handle date confirmation
-                document.getElementById('confirmDateBtn').addEventListener('click', function() {
-                    // Get the selected date
-                    var eventDate = document.getElementById('eventDate').value;
-        
-                    // Get today's date and tomorrow's date
-                    var today = new Date();
-                    var tomorrow = new Date(today);
-                    tomorrow.setDate(tomorrow.getDate() + 1);
-        
-                    // Convert selected date to Date object for comparison
-                    var selectedDate = new Date(eventDate);
-        
-                    // Extract year, month, and day components for comparison
-                    var selectedYear = selectedDate.getFullYear();
-                    var selectedMonth = selectedDate.getMonth();
-                    var selectedDay = selectedDate.getDate();
-        
-                    var tomorrowYear = tomorrow.getFullYear();
-                    var tomorrowMonth = tomorrow.getMonth();
-                    var tomorrowDay = tomorrow.getDate();
-        
-                    // Validate the selected date against tomorrow's date
-                    if (
-                        selectedYear > tomorrowYear ||
-                        (selectedYear === tomorrowYear && selectedMonth > tomorrowMonth) ||
-                        (selectedYear === tomorrowYear && selectedMonth === tomorrowMonth && selectedDay >= tomorrowDay)
-                    ) {
-                        // Construct the URL with the selected package ID and event date
-                        var url = '{% url "destpayment:book_package" 0 %}'.replace('0', packageId) + '?date=' + eventDate;
-        
-                        // Redirect to the constructed URL
-                        window.location.href = url;
-        
-                        // Clear previous error message if any
-                        document.getElementById('dateErrorMessage').textContent = '';
+    
+                // Make an AJAX request to fetch package location
+                // Make an AJAX request to fetch package location
+var url = '{% url "matdest:get_package_location" %}'; // Change to your actual endpoint name
+
+                var data = {
+                    package_id: packageId
+                };
+                $.get(url, data, function(response) {
+                    if (response.success) {
+                        var packageLocation = response.location;
+                        // Proceed with the rest of your code
+                        // Handle date confirmation and other operations using packageLocation
+    
+                        // Handle date confirmation
+                        document.getElementById('confirmDateBtn').addEventListener('click', function() {
+                            // Get the selected date
+                            var eventDate = document.getElementById('eventDate').value;
+    
+                            // Get today's date and tomorrow's date
+                            var today = new Date();
+                            var tomorrow = new Date(today);
+                            tomorrow.setDate(tomorrow.getDate() + 1);
+    
+                            // Convert selected date to Date object for comparison
+                            var selectedDate = new Date(eventDate);
+    
+                            // Extract year, month, and day components for comparison
+                            var selectedYear = selectedDate.getFullYear();
+                            var selectedMonth = selectedDate.getMonth();
+                            var selectedDay = selectedDate.getDate();
+    
+                            var tomorrowYear = tomorrow.getFullYear();
+                            var tomorrowMonth = tomorrow.getMonth();
+                            var tomorrowDay = tomorrow.getDate();
+    
+                            // Validate the selected date against tomorrow's date
+                            if (
+                                selectedYear > tomorrowYear ||
+                                (selectedYear === tomorrowYear && selectedMonth > tomorrowMonth) ||
+                                (selectedYear === tomorrowYear && selectedMonth === tomorrowMonth && selectedDay >= tomorrowDay)
+                            ) {
+                                // Make an AJAX request to check booking limit
+                                // Make an AJAX request to check booking limit
+var url = '{% url "matdest:check_booking_limit" %}'; // Change to your actual endpoint name
+
+                                var data = {
+                                    location: packageLocation,
+                                    date: eventDate
+                                };
+                                $.get(url, data, function(response) {
+                                    if (response.booking_full) {
+                                        var errorMessage = 'Booking is full for the selected date and location. Please choose another date or location.';
+    var errorMessageElement = document.getElementById('dateErrorMessage');
+    errorMessageElement.textContent = errorMessage;
+    errorMessageElement.style.color = 'red';
+                                    } else {
+                                        // Proceed with booking
+                                        var redirectUrl = '{% url "destpayment:book_package" 0 %}'.replace('0', packageId) + '?date=' + eventDate;
+                                        window.location.href = redirectUrl;
+                                    }
+                                });
+    
+                                // Clear previous error message if any
+                                document.getElementById('dateErrorMessage').textContent = '';
+                            } else {
+                                // Show error message and set its content and style
+                                var errorMessage = 'Please Select a Valid Date.';
+                                var errorMessageElement = document.getElementById('dateErrorMessage');
+                                errorMessageElement.textContent = errorMessage;
+                                errorMessageElement.style.color = 'red'; // Set text color to red
+                            }
+                        });
                     } else {
-                        // Show error message and set its content and style
-                        var errorMessage = 'Please Select a Valid Date.';
-                        var errorMessageElement = document.getElementById('dateErrorMessage');
-                        errorMessageElement.textContent = errorMessage;
-                        errorMessageElement.style.color = 'red'; // Set text color to red
+                        console.error('Failed to fetch package location');
                     }
                 });
+    
             });
         });
     });
-    
-    
 </script>
+    
+    
 </body>
 </html>
