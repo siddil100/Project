@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
-    <title>Destination Weddings</title>
+    <title>Scheduling</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -205,6 +205,9 @@
                                         <li class="nav-item active">
                                             <a class="nav-link" href="{% url 'destmanager:list_scheduling' %}">Scheduling</a>
                                             <li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" href="{% url 'destmanager:generate_package_report' %}">Generate Reports</a>
+                                                    <li>
 
                                 {% if request.user.license.is_valid %}
 <!-- Display tick mark if the user's license is valid -->
@@ -226,8 +229,8 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {% if profile_image_url %}
-                            <img src="{{ profile_image_url }}" alt="Profile Picture" width="40" height="40" class="rounded-circle">
+                        {% if request.session.profile_image_url  %}
+                            <img src="{{ request.session.profile_image_url  }}" alt="Profile Picture" width="40" height="40" class="rounded-circle">
                         {% else %}
                             <img src="{% static '/images/no.jpg' %}" alt="Default Profile Picture" width="40" height="40" class="rounded-circle">
                         {% endif %}
@@ -237,6 +240,8 @@
                     <div class="dropdown-menu" aria-labelledby="profileDropdown">
                         
                         <a class="dropdown-item" href="{% url 'destmanager:password_change' %}">Change Password</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'matgp:detect_faces' %}">Update Dp</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
                     </div>

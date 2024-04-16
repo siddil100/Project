@@ -92,9 +92,13 @@
                     My Packages
                 </a>
                 <div class="dropdown-menu" aria-labelledby="packagesDropdown">
-                    <a class="dropdown-item" href="{% url 'matdest:my_packages' %}">My Packages</a>
+                    <a class="dropdown-item" href="{% url 'matdest:my_packages' %}">Normal Package Bookings</a>
                     <a class="dropdown-item" href="{% url 'matdest:my_custom_packages' %}">Custom Package Bookings</a>
                 </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'matdest:generate_user_report' %}">Show History</a>
             </li>
             </ul>
             <ul class="navbar-nav ml-auto">

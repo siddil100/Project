@@ -26,4 +26,8 @@ urlpatterns = [
     path('update-scheduling/<int:scheduling_id>/', views.update_scheduling, name='update_scheduling'),
     path('list-scheduling/', views.list_scheduling, name='list_scheduling'),
 
+
+    path('generate-package-report/',views.generate_package_reports, name='generate_package_report'),
+    
+
 ]

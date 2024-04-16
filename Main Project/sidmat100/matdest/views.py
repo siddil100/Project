@@ -171,6 +171,118 @@ def get_package_location(request):
 
 
 
+from django.http import HttpResponse
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Spacer,Paragraph
+from reportlab.lib.units import inch
+
+from reportlab.platypus.flowables import Image
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from datetime import datetime
+from destpayment.models import PackageBooking, CustomPackageBooking
+from reportlab.lib.styles import getSampleStyleSheet,ParagraphStyle
+
+def generate_user_report(request):
+    user = request.user
+
+    # Fetching booked packages for the logged-in user
+    booked_packages = []
+
+    # Fetching normal package bookings
+    normal_package_bookings = PackageBooking.objects.filter(user=user)
+    for booking in normal_package_bookings:
+        package = booking.package
+        package_name = package.package_name
+        event_date = booking.event_date.date() if booking.event_date else None
+        subscription_date = booking.subscription_date.date() if booking.subscription_date else None
+        package_type = "Normal"
+        location = package.location
+        price = package.price
+        booked_packages.append({
+            'package_name': package_name,
+            'event_date': event_date,
+            'subscription_date': subscription_date,
+            'package_type': package_type,
+            'location': location,
+            'price': price
+        })
+
+    # Fetching custom package bookings
+    custom_package_bookings = CustomPackageBooking.objects.filter(user=user)
+    for booking in custom_package_bookings:
+        package_name = booking.package_name
+        event_date = booking.event_date.date() if booking.event_date else None
+        subscription_date = booking.subscription_date.date() if booking.subscription_date else None
+        package_type = "Custom"
+        location = booking.location
+        price = booking.price
+        booked_packages.append({
+            'package_name': package_name,
+            'event_date': event_date,
+            'subscription_date': subscription_date,
+            'package_type': package_type,
+            'location': location,
+            'price': price
+        })
+
+    # Generate PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="user_report.pdf"'
+
+    doc = SimpleDocTemplate(response, pagesize=letter)
+    elements = []
+
+    # Add site logo to top left
+    image_path = settings.BASE_DIR / 'static' / 'images' / 'logo.jpg'
+    logo = Image(image_path, width=50, height=50)
+    elements.append(logo)
+
+    # Add site name in the center
+    elements.append(Spacer(1, 0.5 * inch))
+    styles = getSampleStyleSheet()
+    style = ParagraphStyle(name='Center', alignment=1, textColor=colors.blue, fontName='Helvetica-Bold', fontSize=20)
+    elements.append(Paragraph("<center>DreamWed</center>", style))
+
+    elements.append(Spacer(1, 0.5 * inch))
+
+    table_data = [
+        ['Package Name', 'Event Date', 'Subscription Date', 'Package Type', 'Location', 'Price']
+    ]
+    for package in booked_packages:
+        table_data.append([
+            package['package_name'],
+            package['event_date'],
+            package['subscription_date'],
+            package['package_type'],
+            package['location'],
+            package['price']
+        ])
+
+    table = Table(table_data)
+    table.setStyle(TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.gray),
+                               ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                               ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                               ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                               ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                               ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                               ('GRID', (0, 0), (-1, -1), 1, colors.black)]))
+
+    elements.append(table)
+
+    # Add issued date below the table and to the left
+    elements.append(Spacer(1, 0.25 * inch))
+    issued_date = datetime.now().strftime("%d-%m-%Y")
+    style = ParagraphStyle(name='IssuedDate', fontName='Helvetica', fontSize=10)
+    elements.append(Paragraph(f"Issued Date: {issued_date}", style))
+
+    doc.build(elements)
+    return response
+
+
+
+
 
 
 

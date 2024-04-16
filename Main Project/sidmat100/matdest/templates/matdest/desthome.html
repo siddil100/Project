@@ -192,6 +192,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'matdest:view_packages' %}">Packages</a>
                 </li>
+                
     
             </li>
             <li class="nav-item">
@@ -202,9 +203,13 @@
                     My Packages
                 </a>
                 <div class="dropdown-menu" aria-labelledby="packagesDropdown">
-                    <a class="dropdown-item" href="{% url 'matdest:my_packages' %}">My Packages</a>
+                    <a class="dropdown-item" href="{% url 'matdest:my_packages' %}">Normal Package Bookings</a>
                     <a class="dropdown-item" href="{% url 'matdest:my_custom_packages' %}">Custom Package Bookings</a>
                 </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'matdest:generate_user_report' %}">Show History</a>
             </li>
             
             
@@ -218,7 +223,6 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="profileDropdown">
                         <a class="dropdown-item" href="{% url 'matrimony:myprofile' %}">My Profile</a>
-                        <a class="dropdown-item" href="#">Settings</a>
                         <a class="dropdown-item" href="{% url 'accounts:password_change' %}">Change Password</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>

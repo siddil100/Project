@@ -105,9 +105,9 @@ def detect_faces(request):
                 personal_details.profile_image.save('profile_image.jpg', image_file)
                 personal_details.save()
                 request.session['profile_image_url'] = personal_details.profile_image.url
-                result = "Your Profile Picture was verified ok and saved By our system."
+                result = "The uploaded picture is verified and valid. This has been placed as your Final Profile Picture."
             else:
-                result = f"{len(faces)} faces detected Please Upload an Image with a single Face."
+                result = " Multiple faces detected Please Upload an Image with a clear Face."
 
         return render(request, 'matgp/result.html', {'result': result})
 

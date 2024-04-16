@@ -18,4 +18,7 @@ urlpatterns = [
     path('my-packages/', views.view_my_packages, name='my_packages'),
      path('get_package_location/', views.get_package_location, name='get_package_location'),
     path('check_booking_limit/', views.check_booking_limit, name='check_booking_limit'),
+
+
+    path('generate_pdf_report/', views.generate_user_report, name='generate_user_report'),
 ]
